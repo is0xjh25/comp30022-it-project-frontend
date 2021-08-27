@@ -1,16 +1,23 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "title": "COMP30022 Team035",
+    "description": "This is the documentation for APIs connected to the backend server",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://virtserver.swaggerhub.com/COMP30022-Team35/CRM/1.0.0",
-      "description": "SwaggerHub API Auto Mocking"
+      "url": "https://comp30022-team35-backend.herokuapp.com",
+      "description": "Backend server"
     },
     {
       "url": "http://localhost:8080",
       "description": "local server"
+    }
+  ],
+  "security": [
+    {
+      "Authorization": []
     }
   ],
   "tags": [
@@ -57,12 +64,7 @@
           "404": {
             "description": "User not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -89,12 +91,7 @@
           "404": {
             "description": "User not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -134,12 +131,7 @@
           "404": {
             "description": "User not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/user/login": {
@@ -150,7 +142,13 @@
         "summary": "Logs user into the system",
         "operationId": "loginUser",
         "requestBody": {
-          "$ref": "#/components/requestBodies/UserLogin"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -173,6 +171,13 @@
                   "type": "string",
                   "format": "date-time"
                 }
+              },
+              "Set-Cookie": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
               }
             },
             "content": {
@@ -191,7 +196,8 @@
           "400": {
             "description": "Invalid username/password supplied"
           }
-        }
+        },
+        "security": []
       }
     },
     "/user/logout": {
@@ -205,12 +211,7 @@
           "default": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/user/resetPassword": {
@@ -237,12 +238,7 @@
           "default": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/organizations": {
@@ -265,12 +261,7 @@
           "400": {
             "description": "bad request"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/organization": {
@@ -303,12 +294,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -328,12 +314,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -357,12 +338,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/organization/transfer": {
@@ -395,12 +371,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -435,12 +406,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/organization/departments": {
@@ -473,12 +439,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/organization/department": {
@@ -513,12 +474,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/department": {
@@ -551,12 +507,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -580,12 +531,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/permission": {
@@ -607,12 +553,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -646,12 +587,7 @@
           "200": {
             "description": "successful operation"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/contact": {
@@ -702,12 +638,7 @@
           "404": {
             "description": "Contact not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -731,12 +662,7 @@
           "400": {
             "description": "Update failed"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -760,12 +686,7 @@
           "400": {
             "description": "Insert failed"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -775,7 +696,7 @@
         "description": "This is available for users with authority level 3 and above",
         "parameters": [
           {
-            "name": "customerID",
+            "name": "customer_id",
             "in": "query",
             "description": "The customer to be deleted",
             "required": true,
@@ -793,12 +714,7 @@
           "400": {
             "description": "Delete failed"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/contact/detail": {
@@ -809,7 +725,7 @@
         "summary": "Display one contact's details",
         "parameters": [
           {
-            "name": "contactID",
+            "name": "contact_id",
             "in": "query",
             "description": "The contact's id",
             "required": true,
@@ -837,12 +753,7 @@
           "404": {
             "description": "Contact not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
+        }
       }
     },
     "/contact/search": {
@@ -854,7 +765,7 @@
         "description": "This is available for users with authority level 1 and above",
         "parameters": [
           {
-            "name": "fisrtName",
+            "name": "fisrt_name",
             "in": "query",
             "description": "Search on the customer's first name",
             "required": false,
@@ -865,7 +776,7 @@
             }
           },
           {
-            "name": "lastName",
+            "name": "last_name",
             "in": "query",
             "description": "Search on the customer's last name",
             "required": false,
@@ -926,12 +837,283 @@
           "404": {
             "description": "Contact not found"
           }
-        },
-        "security": [
-          {
-            "Bearer": []
+        }
+      }
+    },
+    "/event": {
+      "get": {
+        "tags": [
+          "event"
+        ],
+        "summary": "Get a list of events, which belongs to this user",
+        "description": "The events will be displayed in time order",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Events"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Event not found"
           }
-        ]
+        }
+      },
+      "put": {
+        "tags": [
+          "event"
+        ],
+        "summary": "Update an event's information",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update successful"
+          },
+          "400": {
+            "description": "Update failed"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "event"
+        ],
+        "summary": "Add an event to this user's event list",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Event"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Insert succeeded"
+          },
+          "400": {
+            "description": "Insert failed"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "event"
+        ],
+        "summary": "Delete one event",
+        "description": "Delete one event from the event list",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "query",
+            "description": "The event to be deleted",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete succeeded"
+          },
+          "400": {
+            "description": "Delete failed"
+          }
+        }
+      }
+    },
+    "/todo": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Get a list of to-dos, which belongs to this user",
+        "description": "The to-do list will be displayed in time order",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todos"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "To-do not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Update a todo event's information",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Todo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update successful"
+          },
+          "400": {
+            "description": "Update failed"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Add a todo event to this user's todo list",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Todo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Insert succeeded"
+          },
+          "400": {
+            "description": "Insert failed"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Delete one todo event",
+        "description": "Delete one todo event from the todo list",
+        "parameters": [
+          {
+            "name": "todo_id",
+            "in": "query",
+            "description": "The todo event to be deleted",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete succeeded"
+          },
+          "400": {
+            "description": "Delete failed"
+          }
+        }
+      }
+    },
+    "/dash/organizations": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Display some organizations this user belongs to",
+        "description": "The number of organisations could be specified in param",
+        "parameters": [
+          {
+            "name": "display_num",
+            "in": "query",
+            "description": "The number of objects to be displayed",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organizations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/dash/events": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Display some upcoming events from this user",
+        "description": "The number of events could be specified in param",
+        "parameters": [
+          {
+            "name": "display_num",
+            "in": "query",
+            "description": "The number of objects to be displayed",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Events"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
       }
     }
   },
@@ -971,9 +1153,6 @@
           },
           "password": {
             "type": "string"
-          },
-          "remember-me": {
-            "type": "boolean"
           }
         },
         "items": {
@@ -1099,6 +1278,55 @@
           }
         }
       },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "finish_time": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Events": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Event"
+        }
+      },
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "date_time": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Todos": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Todo"
+        }
+      },
       "organization_body": {
         "required": [
           "organization_name"
@@ -1145,29 +1373,10 @@
         }
       }
     },
-    "requestBodies": {
-      "UserLogin": {
-        "description": "request body for login",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/UserLogin"
-            }
-          },
-          "application/xml": {
-            "schema": {
-              "$ref": "#/components/schemas/UserLogin"
-            }
-          }
-        },
-        "required": true
-      }
-    },
     "securitySchemes": {
-      "Bearer": {
-        "type": "apiKey",
-        "name": "Bearer",
-        "in": "header"
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }
