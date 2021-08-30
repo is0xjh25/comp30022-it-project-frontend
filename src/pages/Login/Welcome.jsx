@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Favicon from './favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,6 +8,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 
@@ -51,9 +53,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Welcome(props) {
-
-	const classes = useStyles();
 	
+	const [email, setEmail] = useState(0);
+	const [password, setPassword] = useState(0);
+	const classes = useStyles();
+
+	let validateForm = () => (this.email.length > 0 && this.password.length > 0);
+
 	return (
 		<Container component="main" maxWidth="xs">
 		<CssBaseline />
@@ -104,12 +110,12 @@ function Welcome(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setActive("forgetPassword")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("forgetPassword")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setActive("register")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("register")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

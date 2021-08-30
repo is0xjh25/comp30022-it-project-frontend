@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ForgetPassword(props) {
 	
+	const [email, setEmail] = useState(0);
 	const classes = useStyles();
 
 	return (
@@ -71,12 +72,12 @@ function ForgetPassword(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setActive("welcome")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("welcome")}>
 					{"Oh! I just remembered."}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setActive("register")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("register")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

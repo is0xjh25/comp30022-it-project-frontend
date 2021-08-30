@@ -10,63 +10,39 @@ class Login extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = this.getInitialState();
-		this.setActive = this.setActive.bind(this);
-		this.setEmail = this.setEmail.bind(this);
-		this.setPassword = this.setPassword.bind(this);
 	}
 
-	setActive(a) {
-		this.setState({active: a});
-	};
+	getInitialState = () => ({status: "welcome"});
 
-	setEmail(e) {
-		this.setState({email: e});
-	};
+    reset = () => this.setState(this.getInitialState());
 
-	setPassword(p) {
-		this.setState({email: p});
-	};
+	setStatus = (a) => this.setState({status: a});
 
-	validateForm() {
-		return (this.email.length > 0 && this.password.length > 0);
-	};
+	// Staying(incorrect) or jumping to dashboard(correct).
+	handleLogin = (e, p) => {};
+	
+	// Jumping to welcome and alert.
+	handleForgetPassword = (e) => {};
 
-	getInitialState = () => ({
-		active: "welcome",
-		email:"",
-		password:"",
-		details: {
-			firstName:"",
-			lasName:"",
-			email:"",
-			password:"",
-			phone:"",
-			organisation:"",
-		}
-	});
-
-    reset() {
-        this.setState(this.getInitialState());
-    };
+	// Jumping to welcome and alert.
+	handleRegister = (d) => {};
 
 	render() {
-		let active = this.state.active;
+		let status = this.state.status;
 		return(
 			<div>
 				<div className = {'Login-imageBlock'} >
 					<img src={Image} className = {'Login-image'} alt = ""/>
 				</div>
 				<div className = {'Login-sideBlock'}>
-					{active === 'welcome' ? (
-							<Welcome setEmail={this.setEmail} 
-							setPassword={this.setPassword}
-							setActive={this.setActive} />
-						) : active === 'register' ? (
-							<Register />
-						) : active === 'forgetPassword' ? (
-							<ForgetPassword setEmail={this.setEmail} 
-							setPassword={this.setPassword}
-							setActive={this.setActive} />
+					{status === 'welcome' ? (
+							<Welcome
+							setStatus={this.setStatus} />
+						) : status === 'register' ? (
+							<Register setStatus={this.setStatus} />
+						) : status === 'forgetPassword' ? (
+							<ForgetPassword 
+							setStatus={this.setStatus} />
 						) : null 
 					}
 				</div>
