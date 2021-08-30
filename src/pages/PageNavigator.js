@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Switch, Route } from 'react-router-dom';
+import {Switch, Route } from 'react-router-dom';
 import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Login from './Login/Login';
@@ -7,9 +7,15 @@ import Login from './Login/Login';
 function PageNavigator() {
     return (
         <Switch>
-            <Route excat path ='/' component={Home}></Route>
-            <Route excat path ='/swagger' component={Swagger}></Route>
-            <Route excat path ='/login' component={Login}></Route>
+            <Route exact path='/'>
+                <Home/>
+            </Route>
+            <Route path='/swagger'>
+                <Swagger/>
+            </Route>
+            <Route path ='/login'>
+                <Login/>
+            </Route>
         </Switch>
     );
 }
