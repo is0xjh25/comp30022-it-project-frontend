@@ -1,9 +1,10 @@
 import React from 'react';
 import './Login.css';
-import Image from './road.jpg';
-import Welcome from './Welcome';
-import ForgetPassword from './ForgetPassword';
-import Register from './Register';
+import Image from '../../images/road.jpg';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import Resend from './Resend';
+
 
 class Login extends React.Component {
 	
@@ -12,7 +13,7 @@ class Login extends React.Component {
 		this.state = this.getInitialState();
 	}
 
-	getInitialState = () => ({status: "welcome"});
+	getInitialState = () => ({status: "signIn"});
 
     reset = () => this.setState(this.getInitialState());
 
@@ -30,23 +31,24 @@ class Login extends React.Component {
 	render() {
 		let status = this.state.status;
 		return(
-			<div>
+			<React.Fragment>
 				<div className = {'Login-imageBlock'} >
 					<img src={Image} className = {'Login-image'} alt = ""/>
 				</div>
 				<div className = {'Login-sideBlock'}>
-					{status === 'welcome' ? (
-							<Welcome
+					{status === 'signIn' ? (
+							<SignIn
 							setStatus={this.setStatus} />
-						) : status === 'register' ? (
-							<Register setStatus={this.setStatus} />
-						) : status === 'forgetPassword' ? (
-							<ForgetPassword 
+						) : status === 'signUp' ? (
+							<SignUp
+							setStatus={this.setStatus} />
+						) : status === 'resend' ? (
+							<Resend 
 							setStatus={this.setStatus} />
 						) : null 
 					}
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 }

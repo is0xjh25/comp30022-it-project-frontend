@@ -1,26 +1,43 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
-		fontSize: 19,
-		fontFamily: 'Optima-Italic',
-		marginTop: theme.spacing(30),
+		marginTop: theme.spacing(15),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center'
-	},	
+	},
+	firstLine: {
+		fontFamily: 'Optima-Italic',
+		fontSize: 30
+	},
+	secondLine: {
+		fontFamily: 'Optima-Italic',
+		fontSize: 70,
+		marginTop: theme.spacing(0)
+	},
+	favicon: {
+		position: 'relative',
+		top:180,
+		left: 180,
+		width: 40,
+		height: 40,
+	},		
 	paper: {
-		marginTop: theme.spacing(10),
+		marginTop: theme.spacing(0),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -34,22 +51,28 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function ForgetPassword(props) {
+
+function Welcome(props) {
 	
 	const [email, setEmail] = useState(0);
+	const [password, setPassword] = useState(0);
 	const classes = useStyles();
+
+	let validateForm = () => (this.email.length > 0 && this.password.length > 0);
 
 	return (
 		<Container component="main" maxWidth="xs">
 		<CssBaseline />
 		<div className={classes.headLine}>
-			<h1>Forget your password ?</h1>
+			<img src={Favicon} alt='' className={classes.favicon}></img>
+			<h3 className={classes.firstLine}>Welcome to</h3>
+			<h3 className={classes.secondLine}>ConnecTi</h3>
 		</div>
 		<div className={classes.paper}>
-			<Typography style={{fontSize:20}} component="h2" variant="h5">
-			Reset password via email address!
+			<Typography component="h1" variant="h5">
+			Sign in
 			</Typography>
-			<form className={classes.form} noValidate>
+			<form className={classes.form} noValidate >
 			<TextField
 				variant="outlined"
 				margin="normal"
@@ -61,6 +84,21 @@ function ForgetPassword(props) {
 				autoComplete="email"
 				autoFocus
 			/>
+			<TextField
+				variant="outlined"
+				margin="normal"
+				required
+				fullWidth
+				name="password"
+				label="Password"
+				type="password"
+				id="password"
+				autoComplete="current-password"
+			/>
+			<FormControlLabel
+				control={<Checkbox value="remember" color="primary" />}
+				label="Remember me"
+			/>
 			<Button
 				type="submit"
 				fullWidth
@@ -68,16 +106,16 @@ function ForgetPassword(props) {
 				color="primary"
 				className={classes.submit}
 			>
-				Send
+				Sign In
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("welcome")}>
-					{"Oh! I just remembered."}
+				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("resend")}>
+					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("register")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>
@@ -90,4 +128,4 @@ function ForgetPassword(props) {
 		</Container>
 	);
 }
-export default ForgetPassword;
+export default Welcome;
