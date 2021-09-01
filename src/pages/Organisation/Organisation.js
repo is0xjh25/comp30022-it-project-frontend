@@ -3,25 +3,15 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Title } from '@material-ui/icons';
-
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//       flexGrow: 1,
-//     },
-//     paper: {
-//       padding: theme.spacing(2),
-//       textAlign: 'center',
-//       color: theme.palette.text.secondary,
-//     },
-//   }));
+import './Organisation.css';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(2),
+    typography: {
+        button: {
+            textTransform: 'none'
         },
     },
+
 }));
 
 export default function Org() {
@@ -30,41 +20,36 @@ export default function Org() {
 
     return (
 
-    //     <Typography component="h2" variant="h6" color="text.primary">
-    //         My Orgnizations
-    //     </Typography>
-  
-
     <div className={classes.root}>
         <Typography component="h2" color="text.primary">
             My Orgnizations
         </Typography>
         <Grid container spacing={3}>
             <Grid item xs={12}>
-                <Box className={classes.org} bgcolor="success.main" color="white">
-                    <Button color="white" p={2}>
-                        Unimelb
+                <Box className={classes.root} bgcolor="success.light">
+                    <Button>
+                        The University of Melbourne
                     </Button>
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Box className={classes.org} bgcolor="info.main">
-                    <Button color="white" p={4}>
+                <Box className={classes.root} bgcolor="info.main">
+                    <Button>
                         Organization 2
                     </Button>
                 </Box>
             </Grid>
             <Grid item xs={12}>
                 <Box className={classes.org} bgcolor="info.main">
-                    <Button color="white" p={4}>
+                    <Button>
                         Organization 3
                     </Button>
                 </Box>
             </Grid>
             <Grid item xs={12}>
                 <Box className={classes.org} bgcolor="text.disabled">
-                    <Button color="white" p={4}>
-                        Find Orgnizations
+                    <Button>
+                        +
                     </Button>
                 </Box>
             </Grid>
