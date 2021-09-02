@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -34,32 +34,82 @@ const useStyles = makeStyles((theme) => ({
 		top:180,
 		left: 180,
 		width: 40,
-		height: 40,
+		height: 40
 	},		
 	paper: {
 		marginTop: theme.spacing(0),
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	form: {
 		width: '100%',
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(1)
 	},
 	submit: {
-		margin: theme.spacing(3, 0, 2),
+		margin: theme.spacing(3, 0, 2)
 	}
 }));
 
+function SignIn(props) {
 
-function Welcome(props) {
-	
-	const [email, setEmail] = useState(0);
-	const [password, setPassword] = useState(0);
 	const classes = useStyles();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
 
-	let validateForm = () => (this.email.length > 0 && this.password.length > 0);
+	const handleOnChange = (e) => {
+		if (e.target.id === "email") {
+			setEmail(e.target.value);
+		} else if (e.target.id === "password") {
+			setPassword(e.target.value);
+		}
+    };
 
+	const handleValidation = useCallback(() => {
+
+		let formIsValid = true;
+		
+		if (!password) {
+			formIsValid = false;
+			setError("Password cannot be empty ಠ_ಠ");
+		} 
+
+		if (!email) {
+			formIsValid = false;
+			setError("Email cannot be empty (ʘдʘ╬)");
+		} else if (typeof email !== "undefined") {
+			 let lastAtPos = email.lastIndexOf('@');
+			 let lastDotPos = email.lastIndexOf('.');
+			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
+				formIsValid = false;
+				setError("Invalid Email 눈_눈");
+			}
+		}
+
+		if (!email && !password) {
+			formIsValid = false;
+			setError("Email and Password cannot be empty (#｀皿´)");
+		}
+
+		return formIsValid;
+	}, [email, password]);
+
+	const handleSubmit = (e) => {
+
+		e.preventDefault();
+
+		if (handleValidation()) {
+			alert("YYDS");
+		} else {
+		   	alert(error);
+		}
+	}
+
+	useEffect(() => {}, [email, password, error]);
+
+	useEffect(() => {handleValidation();}, [handleValidation]);
+		
 	return (
 		<Container component="main" maxWidth="xs">
 		<CssBaseline />
@@ -74,6 +124,7 @@ function Welcome(props) {
 			</Typography>
 			<form className={classes.form} noValidate >
 			<TextField
+				autoFocus
 				variant="outlined"
 				margin="normal"
 				required
@@ -82,7 +133,7 @@ function Welcome(props) {
 				label="Email Address"
 				name="email"
 				autoComplete="email"
-				autoFocus
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -94,6 +145,7 @@ function Welcome(props) {
 				type="password"
 				id="password"
 				autoComplete="current-password"
+				onChange={handleOnChange}
 			/>
 			<FormControlLabel
 				control={<Checkbox value="remember" color="primary" />}
@@ -105,17 +157,18 @@ function Welcome(props) {
 				variant="contained"
 				color="primary"
 				className={classes.submit}
+				onClick={handleSubmit}
 			>
 				Sign In
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("resend")}>
+				<NavLink to='./Login' variant="body2" onClick={()=>props.setStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("signUp")}>
+				<NavLink to='./Login' variant="body2" onClick={()=>props.setStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>
@@ -128,4 +181,4 @@ function Welcome(props) {
 		</Container>
 	);
 }
-export default Welcome;
+export default SignIn;

@@ -19,17 +19,10 @@ class Login extends React.Component {
 
 	setStatus = (a) => this.setState({status: a});
 
-	// Staying(incorrect) or jumping to dashboard(correct).
-	handleLogin = (e, p) => {};
-	
-	// Jumping to welcome and alert.
-	handleForgetPassword = (e) => {};
-
-	// Jumping to welcome and alert.
-	handleRegister = (d) => {};
-
 	render() {
+		
 		let status = this.state.status;
+
 		return(
 			<React.Fragment>
 				<div className = {'Login-imageBlock'} >

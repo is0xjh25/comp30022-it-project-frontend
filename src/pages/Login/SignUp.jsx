@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,14 +15,14 @@ const useStyles = makeStyles((theme) => ({
 	headLine: {
 		fontFamily: 'Optima-Italic',
 		fontSize: 50,
-		marginTop: theme.spacing(10),
+		marginTop: theme.spacing(5),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center'
 	},
 	favicon: {
 		position: 'relative',
-		top:140,
+		top:100,
 		left: 360,
 		width: 40,
 		height: 40
@@ -31,29 +31,118 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(0),
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	form: {
 		width: '100%',
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(1)
 	},
 	submit: {
-		margin: theme.spacing(3, 0, 2),
+		margin: theme.spacing(3, 0, 2)
 	}
 }));
 
 
-function Welcome(props) {
+function SignUp(props) {
 
-	const [firstName, setFirstName] = useState(0);
-	const [lastName, setLastName] = useState(0);
-	const [phone, setPhone] = useState(0);
-	const [email, setEmail] = useState(0);
-	const [password, setPassword] = useState(0);
-	const [org, setOrg] = useState(0);
-	const classes = useStyles();
+	const classes = useStyles();	
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [phone, setPhone] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [organisation, setOrganisation] = useState("");
+	const [error, setError] = useState("");
 
-	let validateForm = () => (this.email.length > 0 && this.password.length > 0);
+	const handleOnChange = (e) => {
+		if (e.target.id === "email") {
+			setEmail(e.target.value);
+		} else if (e.target.id === "password") {
+			setPassword(e.target.value);
+		} else if (e.target.id === "firstName") {
+			setFirstName(e.target.value);
+		} else if (e.target.id === "lastName") {
+			setLastName(e.target.value);
+		} else if (e.target.id === "phone") {
+			setPhone(e.target.value);
+		} else if (e.target.id === "organisation") {
+			setOrganisation(e.target.value);
+		}
+    };
+
+	const handleValidation = useCallback(() => {
+
+		let formIsValid = true;
+		
+		if (!password) {
+			formIsValid = false;
+			setError("Password cannot be empty ಠ_ಠ");
+		}
+
+		if (!email) {
+			formIsValid = false;
+			setError("Email cannot be empty (ʘдʘ╬)");
+		} else if (typeof email !== "undefined") {
+			 let lastAtPos = email.lastIndexOf('@');
+			 let lastDotPos = email.lastIndexOf('.');
+			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
+				formIsValid = false;
+				setError("Invalid email 눈_눈");
+			}
+		}
+
+		if (!phone) {
+			formIsValid = false;
+			setError("Phone Number cannot be empty ಠ_ಠ");
+		} else if (typeof phone !== "undefined") {
+			if (phone.length !== 10) {
+			   formIsValid = false;
+			   setError("Invalid phone number 눈_눈");
+			}        
+		}
+
+		if (!lastName) {
+			formIsValid = false;
+			setError("Last Name cannot be empty ಠ_ಠ");
+		} else if (typeof lastName !== "undefined") {
+			if (!lastName.match(/^[a-zA-Z]+$/)) {
+			   formIsValid = false;
+			   setError("Invalid last name 눈_눈");
+			}        
+		}
+
+		if (!firstName) {
+			formIsValid = false;
+			setError("First Name cannot be empty ಠ_ಠ");
+		} else if (typeof firstName !== "undefined") {
+			if (!firstName.match(/^[a-zA-Z]+$/)) {
+			   formIsValid = false;
+			   setError("Invalid first name 눈_눈");
+			}        
+		}
+
+		if (!email && !password && !firstName && !lastName && !phone) {
+			formIsValid = false;
+			setError("Hey, just tell me something about you (#｀皿´)");
+		}
+
+		return formIsValid;
+	}, [firstName, lastName, phone, email, password]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (handleValidation()) {
+			console.log("!!!!");
+			alert("YYDS");
+		} else {
+			console.log("????");
+		   	alert(error);
+		}
+	}
+
+	useEffect(() => {}, [firstName, lastName, phone, email, password, organisation]);
+
+	useEffect(() => {handleValidation();}, [handleValidation]);
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -68,6 +157,7 @@ function Welcome(props) {
 			</Typography>
 			<form className={classes.form} noValidate>
 			<TextField
+				autoFocus
 				variant="outlined"
 				margin="normal"
 				required
@@ -76,7 +166,7 @@ function Welcome(props) {
 				label="First Name"
 				name="firstName"
 				autoComplete="given-name"
-				autoFocus
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -87,6 +177,7 @@ function Welcome(props) {
 				label="Last Name"
 				name="lastName"
 				autoComplete="family-name"
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -97,6 +188,7 @@ function Welcome(props) {
 				label="Phone Number"
 				name="phone"
 				autoComplete="phone"
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -107,6 +199,7 @@ function Welcome(props) {
 				label="Email Address"
 				name="email"
 				autoComplete="email"
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -118,6 +211,7 @@ function Welcome(props) {
 				type="password"
 				id="password"
 				autoComplete="current-password"
+				onChange={handleOnChange}
 			/>
 			<TextField
 				variant="outlined"
@@ -126,6 +220,7 @@ function Welcome(props) {
 				id="organisation"
 				label="Join Organisation (optional)"
 				name="organisation"
+				onChange={handleOnChange}
 			/>
 			<Button
 				type="submit"
@@ -133,6 +228,7 @@ function Welcome(props) {
 				variant="contained"
 				color="primary"
 				className={classes.submit}
+				onClick={handleSubmit}
 			>
 				Sign up
 			</Button>
@@ -156,4 +252,4 @@ function Welcome(props) {
 		</Container>
 	);
 }
-export default Welcome;
+export default SignUp;

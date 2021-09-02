@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -23,21 +23,62 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(10),
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	form: {
 		width: '100%',
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(1)
 	},
 	submit: {
-		margin: theme.spacing(3, 0, 2),
+		margin: theme.spacing(3, 0, 2)
 	}
 }));
 
-function ForgetPassword(props) {
-	
-	const [email, setEmail] = useState(0);
+function Resend(props) {
+
 	const classes = useStyles();
+	const [email, setEmail] = useState("");
+	const [error, setError] = useState("");
+
+	const handleOnChange = (e) => {
+		if (e.target.id === "email") {
+			setEmail(e.target.value);
+		}
+    };
+
+	const handleValidation = useCallback(() => {
+
+		let formIsValid = true;
+
+		if (!email) {
+		   formIsValid = false;
+		   setError("Email cannot be empty (ʘдʘ╬)");
+		} else if (typeof email !== "undefined") {
+			let lastAtPos = email.lastIndexOf('@');
+			let lastDotPos = email.lastIndexOf('.');
+			if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
+			   formIsValid = false;
+			   setError("Invalid email 눈_눈");
+			}
+		}
+
+		return formIsValid;
+	}, [email]);
+
+	const handleSubmit = (e) => {
+
+		e.preventDefault();
+
+		if (handleValidation()) {
+			alert("YYDS");
+		} else {
+		   	alert(error);
+		}
+	}
+
+	useEffect(() => {}, [email]);
+
+	useEffect(() => {handleValidation();}, [handleValidation]);
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -51,6 +92,7 @@ function ForgetPassword(props) {
 			</Typography>
 			<form className={classes.form} noValidate>
 			<TextField
+				autoFocus
 				variant="outlined"
 				margin="normal"
 				required
@@ -59,7 +101,7 @@ function ForgetPassword(props) {
 				label="Email Address"
 				name="email"
 				autoComplete="email"
-				autoFocus
+				onChange={handleOnChange}
 			/>
 			<Button
 				type="submit"
@@ -67,6 +109,7 @@ function ForgetPassword(props) {
 				variant="contained"
 				color="primary"
 				className={classes.submit}
+				onClick={handleSubmit}
 			>
 				Send
 			</Button>
@@ -90,4 +133,4 @@ function ForgetPassword(props) {
 		</Container>
 	);
 }
-export default ForgetPassword;
+export default Resend;
