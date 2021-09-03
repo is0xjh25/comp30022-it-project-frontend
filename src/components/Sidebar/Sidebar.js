@@ -14,15 +14,17 @@ import Contact from '@material-ui/icons/Person';
 import Event from '@material-ui/icons/ChatBubble';
 import Manage from '@material-ui/icons/People';
 import ImageIcon from '@material-ui/icons/Image';
+import SettingsIcon from '@material-ui/icons/MoreHoriz'
+import LogOutIcon from '@material-ui/icons/ExitToApp';
 
 
 import './Sidebar.css';
+
 
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: "Dashboard",
             navItems: [
                 {
                     icon: <Dashboard />,
@@ -42,14 +44,10 @@ class Sidebar extends React.Component {
                 },
             ]
         }
-        this.changeSelected = this.changeSelected.bind(this);
+        
     }
 
-    changeSelected(nowSelected) {
-        this.setState({
-            selected: nowSelected
-        })
-    }
+    
 
     render() {
         const title = (
@@ -60,12 +58,17 @@ class Sidebar extends React.Component {
 
         const user = (
             <div className='sidebar-user'>
-                <div className='sidebar-user-avatar'>
-                    <Avatar>
-                        <ImageIcon/>
-                    </Avatar>
+                <div className='sidebar-user-avatar-container'>
+                    <div className='sidebar-user-avatar'>
+                        <Avatar>
+                            <ImageIcon/>
+                        </Avatar>
+                    </div>
+                    <text>
+                        Edit Profile
+                    </text>
                 </div>
-                <div>
+                <div className='sidebar-user-main'>
                     <div className='sidebar-user-name'>
                         Sierra Ferguson
                     </div>
@@ -80,7 +83,7 @@ class Sidebar extends React.Component {
             <div className='sidebar-container'>
                 <List>
                     {this.state.navItems.map((item, index) => (
-                        <ListItem onClick={() => this.changeSelected(item.name)} button key={item.name} selected={item.name == this.state.selected}>
+                        <ListItem onClick={() => this.props.changePage(item.name)} button key={item.name} selected={item.name == this.props.selectedPage}>
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.name}></ListItemText>
                         </ListItem>
@@ -113,6 +116,27 @@ class Sidebar extends React.Component {
             </div>
         )
 
+        const settings = (
+            <div>
+                <ListItem button>
+                    <ListItemIcon>
+                        <SettingsIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Settings"></ListItemText>
+                </ListItem>
+            </div>
+        )
+
+        const logOut = (
+            <div>
+                <ListItem button>
+                    <ListItemIcon>
+                        <LogOutIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Log out"></ListItemText>
+                </ListItem>
+            </div>
+        )
 
         return(
             <div>
@@ -122,6 +146,10 @@ class Sidebar extends React.Component {
                     {navList}
                     {divider}
                     {recentContacts}
+                    <div className='sidebar-stick-bottom'>
+                        {settings}
+                        {logOut}
+                    </div>
                 </Drawer>
 
             </div>

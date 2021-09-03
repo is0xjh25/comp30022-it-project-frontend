@@ -11,14 +11,21 @@ class Home extends React.Component {
     super(props);
     // Use state to control current viewing page
     this.state = {
-      currentPage: 'dashboard'
+      selectedPage: 'dashboard'
     };
+    this.changePage = this.changePage.bind(this);
   }
+
+  changePage(nowSelected) {
+    this.setState({
+      selectedPage: nowSelected
+    })
+}
 
   render() {
     return(
       <div className='home-main-container'>
-        <Sidebar currentPage={this.state.currentPage}/>
+        <Sidebar selectedPage={this.state.selectedPage} changePage={this.changePage}/>
 
       </div>
     )

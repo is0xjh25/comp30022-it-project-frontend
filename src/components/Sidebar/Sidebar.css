@@ -1,7 +1,7 @@
 
 .sidebar-container {
     /* height: 100%; */
-    width: 250px;
+    width: 300px;
     background-color: white;
 }
 
@@ -23,19 +23,40 @@
     color: #109CF1;
 }
 
+
+
 .sidebar-user {
     display: flex;
     justify-content: center;
     margin-bottom: 40px;
 }
 
-.sidebar-user-avatar {
-    margin-right: 15px;
+.sidebar-user text{
+    color: black;
+    opacity: 40%;
+    font-size: small;
+}
+
+.sidebar-user-avatar-container {
+    width: 35%;
+
+    text-align: center;
 
 }
 
+.sidebar-user-avatar {
+    display: flex;
+    justify-content: center;
+
+}
+
+.sidebar-user-main{
+    width: 65%;
+    text-align: center;
+}
+
 .sidebar-user-name {
-    color: #109CF1;
+    color: black;
     text-align: center;
 }
 
@@ -48,4 +69,10 @@
 
 .divider {
     color: aqua;
+}
+
+.sidebar-stick-bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
 }
