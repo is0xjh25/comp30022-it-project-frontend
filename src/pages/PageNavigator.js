@@ -2,7 +2,7 @@ import React from 'react';
 import {Switch, Route } from 'react-router-dom';
 import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
-import Org from './Organisation/Organisation';
+import OrgSample from './Organisation/OrgSample';
 
 function PageNavigator() {
     return (
@@ -14,7 +14,7 @@ function PageNavigator() {
                 <Swagger/>
             </Route>
             <Route path ='/org'>
-                <Org/>
+                <OrgSample/>
             </Route>
         </Switch>
 
