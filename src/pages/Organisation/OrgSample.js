@@ -1,9 +1,10 @@
+import React from 'react';
 import { Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import './Organisation.css';
@@ -59,22 +60,22 @@ const useStyles = makeStyles((theme) => ({
         // m: 1,
         // borderColor: 'text.primary',
         // alignItems: 'center',
-        // color: theme.palette.success.main,
+        color: theme.palette.success.main,
     },
     memberBox: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'rous',
         justifyContent: 'center',
         height: 48,
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        alignSelf: strentch,
+        // alignSelf: strentch,
         // color: theme.palette.info.main,
     },
     plusBox: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         height: 48,
         border: 4,
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Org() {
+export default function OrgSample() {
     
     const classes = useStyles();
 
