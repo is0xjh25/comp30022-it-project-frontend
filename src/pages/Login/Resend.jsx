@@ -9,6 +9,7 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -40,6 +41,8 @@ function Resend(props) {
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState("");
 
+	let history = useHistory();
+
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
 			setEmail(e.target.value);
@@ -65,12 +68,33 @@ function Resend(props) {
 		return formIsValid;
 	}, [email]);
 
+	const handleResend = () => {
+
+		const info = {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({email: email})
+		};
+
+		fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)
+		.then(res => {
+			if (res.status === "200") {
+				alert("Request is submitted. Please check your mailbox !");
+				history.push('/Login');
+			if (res.status === "401") {
+				alert(res.json('msg'));
+				history.push('/Login');
+			}}})
+		.catch(error => {alert(error);})
+	}
+
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
 
 		if (handleValidation()) {
-			alert("YYDS");
+			alert("Please check your email");
+			handleResend();
 		} else {
 		   	alert(error);
 		}

@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -53,6 +54,8 @@ function SignUp(props) {
 	const [password, setPassword] = useState("");
 	const [organisation, setOrganisation] = useState("");
 	const [error, setError] = useState("");
+
+	let history = useHistory();
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
@@ -105,7 +108,7 @@ function SignUp(props) {
 			formIsValid = false;
 			setError("Last Name cannot be empty ಠ_ಠ");
 		} else if (typeof lastName !== "undefined") {
-			if (!lastName.match(/^[a-zA-Z]+$/)) {
+			if (!lastName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
 			   setError("Invalid last name 눈_눈");
 			}        
@@ -115,7 +118,7 @@ function SignUp(props) {
 			formIsValid = false;
 			setError("First Name cannot be empty ಠ_ಠ");
 		} else if (typeof firstName !== "undefined") {
-			if (!firstName.match(/^[a-zA-Z]+$/)) {
+			if (!firstName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
 			   setError("Invalid first name 눈_눈");
 			}        
@@ -129,13 +132,33 @@ function SignUp(props) {
 		return formIsValid;
 	}, [firstName, lastName, phone, email, password]);
 
+	const handleSignUp= () => {
+
+		const info = {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({email: email, password: password, 
+				firstName: firstName, lastName: lastName, phone: phone})
+		};
+
+		fetch("https://comp30022-team35-backend.herokuapp.com/user", info)
+		.then(res => {
+			if (res.status === "200") {
+				alert("Welcom to join ConnecTI !");
+				history.push('/Login');
+			if (res.status === "400") {
+				alert(res.json("msg"));
+				history.push('/Login');
+			}}})
+		.catch(error => {alert(error);history.push('/Swagger');})
+	}
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (handleValidation()) {
-			console.log("!!!!");
-			alert("YYDS");
+			
+			handleSignUp();
 		} else {
-			console.log("????");
 		   	alert(error);
 		}
 	}

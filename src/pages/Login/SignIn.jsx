@@ -12,6 +12,7 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -56,13 +57,18 @@ function SignIn(props) {
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [remember, setRemember] = useState(false);
 	const [error, setError] = useState("");
+	
+	let history = useHistory();
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
 			setEmail(e.target.value);
 		} else if (e.target.id === "password") {
 			setPassword(e.target.value);
+		} else if (e.target.id === "remember") {
+			setRemember(e.target.checked);
 		}
     };
 
@@ -95,12 +101,34 @@ function SignIn(props) {
 		return formIsValid;
 	}, [email, password]);
 
+	const handleSignIn = () => {
+
+		const info = {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({email: email, password: password})
+		};
+
+		fetch("https://comp30022-team35-backend.herokuapp.com/user/login", info)
+		.then(res => {
+			if (res.status === "200") {
+				let data = res.headers('authorization');
+				if (remember) {localStorage.setItem('Token', data);}
+				sessionStorage.setItem('Token', data);
+				history.push('/Home');
+			if (res.status === "400") {
+				alert(res.json('msg'));
+				history.push('/Login');
+			}}})
+		.catch(error => {alert(error);history.push('/Login');})
+	}
+
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
 
 		if (handleValidation()) {
-			alert("YYDS");
+			handleSignIn();
 		} else {
 		   	alert(error);
 		}
@@ -150,6 +178,7 @@ function SignIn(props) {
 			<FormControlLabel
 				control={<Checkbox value="remember" color="primary" />}
 				label="Remember me"
+				onChange={handleOnChange}
 			/>
 			<Button
 				type="submit"
