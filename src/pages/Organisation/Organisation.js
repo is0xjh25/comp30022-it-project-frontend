@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -7,7 +8,8 @@ import Box from '@material-ui/core/Box';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
+import './Organisation.css';
+
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -49,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         padding: '30px',
     },
     ownBox: {
-        marginTop: theme.spacing(3),
+        // marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
@@ -86,21 +88,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// @withStyles(useStyles)
-export default class Organisation extends React.Component {
+export default function Organisation() {
     // read in the user's organisation info from backend api
-    // const classes = useStyles();
 
-    state = {
-        loading: true,
-        organisations: [],
-    };
-    
+    const [loading, setLoading] = useState(true);
+    const [organizations, setOrganizations] = useState([]);
 
-    async componentDidMount() {
-        // const url;
-        // const response = await fetch(url);
-        // const data = response.json();
+    useEffect(() => {
+        // fetch(url)
+        //     .then(response => response.json())
+        //     .then(json => console.log(json))
 
         // make up some fake data for testing
         const data = [
@@ -116,12 +113,12 @@ export default class Organisation extends React.Component {
                 "owner_id": 100,
                 "ownership": "own"
             },
-            {
-                "organization_id": 3,
-                "name": "Peking University",
-                "owner_id": 200,
-                "ownership": "member"
-            },
+            // {
+            //     "organization_id": 3,
+            //     "name": "Peking University",
+            //     "owner_id": 200,
+            //     "ownership": "member"
+            // },
             {
                 "organization_id": 4,
                 "name": "University of Tokyo",
@@ -129,37 +126,44 @@ export default class Organisation extends React.Component {
                 "ownership": "member"
             }
         ]
-        this.setState({loading: false, organisations: data});
-        
-    };
+        return () => {
+            // setLoading(false);
+            setOrganizations(data);
+        }
+    }, [loading])
     
 
     // identify organisation data from json
     // create different boxes for different authority levels
     // boxes has link buttons directs to department pages
-    render() {
+ 
         
-        // const classes = useStyles();
+    const classes = useStyles();
 
-        // console.log(this.state.loading);
-        // console.log(this.state.organisations);
+    // console.log(this.state.loading);
+    // console.log(this.state.organisations);
 
-        if (this.state.loading) {
-            return <div>loading...</div>
-        }
+    const testButton = <div>
+            <Button onClick = {() => setLoading(false)}>test</Button>
+        </div>;
 
-        // if (this.state.organisations.length()==0) {
-        //     return <div>No valid organisation</div>
-        // }
-        
-        const orgs = [];
-        this.state.organisations.map((org) => {
-            orgs.push(
-                org.ownership === "own" ? 
-                    <div key={org.organization_id}>
-                        {/* <div>{org.name}</div>
-                        <div>{org.owner_id}</div> */}
-                        <Grid item alignItems={'center'} xs={8}>
+    if (loading) {
+        return <div>loading...
+        {testButton}
+        </div>
+    }
+
+    // if (this.state.organisations.length()==0) {
+    //     return <div>No valid organisation</div>
+    // }
+
+    
+    const orgs = [];
+    organizations.map((org) => {
+        orgs.push(
+            org.ownership === "own" ? 
+                // <div key={org.organization_id}>
+                    <Grid item alignItems={'center'} xs={8}>
                         <Box className={classes.ownBox} bgcolor="success.main">
                             <Button alignItems='center'>
                                 {org.name}
@@ -174,11 +178,9 @@ export default class Organisation extends React.Component {
                             </IconButton>
                         </Box>
                     </Grid>
-                    </div>
-                
-                :
-                <div key={org.organization_id}>
-                    {/* <div>{org.owner_id}</div> */}
+                // </div>
+            :
+                // <div key={org.organization_id}>
                     <Grid item alignItems="center" xs={8}>
                         <Box className={classes.memberBox} bgcolor="info.main">
                             <Button>
@@ -186,18 +188,17 @@ export default class Organisation extends React.Component {
                             </Button>
                         </Box>
                     </Grid>
-                </div>
-            )
-            
-        });
+                // </div>
+        )
+        
+    });
 
-        return (
-            <div>
+    return (
+        <div>
             <Typography className={classes.topic}>
                 My Orgnizations
             </Typography>
             <Grid className={classes.orgGrid} container spacing={5}>
-                {/* {this.state.organisations} */}
                 {orgs}
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
@@ -207,7 +208,6 @@ export default class Organisation extends React.Component {
                     </Box>
                 </Grid>
             </Grid>
-            </div>
-        )
-    }
+        </div>
+    )
 }
