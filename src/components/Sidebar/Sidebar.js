@@ -16,10 +16,29 @@ import Manage from '@material-ui/icons/People';
 import ImageIcon from '@material-ui/icons/Image';
 import SettingsIcon from '@material-ui/icons/MoreHoriz'
 import LogOutIcon from '@material-ui/icons/ExitToApp';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 
 
 import './Sidebar.css';
 
+require('dotenv').config();
+
+const useStyles = makeStyles((theme) => ({
+    divider: {
+        background: '#109CF1'
+    },
+
+}))
+
+function MyDivider() {
+    const classes = useStyles();
+    return <Divider className={classes.divider} variant='middle'></Divider>
+}
+
+function MyDrawer() {
+    const classes = useStyles();
+    return <Drawer className={classes.drawer} varian='permanent'></Drawer>
+}
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -50,6 +69,7 @@ class Sidebar extends React.Component {
     
 
     render() {
+
         const title = (
             <div className='sidebar-title'>
                 ConnecTI
@@ -92,15 +112,15 @@ class Sidebar extends React.Component {
             </div>
         )
 
-        const divider = (
-            <div>
-                <Divider className='divider'/>
-            </div>
-        )
+        // const divider = (
+        //     <div>
+        //         <Divider className={classes.root}/>
+        //     </div>
+        // )
 
         const recentContacts = (
             <div>
-                <List>
+                {/* <List>
                     {[1,2,3,4,5].map(item => (
                     <ListItem>
                         <ListItemAvatar>
@@ -112,7 +132,7 @@ class Sidebar extends React.Component {
                     </ListItem>
                     ))}
 
-                </List>
+                </List> */}
             </div>
         )
 
@@ -144,14 +164,14 @@ class Sidebar extends React.Component {
                     {title}
                     {user}
                     {navList}
-                    {divider}
+                    <MyDivider />
                     {recentContacts}
                     <div className='sidebar-stick-bottom'>
                         {settings}
                         {logOut}
                     </div>
                 </Drawer>
-
+                {process.env.BASE_URL}
             </div>
         )
     }
