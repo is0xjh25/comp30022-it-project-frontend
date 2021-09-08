@@ -8,8 +8,6 @@ import Box from '@material-ui/core/Box';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import './Organisation.css';
-
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -113,12 +111,12 @@ export default function Organisation() {
                 "owner_id": 100,
                 "ownership": "own"
             },
-            // {
-            //     "organization_id": 3,
-            //     "name": "Peking University",
-            //     "owner_id": 200,
-            //     "ownership": "member"
-            // },
+            {
+                "organization_id": 3,
+                "name": "Peking University",
+                "owner_id": 200,
+                "ownership": "member"
+            },
             {
                 "organization_id": 4,
                 "name": "University of Tokyo",
