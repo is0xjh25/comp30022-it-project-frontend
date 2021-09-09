@@ -1,0 +1,1186 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "COMP30022 Team035",
+    "description" : "This is the documentation for APIs connected to the backend server"
+  },
+  "tags" : [ {
+    "name" : "user",
+    "description" : "Operations about user"
+  }, {
+    "name" : "manage",
+    "description" : "Manage organization"
+  }, {
+    "name" : "contact",
+    "description" : "Customer Contacts"
+  } ],
+  "paths" : {
+    "/user" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "createUser",
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          },
+          "description" : "Created user object",
+          "required" : true
+        }
+      },
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Get user by token",
+        "operationId" : "getUserByName",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid username supplied"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "user" ],
+        "summary" : "Updated user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "updateUser",
+        "responses" : {
+          "400" : {
+            "description" : "Invalid user supplied"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          },
+          "description" : "Updated user object",
+          "required" : true
+        }
+      },
+      "delete" : {
+        "tags" : [ "user" ],
+        "summary" : "Delete user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "deleteUser",
+        "responses" : {
+          "400" : {
+            "description" : "Invalid username supplied"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      }
+    },
+    "/user/login" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs user into the system",
+        "operationId" : "loginUser",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserLogin"
+              }
+            }
+          }
+        },
+        "security" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "headers" : {
+              "X-Rate-Limit" : {
+                "description" : "calls per hour allowed by the user",
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              },
+              "X-Expires-After" : {
+                "description" : "date in UTC when token expires",
+                "schema" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                }
+              },
+              "Set-Cookie" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/user/logout" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs out current logged in user session",
+        "operationId" : "logoutUser",
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/resetPassword" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs out current logged in user session",
+        "operationId" : "ResetPasswordUser",
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The user name for login",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/organizations" : {
+      "get" : {
+        "tags" : [ "manage" ],
+        "summary" : "Check out all organization this user belongs to",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Organizations"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        }
+      }
+    },
+    "/organization" : {
+      "get" : {
+        "tags" : [ "manage" ],
+        "summary" : "Get information of an organization",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successfully retrives the organization detail",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "manage" ],
+        "summary" : "Create an organization",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "organization_name" ],
+                "properties" : {
+                  "organization_name" : {
+                    "type" : "string",
+                    "description" : "The name of the organization"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "manage" ],
+        "summary" : "Delete an organization",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/organization/transfer" : {
+      "get" : {
+        "tags" : [ "manage" ],
+        "summary" : "Transfer the ownership of the organization, returning an array of users in the organizaton\n",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserArray"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "manage" ],
+        "summary" : "Transfer the ownership of the organization to a User\n",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "new_owner",
+          "in" : "query",
+          "description" : "The user_id of the new owner",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/organization/departments" : {
+      "get" : {
+        "tags" : [ "manage" ],
+        "summary" : "Get all departments information within the organization",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successfully retrives departments detail",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Departments"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organization/department" : {
+      "post" : {
+        "tags" : [ "manage" ],
+        "summary" : "Create a new department in an organization",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "department_name" ],
+                "properties" : {
+                  "department_name" : {
+                    "type" : "string",
+                    "description" : "The name of the department"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/department" : {
+      "get" : {
+        "tags" : [ "manage" ],
+        "summary" : "Get information of a department",
+        "parameters" : [ {
+          "name" : "department_id",
+          "in" : "query",
+          "description" : "The department id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successfully retrives the department detail",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Department"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "manage" ],
+        "summary" : "Delete a department",
+        "parameters" : [ {
+          "name" : "department_id",
+          "in" : "query",
+          "description" : "The department id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/permission" : {
+      "post" : {
+        "tags" : [ "manage" ],
+        "summary" : "Give a user in a department a permission",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "user_id", "permission_level", "department_id" ],
+                "properties" : {
+                  "user_id" : {
+                    "type" : "integer"
+                  },
+                  "permission_level" : {
+                    "type" : "integer",
+                    "description" : "The permission level to set to"
+                  },
+                  "department_id" : {
+                    "type" : "integer",
+                    "description" : "The id of the department"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "manage" ],
+        "summary" : "Delete a user from accessing a department",
+        "parameters" : [ {
+          "name" : "user_id",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "department_id",
+          "in" : "query",
+          "description" : "The id of the department",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/contact" : {
+      "get" : {
+        "tags" : [ "contact" ],
+        "summary" : "Get a list of contacts, which belongs to the department",
+        "description" : "This is available for users with authority level 1 and above",
+        "parameters" : [ {
+          "name" : "organization_id",
+          "in" : "query",
+          "description" : "The organization to query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "department_id",
+          "in" : "query",
+          "description" : "The department to query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Contacts"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          },
+          "404" : {
+            "description" : "Contact not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "contact" ],
+        "summary" : "Delete one contact",
+        "description" : "This is available for users with authority level 3 and above",
+        "parameters" : [ {
+          "name" : "customer_id",
+          "in" : "query",
+          "description" : "The customer to be deleted",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete succeeded"
+          },
+          "400" : {
+            "description" : "Delete failed"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "contact" ],
+        "summary" : "Add a contact to department",
+        "description" : "This is available for users with authority level 2 and above",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Insert succeeded"
+          },
+          "400" : {
+            "description" : "Insert failed"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "contact" ],
+        "summary" : "Update a contact's information",
+        "description" : "This is available for users with authority level 2 and above",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update successful"
+          },
+          "400" : {
+            "description" : "Update failed"
+          }
+        }
+      }
+    },
+    "/contact/detail" : {
+      "get" : {
+        "tags" : [ "contact" ],
+        "summary" : "Display one contact's details",
+        "parameters" : [ {
+          "name" : "contact_id",
+          "in" : "query",
+          "description" : "The contact's id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          },
+          "404" : {
+            "description" : "Contact not found"
+          }
+        }
+      }
+    },
+    "/contact/search" : {
+      "get" : {
+        "tags" : [ "contact" ],
+        "summary" : "Search the contact list on the given parameter",
+        "description" : "This is available for users with authority level 1 and above",
+        "parameters" : [ {
+          "name" : "fisrt_name",
+          "in" : "query",
+          "description" : "Search on the customer's first name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "last_name",
+          "in" : "query",
+          "description" : "Search on the customer's last name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "gender",
+          "in" : "query",
+          "description" : "Search on the customer's gender",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "age",
+          "in" : "query",
+          "description" : "Search on the customer's age",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "organisation",
+          "in" : "query",
+          "description" : "Search on the customer's organisation",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          },
+          "404" : {
+            "description" : "Contact not found"
+          }
+        }
+      }
+    },
+    "/event" : {
+      "get" : {
+        "tags" : [ "event" ],
+        "summary" : "Get a list of events, which belongs to this user",
+        "description" : "The events will be displayed in time order",
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Events"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          },
+          "404" : {
+            "description" : "Event not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "event" ],
+        "summary" : "Delete one event",
+        "description" : "Delete one event from the event list",
+        "parameters" : [ {
+          "name" : "event_id",
+          "in" : "query",
+          "description" : "The event to be deleted",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete succeeded"
+          },
+          "400" : {
+            "description" : "Delete failed"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "event" ],
+        "summary" : "Add an event to this user's event list",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Event"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Insert succeeded"
+          },
+          "400" : {
+            "description" : "Insert failed"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "event" ],
+        "summary" : "Update an event's information",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Event"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update successful"
+          },
+          "400" : {
+            "description" : "Update failed"
+          }
+        }
+      }
+    },
+    "/todo" : {
+      "get" : {
+        "tags" : [ "todo" ],
+        "summary" : "Get a list of to-dos, which belongs to this user",
+        "description" : "The to-do list will be displayed in time order",
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Todos"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          },
+          "404" : {
+            "description" : "To-do not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "todo" ],
+        "summary" : "Delete one todo event",
+        "description" : "Delete one todo event from the todo list",
+        "parameters" : [ {
+          "name" : "todo_id",
+          "in" : "query",
+          "description" : "The todo event to be deleted",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete succeeded"
+          },
+          "400" : {
+            "description" : "Delete failed"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "todo" ],
+        "summary" : "Add a todo event to this user's todo list",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Todo"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Insert succeeded"
+          },
+          "400" : {
+            "description" : "Insert failed"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "todo" ],
+        "summary" : "Update a todo event's information",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Todo"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update successful"
+          },
+          "400" : {
+            "description" : "Update failed"
+          }
+        }
+      }
+    },
+    "/dash/organizations" : {
+      "get" : {
+        "tags" : [ "dashboard" ],
+        "summary" : "Display some organizations this user belongs to",
+        "description" : "The number of organisations could be specified in param",
+        "parameters" : [ {
+          "name" : "display_num",
+          "in" : "query",
+          "description" : "The number of objects to be displayed",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Organizations"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        }
+      }
+    },
+    "/dash/events" : {
+      "get" : {
+        "tags" : [ "dashboard" ],
+        "summary" : "Display some upcoming events from this user",
+        "description" : "The number of events could be specified in param",
+        "parameters" : [ {
+          "name" : "display_num",
+          "in" : "query",
+          "description" : "The number of objects to be displayed",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Events"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "username" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "User"
+        }
+      },
+      "UserLogin" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        },
+        "items" : {
+          "$ref" : "#/components/schemas/UserLogin"
+        }
+      },
+      "UserArray" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/User"
+        }
+      },
+      "Organizations" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Organization"
+        }
+      },
+      "Organization" : {
+        "type" : "object",
+        "properties" : {
+          "organization_id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "owner_id" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "Departments" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Department"
+        }
+      },
+      "Department" : {
+        "type" : "object",
+        "properties" : {
+          "department_id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "organization_id" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "Customer" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "department_id" : {
+            "type" : "integer"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "birthday" : {
+            "type" : "string"
+          },
+          "age" : {
+            "type" : "integer"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "organization" : {
+            "type" : "string"
+          },
+          "customer_type" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Contacts" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Contact"
+        }
+      },
+      "Contact" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "age" : {
+            "type" : "integer"
+          },
+          "organization" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event" : {
+        "type" : "object",
+        "properties" : {
+          "user_id" : {
+            "type" : "integer"
+          },
+          "start_time" : {
+            "type" : "string"
+          },
+          "finish_time" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Events" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Event"
+        }
+      },
+      "Todo" : {
+        "type" : "object",
+        "properties" : {
+          "user_id" : {
+            "type" : "integer"
+          },
+          "date_time" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Todos" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Todo"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "Authorization" : {
+        "type" : "http",
+        "scheme" : "bearer"
+      }
+    }
+  },
+  "security" : [ {
+    "Authorization" : [ ]
+  } ],
+  "servers" : [ {
+    "description" : "Backend server",
+    "url" : "https://comp30022-team35-backend.herokuapp.com"
+  }, {
+    "description" : "local server",
+    "url" : "http://localhost:8080"
+  } ]
+}

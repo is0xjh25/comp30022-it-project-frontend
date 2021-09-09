@@ -3,6 +3,7 @@ import {Switch, Route } from 'react-router-dom';
 import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Org from './Organisation/Organisation';
+import Login from './Login/Login';
 
 function PageNavigator() {
     return (
@@ -16,9 +17,11 @@ function PageNavigator() {
             <Route path='/org'>
                 <Org/>
             </Route>
+            <Route path ='/login'>
+                <Login/>
+            </Route>
         </Switch>
-
-    )
+    );
 }
 
 export default PageNavigator;

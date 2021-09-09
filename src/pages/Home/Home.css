@@ -1,0 +1,15 @@
+
+.home-main-container{
+    height: 100vh;
+    background-color: #E5E5E5;
+    display: flex;
+}
+
+.sidebar-container {
+    height: 100%;
+    width: 20%;
+}
+
+.sidebar-body {
+    width: 80%;
+}

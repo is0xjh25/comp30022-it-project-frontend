@@ -1,0 +1,78 @@
+
+.sidebar-container {
+    /* height: 100%; */
+    width: 300px;
+    background-color: white;
+}
+
+.sidebar-title {
+    /* ConnecTI */
+
+    text-align: center;
+
+    font-family: NTR;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    align-items: center;
+    text-align: center;
+    margin: 20px 40px 20px 0px;
+
+    /* Accent blue */
+
+    color: #109CF1;
+}
+
+
+
+.sidebar-user {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.sidebar-user text{
+    color: black;
+    opacity: 40%;
+    font-size: small;
+}
+
+.sidebar-user-avatar-container {
+    width: 35%;
+
+    text-align: center;
+
+}
+
+.sidebar-user-avatar {
+    display: flex;
+    justify-content: center;
+
+}
+
+.sidebar-user-main{
+    width: 65%;
+    text-align: center;
+}
+
+.sidebar-user-name {
+    color: black;
+    text-align: center;
+}
+
+.sidebar-user-email {
+    color: gray;
+}
+
+
+
+
+.divider {
+    color: aqua;
+}
+
+.sidebar-stick-bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
+}
