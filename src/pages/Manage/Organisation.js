@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -89,6 +90,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Organisation() {
     // read in the user's organisation info from backend api
 
+    const [login] = useState(true);
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
 
@@ -155,38 +157,38 @@ export default function Organisation() {
     //     return <div>No valid organisation</div>
     // }
 
+    const showDepartment = (orgName) => {
+        login ? <Redirect to={'/department'} /> : <Typography>Not logged in QAQ</Typography>
+    };
+
     
     const orgs = [];
     organizations.map((org) => {
         orgs.push(
             org.ownership === "own" ? 
-                // <div key={org.organization_id}>
-                    <Grid item alignItems={'center'} xs={8}>
-                        <Box className={classes.ownBox} bgcolor="success.main">
-                            <Button alignItems='center'>
-                                {org.name}
-                            </Button>
+                <Grid item alignItems={'center'} xs={8}>
+                    <Box className={classes.ownBox} bgcolor="success.main">
+                        <Button alignItems='center' onClick={() => showDepartment(org.name) }>
+                            {org.name}
+                        </Button>
 
-                            <IconButton aria-label="personOutlined">
-                                <PersonOutlineOutlinedIcon />
-                            </IconButton>
-                            
-                            <IconButton aria-label="delete">
-                                <DeleteIcon />
-                            </IconButton>
-                        </Box>
+                        <IconButton aria-label="personOutlined">
+                            <PersonOutlineOutlinedIcon />
+                        </IconButton>
+                        
+                        <IconButton aria-label="delete">
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
                     </Grid>
-                // </div>
             :
-                // <div key={org.organization_id}>
-                    <Grid item alignItems="center" xs={8}>
-                        <Box className={classes.memberBox} bgcolor="info.main">
-                            <Button>
-                                {org.name}
-                            </Button>
-                        </Box>
-                    </Grid>
-                // </div>
+                <Grid item alignItems="center" xs={8}>
+                    <Box className={classes.memberBox} bgcolor="info.main">
+                        <Button>
+                            {org.name}
+                        </Button>
+                    </Box>
+                </Grid>
         )
         
     });
