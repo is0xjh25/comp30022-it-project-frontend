@@ -105,7 +105,7 @@ function SignIn(props) {
 
 		const info = {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
 			body: JSON.stringify({email: email, password: password})
 		};
 

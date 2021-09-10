@@ -136,7 +136,7 @@ function SignUp(props) {
 
 		const info = {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
 			body: JSON.stringify({email: email, password: password, 
 				firstName: firstName, lastName: lastName, phone: phone})
 		};
@@ -144,6 +144,7 @@ function SignUp(props) {
 		fetch("https://comp30022-team35-backend.herokuapp.com/user", info)
 		.then(res => {
 			if (res.status === "200") {
+				console.log("!!!");
 				alert("Welcom to join ConnecTI !");
 				history.push('/Login');
 			if (res.status === "400") {
