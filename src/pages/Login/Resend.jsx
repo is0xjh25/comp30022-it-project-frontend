@@ -73,7 +73,7 @@ function Resend(props) {
 		const info = {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
-			body: JSON.stringify({email: email})
+			body: JSON.stringify({"email": email})
 		};
 
 		fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)

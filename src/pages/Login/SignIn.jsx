@@ -106,7 +106,7 @@ function SignIn(props) {
 		const info = {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
-			body: JSON.stringify({email: email, password: password})
+			body: JSON.stringify({"email": email, "password": password})
 		};
 
 		fetch("https://comp30022-team35-backend.herokuapp.com/user/login", info)

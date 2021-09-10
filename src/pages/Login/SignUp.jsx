@@ -137,8 +137,8 @@ function SignUp(props) {
 		const info = {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
-			body: JSON.stringify({email: email, password: password, 
-				firstName: firstName, lastName: lastName, phone: phone})
+			body: JSON.stringify({"email": email, "password": password, 
+				"firstName": firstName, "lastName": lastName, "phone": phone})
 		};
 
 		fetch("https://comp30022-team35-backend.herokuapp.com/user", info)
@@ -157,7 +157,6 @@ function SignUp(props) {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (handleValidation()) {
-			
 			handleSignUp();
 		} else {
 		   	alert(error);
