@@ -11,7 +11,7 @@ class App extends React.Component {
       <Redirect to={'./Login'} />
     } else {
       sessionStorage.setItem("Token", localStorage.getItem("Token"));
-      <Redirect to={'./Home'} />
+      <Redirect to={'/'} />
     }
   }
 

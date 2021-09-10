@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState } from 'react';
 import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -72,7 +72,7 @@ function SignIn(props) {
 		}
     };
 
-	const handleValidation = useCallback(() => {
+	const handleValidation = () => {
 
 		let formIsValid = true;
 		
@@ -99,28 +99,28 @@ function SignIn(props) {
 		}
 
 		return formIsValid;
-	}, [email, password]);
+	};
 
 	const handleSignIn = () => {
 
 		const info = {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
+			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
 			body: JSON.stringify({"email": email, "password": password})
 		};
 
-		fetch("https://comp30022-team35-backend.herokuapp.com/user/login", info)
+		fetch(process.env.REACT_APP_BASE_URL + "/user/login", info)
 		.then(res => {
-			if (res.status === "200") {
-				let data = res.headers('authorization');
-				if (remember) {localStorage.setItem('Token', data);}
+			if (res.ok) {
+				let data = res.headers.get("Authorization");
+				if (remember) localStorage.setItem('Token', data);
 				sessionStorage.setItem('Token', data);
-				history.push('/Home');
-			if (res.status === "400") {
-				alert(res.json('msg'));
+				history.push('/');
+			} else {
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 				history.push('/Login');
-			}}})
-		.catch(error => {alert(error);history.push('/Login');})
+			}})
+		.catch(error => {alert(error);})
 	}
 
 	const handleSubmit = (e) => {
@@ -133,10 +133,6 @@ function SignIn(props) {
 		   	alert(error);
 		}
 	}
-
-	useEffect(() => {}, [email, password, error]);
-
-	useEffect(() => {handleValidation();}, [handleValidation]);
 		
 	return (
 		<Container component="main" maxWidth="xs">
@@ -178,6 +174,7 @@ function SignIn(props) {
 			<FormControlLabel
 				control={<Checkbox value="remember" color="primary" />}
 				label="Remember me"
+				id="remember"
 				onChange={handleOnChange}
 			/>
 			<Button

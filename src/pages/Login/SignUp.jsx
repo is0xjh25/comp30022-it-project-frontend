@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState } from 'react';
 import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -73,7 +73,7 @@ function SignUp(props) {
 		}
     };
 
-	const handleValidation = useCallback(() => {
+	const handleValidation = () => {
 
 		let formIsValid = true;
 		
@@ -130,28 +130,27 @@ function SignUp(props) {
 		}
 
 		return formIsValid;
-	}, [firstName, lastName, phone, email, password]);
+	};
 
 	const handleSignUp= () => {
 
 		const info = {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': 'https://comp30022-yyds.herokuapp.com'},
+			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
 			body: JSON.stringify({"email": email, "password": password, 
-				"firstName": firstName, "lastName": lastName, "phone": phone})
+				"firstName": firstName, "lastName": lastName, "phone": phone, "organisation": organisation})
 		};
 
-		fetch("https://comp30022-team35-backend.herokuapp.com/user", info)
+		fetch(process.env.REACT_APP_BASE_URL + "/user", info)
 		.then(res => {
-			if (res.status === "200") {
-				console.log("!!!");
+			if (res.ok) {
 				alert("Welcom to join ConnecTI !");
-				history.push('/Login');
-			if (res.status === "400") {
-				alert(res.json("msg"));
-				history.push('/Login');
-			}}})
-		.catch(error => {alert(error);history.push('/Swagger');})
+				sessionStorage.setItem('Token', res.headers.get("Authorization"));
+				history.push('/');
+			} else {
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+			}})
+		.catch(error => {alert(error);})
 	}
 
 	const handleSubmit = (e) => {
@@ -162,10 +161,6 @@ function SignUp(props) {
 		   	alert(error);
 		}
 	}
-
-	useEffect(() => {}, [firstName, lastName, phone, email, password, organisation]);
-
-	useEffect(() => {handleValidation();}, [handleValidation]);
 
 	return (
 		<Container component="main" maxWidth="xs">
