@@ -2,7 +2,7 @@ import React from 'react';
 import {Switch, Route } from 'react-router-dom';
 import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
-import Org from './Manage/Organisation';
+import Org from './Manage/Organization';
 import Department from './Manage/Department';
 import Login from './Login/Login';
 

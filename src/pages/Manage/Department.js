@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     ownBox: {
         // marginTop: theme.spacing(3),
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     },
     memberBox: {
         display: 'flex',
-        flexDirection: 'rous',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     },
     plusBox: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -85,6 +85,14 @@ const useStyles = makeStyles((theme) => ({
         // alignItems: 'center',
         // color: theme.palette.success.main,
     },
+    transferOwnerButton: {
+        position: 'absolute',
+        right: 300
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: 250,
+    }
 }));
 
 export default function Department() {
@@ -167,11 +175,11 @@ export default function Department() {
                             {department.name}
                         </Button>
 
-                        <IconButton aria-label="personOutlined">
+                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
                             <PersonOutlineOutlinedIcon />
                         </IconButton>
                         
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" className={classes.deleteButton}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>

@@ -5,8 +5,9 @@ import './Home.css';
 
 
 
-import Sidebar from '../../components/Sidebar/Sidebar'
-import Members from '../../components/Members/Members'
+import Sidebar from '../../components/Sidebar/Sidebar';
+import Members from '../../components/Members/Members';
+import Organization from '../../pages/Manage/Organization';
 
 require('dotenv').config();
 
@@ -32,7 +33,8 @@ class Home extends React.Component {
 
     if(this.state.selectedPage === 'Manage') {
       body = (
-        <Members></Members>
+        // <Members></Members>
+        <Organization></Organization>
       )
     }
 

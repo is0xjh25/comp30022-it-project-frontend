@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router-dom';
 
+import Department from './Department';
+
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
@@ -52,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     ownBox: {
         // marginTop: theme.spacing(3),
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     },
     memberBox: {
         display: 'flex',
-        flexDirection: 'rous',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     },
     plusBox: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -85,14 +87,26 @@ const useStyles = makeStyles((theme) => ({
         // alignItems: 'center',
         // color: theme.palette.success.main,
     },
+    transferOwnerButton: {
+        position: 'absolute',
+        right: 300
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: 250,
+    }
 }));
 
-export default function Organisation() {
+export default function Organization() {
     // read in the user's organisation info from backend api
 
     const [login] = useState(true);
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [])
 
     useEffect(() => {
         // fetch(url)
@@ -158,7 +172,9 @@ export default function Organisation() {
     // }
 
     const showDepartment = (orgName) => {
-        login ? <Redirect to={'/department'} /> : <Typography>Not logged in QAQ</Typography>
+        // login ? 
+            return <Department></Department> 
+            // : <Typography>Not logged in QAQ</Typography>
     };
 
     
@@ -172,11 +188,11 @@ export default function Organisation() {
                             {org.name}
                         </Button>
 
-                        <IconButton aria-label="personOutlined">
+                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
                             <PersonOutlineOutlinedIcon />
                         </IconButton>
                         
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" className={classes.deleteButton}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>
