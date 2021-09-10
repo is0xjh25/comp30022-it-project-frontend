@@ -117,7 +117,10 @@ class Members extends React.Component {
         return(
             <div>
                 <MySearchBar/>
-                <Table></Table>
+                <div className='table-container'>
+                    <Table className='table'></Table>
+                </div>
+                
             </div>
         )
     }
