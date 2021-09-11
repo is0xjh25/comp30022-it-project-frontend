@@ -49,7 +49,7 @@ function Resend(props) {
 		}
     };
 
-	const handleValidation = useCallback(() => {
+	const handleValidation = () => {
 
 		let formIsValid = true;
 
@@ -66,25 +66,23 @@ function Resend(props) {
 		}
 
 		return formIsValid;
-	}, [email]);
+	};
 
 	const handleResend = () => {
 
 		const info = {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({email: email})
+			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
+			body: JSON.stringify({"email": email})
 		};
 
 		fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)
 		.then(res => {
-			if (res.status === "200") {
+			if (res.ok) {
 				alert("Request is submitted. Please check your mailbox !");
 				history.push('/Login');
-			if (res.status === "401") {
-				alert(res.json('msg'));
-				history.push('/Login');
-			}}})
+			} else { res.json().then(bodyRes=>{alert(bodyRes.msg);});
+			}})
 		.catch(error => {alert(error);})
 	}
 
@@ -99,10 +97,6 @@ function Resend(props) {
 		   	alert(error);
 		}
 	}
-
-	useEffect(() => {}, [email]);
-
-	useEffect(() => {handleValidation();}, [handleValidation]);
 
 	return (
 		<Container component="main" maxWidth="xs">
