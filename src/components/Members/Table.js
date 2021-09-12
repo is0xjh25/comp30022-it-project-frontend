@@ -25,6 +25,12 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import Button from '@material-ui/core/Button';
+import Delete from '@material-ui/icons/Delete';
+import Mail from '@material-ui/icons/MailOutline';
+import EditPermission from '@material-ui/icons/Person';
+
+import {getAllUsers, acceptUser, declineUser} from '../../api/Manage';
+import AlertDialog from '../Dialog/AlertDialog';
 
 function createData(name, email, permissionLevel, recentActivity) {
   const manage = permissionLevel === 0 ? 0 : 6 - permissionLevel;
@@ -124,6 +130,8 @@ function EnhancedTableHead(props) {
   );
 }
 
+
+
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -134,66 +142,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-// const useToolbarStyles = makeStyles((theme) => ({
-//   root: {
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(1),
-//   },
-//   highlight:
-//     theme.palette.type === 'light'
-//       ? {
-//           color: theme.palette.secondary.main,
-//           backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-//         }
-//       : {
-//           color: theme.palette.text.primary,
-//           backgroundColor: theme.palette.secondary.dark,
-//         },
-//   title: {
-//     flex: '1 1 100%',
-//   },
-// }));
-
-// const EnhancedTableToolbar = (props) => {
-//   const classes = useToolbarStyles();
-//   const { numSelected } = props;
-
-//   return (
-//     <Toolbar
-//       className={clsx(classes.root, {
-//         [classes.highlight]: numSelected > 0,
-//       })}
-//     >
-//       {numSelected > 0 ? (
-//         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-//           {numSelected} selected
-//         </Typography>
-//       ) : (
-//         <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-//           Manage Members
-//         </Typography>
-//       )}
-
-//       {numSelected > 0 ? (
-//         <Tooltip title="Delete">
-//           <IconButton aria-label="delete">
-//             <DeleteIcon />
-//           </IconButton>
-//         </Tooltip>
-//       ) : (
-//         <Tooltip title="Filter list">
-//           <IconButton aria-label="filter list">
-//             <FilterListIcon />
-//           </IconButton>
-//         </Tooltip>
-//       )}
-//     </Toolbar>
-//   );
-// };
-
-// EnhancedTableToolbar.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-// };
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -219,7 +167,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
+  const currentUser = props.currentUser;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('manage');
@@ -281,6 +230,7 @@ export default function EnhancedTable() {
 
   return (
     <div className={classes.root}>
+      <AlertDialog alertTitle='Delete Confirm' alertMessage='Do you want to kick this member?' open/>
       <Paper className={classes.paper}>
         {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
@@ -316,6 +266,36 @@ export default function EnhancedTable() {
                             Decline
                         </Button>
                       </div>)
+                  }else if(currentUser && currentUser.permissionLevel > row.permissionLevel) {
+                    manage = (
+                      <div> 
+                        <IconButton>
+                          <EditPermission/>
+                        </IconButton>
+                        <IconButton>
+                          <Mail/>
+                        </IconButton>
+                        <IconButton>
+                          <Delete/>
+                        </IconButton>
+                      </div>
+                    )
+                  }else {
+                    manage = (
+                      <div> 
+                        <IconButton>
+                          <Mail/>
+                        </IconButton>
+                      </div>
+                    )
+                  }
+                  const permissionLevels = {
+                    0: 'Pending to join',
+                    1: 'Member',
+                    2: 'Department admin',
+                    3: 'Department admin',
+                    4: 'Department admin',
+                    5: 'Organization Owner'
                   }
 
                   return (
@@ -336,7 +316,7 @@ export default function EnhancedTable() {
                         {row.name}
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.permissionLevel}</TableCell>
+                      <TableCell align="center">{permissionLevels[row.permissionLevel]}</TableCell>
                       <TableCell align="center">{row.recentActivity}</TableCell>
                       <TableCell align="center">
                         {manage}
