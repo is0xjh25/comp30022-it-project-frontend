@@ -9,6 +9,9 @@ import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import CreateOrgPopup from '../../components/CreateOrgPopup';
+import JoinOrgPopup from '../../components/JoinOrgPopup';
+
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
@@ -201,7 +204,7 @@ export default function Organisation() {
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            +
+                        <CreateOrgPopup /> + <JoinOrgPopup />
                         </Button>
                     </Box>
                 </Grid>
