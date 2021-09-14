@@ -14,6 +14,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 
+import handleSignIn from '../../api/Login';
+
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		marginTop: theme.spacing(15),
@@ -101,34 +103,24 @@ function SignIn(props) {
 		return formIsValid;
 	};
 
-	const handleSignIn = () => {
-
-		const info = {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-			body: JSON.stringify({"email": email, "password": password})
-		};
-
-		fetch(process.env.REACT_APP_BASE_URL + "/user/login", info)
-		.then(res => {
-			if (res.ok) {
-				let data = res.headers.get("Authorization");
-				if (remember) localStorage.setItem('Token', data);
-				sessionStorage.setItem('Token', data);
-				history.push('/');
-			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-				history.push('/Login');
-			}})
-		.catch(error => {alert(error);})
-	}
 
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
 
 		if (handleValidation()) {
-			handleSignIn();
+			handleSignIn(email, password).then(res => {
+			if (res.ok) {
+                let data = res.headers.get("Authorization");
+                if (remember) localStorage.setItem('Token', data);
+                sessionStorage.setItem('Token', data);
+                history.push('/');
+            } else {
+                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+                history.push('/Login');
+			}
+			
+			})
 		} else {
 		   	alert(error);
 		}
