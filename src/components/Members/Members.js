@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SearchBar from '@material-ui/core/TextField';
+import SearchBar from '../SearchBar/SearchBar';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 
@@ -105,7 +105,9 @@ function MembersTable(props) {
     )
 }
 
-
+const mockUser = {
+    permissionLevel: 4
+}
 
 
 class Members extends React.Component {
@@ -116,8 +118,11 @@ class Members extends React.Component {
     render() {
         return(
             <div>
-                <MySearchBar/>
-                <Table></Table>
+                <SearchBar />
+                <div className='table-container'>
+                    <Table className='table' currentUser={mockUser}></Table>
+                </div>
+                
             </div>
         )
     }

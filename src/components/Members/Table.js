@@ -22,25 +22,35 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
+import Button from '@material-ui/core/Button';
+import Delete from '@material-ui/icons/Delete';
+import Mail from '@material-ui/icons/MailOutline';
+import EditPermission from '@material-ui/icons/Person';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+import {getAllUsers, acceptUser, declineUser} from '../../api/Manage';
+import AlertDialog from '../Dialog/AlertDialog';
+
+function createData(name, email, permissionLevel, recentActivity) {
+  const manage = permissionLevel === 0 ? 0 : 6 - permissionLevel;
+  return { name, email, permissionLevel, recentActivity, manage };
 }
 
 const rows = [
-  createData('Member1', 305, 3.7, 67, 4.3),
-  createData('Member2', 452, 25.0, 51, 4.9),
-  createData('Member3', 262, 16.0, 24, 6.0),
-  createData('Member4', 159, 6.0, 24, 4.0),
-  createData('Member5', 356, 16.0, 49, 3.9),
-  createData('Member6', 408, 3.2, 87, 6.5),
-  createData('Member7', 237, 9.0, 37, 4.3),
-  createData('Member8', 375, 0.0, 94, 0.0),
-  createData('Member9', 518, 26.0, 65, 7.0),
-  createData('Member10', 392, 0.2, 98, 0.0),
-  createData('Member11', 318, 0, 81, 2.0),
-  createData('Member12', 360, 19.0, 9, 37.0),
-  createData('Member13', 437, 18.0, 63, 4.0),
+  createData('Member1', 'example@email.com', 1, 'timestamp'),
+  createData('Member2', 'example@email.com', 2, 'timestamp'),
+  createData('Member3', 'example@email.com', 1, 'timestamp'),
+  createData('Member4', 'example@email.com', 1, 'timestamp'),
+  createData('Member5', 'example@email.com', 1, 'timestamp'),
+  createData('Member6', 'example@email.com', 1, 'timestamp'),
+  createData('Member7', 'example@email.com', 1, 'timestamp'),
+  createData('Member8', 'example@email.com', 1, 'timestamp'),
+  createData('Member9', 'example@email.com', 1, 'timestamp'),
+  createData('Member10', 'example@email.com', 1, 'timestamp'),
+  createData('Member11', 'example@email.com', 0, 'timestamp'),
+  createData('Member12', 'example@email.com', 0, 'timestamp'),
+  createData('Member13', 'example@email.com', 5, 'timestamp'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -87,17 +97,17 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align='center'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -120,6 +130,8 @@ function EnhancedTableHead(props) {
   );
 }
 
+
+
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -130,66 +142,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-  },
-}));
-
-const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Manage Members
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -215,14 +167,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
+  const currentUser = props.currentUser;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('manage');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -268,9 +220,9 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
+  // const handleChangeDense = (event) => {
+  //   setDense(event.target.checked);
+  // };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -278,13 +230,14 @@ export default function EnhancedTable() {
 
   return (
     <div className={classes.root}>
+      <AlertDialog alertTitle='Delete Confirm' alertMessage='Do you want to kick this member?' open/>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size='medium'
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -302,6 +255,48 @@ export default function EnhancedTable() {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  var manage;
+                  if(row.permissionLevel === 0) {
+                    manage = (
+                      <div>
+                        <Button variant='contained'>
+                            Accept
+                        </Button>
+                        <Button variant='outlined'>
+                            Decline
+                        </Button>
+                      </div>)
+                  }else if(currentUser && currentUser.permissionLevel > row.permissionLevel) {
+                    manage = (
+                      <div> 
+                        <IconButton>
+                          <EditPermission/>
+                        </IconButton>
+                        <IconButton>
+                          <Mail/>
+                        </IconButton>
+                        <IconButton>
+                          <Delete/>
+                        </IconButton>
+                      </div>
+                    )
+                  }else {
+                    manage = (
+                      <div> 
+                        <IconButton>
+                          <Mail/>
+                        </IconButton>
+                      </div>
+                    )
+                  }
+                  const permissionLevels = {
+                    0: 'Pending to join',
+                    1: 'Member',
+                    2: 'Department admin',
+                    3: 'Department admin',
+                    4: 'Department admin',
+                    5: 'Organization Owner'
+                  }
 
                   return (
                     <TableRow
@@ -311,26 +306,26 @@ export default function EnhancedTable() {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.name}
-                      selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
+                      <TableCell padding="normal">
+                        <Avatar>
+                          <ImageIcon/>
+                        </Avatar>
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="center">{row.email}</TableCell>
+                      <TableCell align="center">{permissionLevels[row.permissionLevel]}</TableCell>
+                      <TableCell align="center">{row.recentActivity}</TableCell>
+                      <TableCell align="center">
+                        {manage}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -347,10 +342,6 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </div>
   );
 }

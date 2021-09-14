@@ -1,0 +1,8 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+
+}
+.table{
+    width: 80%;
+}
