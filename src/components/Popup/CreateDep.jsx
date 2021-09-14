@@ -8,12 +8,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function CreateOrgPopup() {
+export default function CreateDep() {
 	
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
-  	const [organisation, setOrganisation] = useState("");
+  	const [department, setDepartment] = useState("");
 
 	let history = useHistory();
 
@@ -23,14 +23,14 @@ export default function CreateOrgPopup() {
   	};
 
   	const handleClickClose = () => {
-		setOrganisation("");
+		setDepartment("");
 		setAvailable(false);
 		setOpen(false);
   	};
 	
 	const handleOnChange = (e) => {
-		if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		if (e.target.id === "department") {
+			setDepartment(e.target.value);
 		}
     };
 
@@ -41,35 +41,17 @@ export default function CreateOrgPopup() {
 
   	const handleSearch = () => {
 		setFirstTry(false);
-		if (organisation === "") {
+		if (department === "") {
 			alert("Searching box cannot be empty") 
 			setAvailable(false);
 		} else {
-			if (organisation === "yyds") {
+			if (department === "yyds") {
 				setAvailable(false);
 			} else {
 				setAvailable(true);
 			}
 		}
-		
-		// Handle API *await
-		/*const info = {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-			body: JSON.stringify({"organisation": organisation})
-		};
-		const results = await fetch(process.env.REACT_APP_BASE_URL + "/organisation/search", info)
-		.then(res => {
-			if (res.ok) {
-				await setResults(res.json());
-				setAvailable(true);
-			} else {
-				setAvailable(false);
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-			}})
-		.catch(error => {alert(error);})*/
 	}
-
 
 	let button;
 	if (!available) {
@@ -81,24 +63,24 @@ export default function CreateOrgPopup() {
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Create a new organisation
+				Create a new department
 			</Button>
 			<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Creating</DialogTitle>
 				<DialogContent>
 				<DialogContentText>
-					Type the name of the orgnaisation.
+					Type the name of the department.
 				</DialogContentText>
 				<TextField
 					autoFocus
-					margin="dense"
-					id="organisation"
-					label="Organisation"
-					type="organisation"
 					fullWidth
+					margin="dense"
+					id="department"
+					type="department"
+					label="Department"
 					onChange={handleOnChange}
 					error={!available && !firstTry ? true : false}
-					helperText={available || firstTry ? "Let's start" : "The organisation name is invalid"}
+					helperText={available || firstTry ? "Let's start" : "The department name is invalid"}
 				/>
 				</DialogContent>
 				<DialogActions>
