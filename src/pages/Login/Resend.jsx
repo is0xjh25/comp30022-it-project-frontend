@@ -10,6 +10,7 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import handleResend from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -68,31 +69,19 @@ function Resend(props) {
 		return formIsValid;
 	};
 
-	const handleResend = () => {
-
-		const info = {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-			body: JSON.stringify({"email": email})
-		};
-
-		fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)
-		.then(res => {
-			if (res.ok) {
-				alert("Request is submitted. Please check your mailbox !");
-				history.push('/Login');
-			} else { res.json().then(bodyRes=>{alert(bodyRes.msg);});
-			}})
-		.catch(error => {alert(error);})
-	}
-
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
 
 		if (handleValidation()) {
-			alert("Please check your email");
-			handleResend();
+			handleResend(email).then(res => {
+				if (res.ok) {
+					alert("Request is submitted. Please check your mailbox !");
+					history.push('/Login');
+				} else {
+					res.json().then(bodyRes=>{alert(bodyRes.msg);});
+					history.push('/Login');
+				}}).catch(error => {alert(error);})
 		} else {
 		   	alert(error);
 		}

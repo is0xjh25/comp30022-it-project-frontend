@@ -11,6 +11,7 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
+import handleSignUp from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -132,35 +133,26 @@ function SignUp(props) {
 		return formIsValid;
 	};
 
-	const handleSignUp= () => {
+	const handleSubmit = (e) => {
 
-		const info = {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-			body: JSON.stringify({"email": email, "password": password, 
-				"firstName": firstName, "lastName": lastName, "phone": phone, "organisation": organisation})
-		};
+		e.preventDefault();
 
-		fetch(process.env.REACT_APP_BASE_URL + "/user", info)
-		.then(res => {
+		if (handleValidation()) {
+			handleSignUp (email, password, firstName, lastName, phone, organisation).then(res => {
 			if (res.ok) {
 				alert("Welcom to join ConnecTI !");
-				sessionStorage.setItem('Token', res.headers.get("Authorization"));
+				let data = res.headers.get("Authorization");
+				sessionStorage.setItem('Token', data);
 				history.push('/');
 			} else {
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-			}})
-		.catch(error => {alert(error);})
-	}
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (handleValidation()) {
-			handleSignUp();
+				history.push('/Login');
+			}
+			})
 		} else {
 		   	alert(error);
 		}
-	}
+	};
 
 	return (
 		<Container component="main" maxWidth="xs">

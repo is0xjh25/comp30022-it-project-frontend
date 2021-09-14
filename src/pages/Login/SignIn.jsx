@@ -13,7 +13,6 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
-
 import handleSignIn from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +102,6 @@ function SignIn(props) {
 		return formIsValid;
 	};
 
-
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
@@ -119,7 +117,6 @@ function SignIn(props) {
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
                 history.push('/Login');
 			}
-			
 			})
 		} else {
 		   	alert(error);

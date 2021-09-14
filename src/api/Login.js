@@ -1,7 +1,4 @@
-
-
-// Return token
-export default function handleSignIn(email, password) {
+function handleSignIn(email, password) {
 
     const info = {
         method: 'POST',
@@ -11,16 +8,53 @@ export default function handleSignIn(email, password) {
     return new Promise((resolve, reject) => {
         fetch(process.env.REACT_APP_BASE_URL + "/user/login", info)
         .then(res => {
-            // if (res.ok) {
-            //     let data = res.headers.get("Authorization");
-            //     if (remember) localStorage.setItem('Token', data);
-            //     sessionStorage.setItem('Token', data);
-            //     history.push('/');
-            // } else {
-            //     res.json().then(bodyRes=>{alert(bodyRes.msg);});
-            //     history.push('/Login');
             resolve(res)
-            })
-        .catch(error => {alert(error);})
+        })
+        .catch(error => {reject(error);})
     })
 }
+
+function handleResend(email) {
+
+    const info = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
+        body: JSON.stringify({"email": email})
+    };
+
+    return new Promise((resolve, reject) => {
+    fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)
+    .then(res => {
+        if (res.ok) {
+            resolve(res);
+        } else {
+            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+        }})
+    .catch(error => {reject(error);})
+    })
+}
+
+function handleSignUp (email, password, firstName, lastName, phone, organisation) {
+
+    const info = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
+        body: JSON.stringify({"email": email, "password": password, 
+            "firstName": firstName, "lastName": lastName, "phone": phone, "organisation": organisation})
+    };
+    return new Promise((resolve, reject) => {
+    fetch(process.env.REACT_APP_BASE_URL + "/user", info)
+    .then(res => {
+        if (res.ok) {
+            alert("Welcom to join ConnecTI !");
+            resolve(res);
+        } else {
+            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+        }})
+    .catch(error => {reject(error);})
+    })
+}
+
+
+
+export default {handleSignIn, handleResend, handleSignUp};
