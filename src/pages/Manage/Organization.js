@@ -162,9 +162,7 @@ export default function Organization() {
         </div>;
 
     if (loading) {
-        return <div>loading...
-        {testButton}
-        </div>
+        return <div>loading...</div>
     }
 
     // if (this.state.organisations.length()==0) {

@@ -8,6 +8,7 @@ import './Home.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../pages/Manage/Organization';
+import Department from '../../pages/Manage/Department';
 
 require('dotenv').config();
 
