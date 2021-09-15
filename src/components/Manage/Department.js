@@ -33,8 +33,6 @@ const useStyles = makeStyles((theme) => ({
         color: "primary.main",
     },
 
-    // 一个box的class，规定box css
-    // 三个不同颜色的css
     manageGrid: {
         alignItems: 'flex-start',
         direction: 'column',
@@ -102,6 +100,10 @@ export default function Department() {
     const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
+        setLoading(false);
+    }, [])
+
+    useEffect(() => {
         // fetch(url)
         //     .then(response => response.json())
         //     .then(json => console.log(json))
@@ -111,12 +113,6 @@ export default function Department() {
             {
                 "department_id": 1,
                 "name": "Department of Informatics",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "department_id": 2,
-                "name": "Department of Digimon",
                 "owner_id": 100,
                 "ownership": "own"
             },
@@ -134,37 +130,17 @@ export default function Department() {
             }
         ]
         return () => {
-            // setLoading(false);
             setDepartments(data);
         }
     }, [loading])
-    
-
-    // identify organisation data from json
-    // create different boxes for different authority levels
-    // boxes has link buttons directs to department pages
- 
         
     const classes = useStyles();
 
-    // console.log(this.state.loading);
-    // console.log(this.state.organisations);
-
-    const testButton = <div>
-            <Button onClick = {() => setLoading(false)}>test</Button>
-        </div>;
-
     if (loading) {
         return <div>loading...
-        {testButton}
         </div>
     }
 
-    // if (departments.length()==0) {
-    //     return <div>No valid department</div>
-    // }
-
-    
     const output = [];
     departments.map((department) => {
         output.push(

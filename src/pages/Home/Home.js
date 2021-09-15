@@ -4,11 +4,10 @@ import {Link} from 'react-router-dom';
 import './Home.css';
 
 
-
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
-import Organization from '../../pages/Manage/Organization';
-import Department from '../../pages/Manage/Department';
+import Organization from '../../components/Manage/Organization';
+import Department from '../../components/Manage/Department';
 
 require('dotenv').config();
 
@@ -34,8 +33,13 @@ class Home extends React.Component {
 
     if(this.state.selectedPage === 'Manage') {
       body = (
-        // <Members></Members>
-        <Organization></Organization>
+        <Organization changePage={this.changePage}></Organization>
+      )
+    }
+
+    if(this.state.selectedPage === 'Department') {
+      body = (
+        <Department></Department>
       )
     }
 

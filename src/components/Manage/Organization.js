@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Organization() {
+export default function Organization({changePage}) {
     // read in the user's organisation info from backend api
 
     const [login] = useState(true);
@@ -141,40 +141,29 @@ export default function Organization() {
             }
         ]
         return () => {
-            // setLoading(false);
             setOrganizations(data);
         }
     }, [loading])
     
-
-    // identify organisation data from json
-    // create different boxes for different authority levels
-    // boxes has link buttons directs to department pages
- 
-        
     const classes = useStyles();
-
-    // console.log(this.state.loading);
-    // console.log(this.state.organisations);
-
-    const testButton = <div>
-            <Button onClick = {() => setLoading(false)}>test</Button>
-        </div>;
-
+ 
     if (loading) {
         return <div>loading...</div>
     }
 
-    // if (this.state.organisations.length()==0) {
-    //     return <div>No valid organisation</div>
+    // function MyChild({ name, onNameChange }) {
+
+    //     const handleInputChange = useCallback(event => {
+    //       onNameChange(event.target.value)
+    //     }, [onNameChange])
     // }
 
     const showDepartment = (orgName) => {
         // login ? 
-            return <Department></Department> 
-            // : <Typography>Not logged in QAQ</Typography>
+        changePage('Department');
+        // return <Department></Department> 
+        // : <Typography>Not logged in QAQ</Typography>
     };
-
     
     const orgs = [];
     organizations.map((org) => {
@@ -182,7 +171,7 @@ export default function Organization() {
             org.ownership === "own" ? 
                 <Grid item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center' onClick={() => showDepartment(org.name) }>
+                        <Button alignItems='center' onClick={() => showDepartment(org.name)}>
                             {org.name}
                         </Button>
 
@@ -198,7 +187,7 @@ export default function Organization() {
             :
                 <Grid item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
-                        <Button>
+                        <Button onClick={() => showDepartment(org.name)}>
                             {org.name}
                         </Button>
                     </Box>
