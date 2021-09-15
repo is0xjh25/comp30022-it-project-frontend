@@ -11,7 +11,7 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
-import handleSignUp from '../../api/Login';
+import { handleSignUp } from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {

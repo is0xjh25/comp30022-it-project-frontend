@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {handleSearchOrg, handleJoinOrg} from '../../api/Login';
 
 export default function JoinOrg() {
 	
@@ -15,11 +16,10 @@ export default function JoinOrg() {
 	const [firstTry, setFirstTry] = useState(true);
 	const [available, setAvailable] = useState(false);
   	const [organisation, setOrganisation] = useState("");
-	const [selected, setSelected] = useState("");
+	const [selected, setSelected] = useState(0);
 	const [results, setResults] = useState([]);
 
-	useEffect(() => {
-        const data = [
+	/*        const data = [
             {
                 "name": "University of Melbourne",
                 "owner_id": 111,
@@ -36,12 +36,7 @@ export default function JoinOrg() {
                 "name": "University of Tokyo",
                 "owner_id": 444,
             }
-        ]
-        return () => {
-            // setLoading(false);
-            setResults(data);
-        }
-    }, [available])
+        ]*/
 
 	const handleClickOpen = () => {
 	  setFirstTry(true);
@@ -66,26 +61,33 @@ export default function JoinOrg() {
 
   	const handleSearch = () => {
 		
-		setFirstTry(false);
-
-		if (organisation === "") {
-			alert("Searching box cannot be empty")
-			setAvailable(false);
-		} else if (organisation === "uni") {
-			setAvailable(true);
+		if (organisation !== true) {
+			setFirstTry(false);
+			handleSearchOrg(organisation).then(res => {
+			if (res.ok) {
+				let data = JSON.parse(res.json());
+				if (data !== null) {
+					setResults(data);
+					setAvailable(true)
+					handleResult();
+				} else {
+					setAvailable(false);
+				}
+            } else {
+                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+			}
+			})
 		} else {
-			setAvailable(false);
+			alert("Typing box cannot be empty") 
 		}
 	}
 
 	const handleResult = () => {
-
 		return (
-
 			<div>
 			<ToggleButtonGroup orientation="vertical" value={selected} exclusive onChange={handleSelected}>
 				{results.map((org) => (
-					<ToggleButton value={org.name} aria-label={org.name}>
+					<ToggleButton value={org.id} aria-label={org.name}>
 						{org.name}
 					</ToggleButton>
 				))}			
@@ -95,9 +97,14 @@ export default function JoinOrg() {
 	}
 
 	const handleJoin = () =>{
+		handleJoinOrg(selected).then(res => {
+			if (res.ok) {
+				alert("Successfully join");
+            } else {
+                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+			}
+		})
 		handleClickClose();
-		setFirstTry(true);
-		setAvailable(false);
 	}
 
 	let button;

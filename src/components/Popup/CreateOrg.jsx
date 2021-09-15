@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {handleCreateOrg} from '../../api/Login';
 
 export default function CreateOrg() {
 	
@@ -32,29 +33,22 @@ export default function CreateOrg() {
     };
 
 	const handleCreate = () =>{
-		handleClickClose();
-	}
-
-  	const handleSearch = () => {
-		setFirstTry(false);
-		if (organisation === "") {
-			alert("Searching box cannot be empty") 
-			setAvailable(false);
-		} else {
-			if (organisation === "yyds") {
-				setAvailable(false);
-			} else {
+		if (organisation !== "") {
+			setFirstTry(false);
+			handleCreateOrg(organisation).then(res => {
+			if (res.ok) {
+				alert("Successfully created");
 				setAvailable(true);
+				handleClickClose();
+            } else {
+				// 重複名字會返回什麼？
+				setAvailable(false);
+                res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
+			})
+		} else {
+			alert("Typing box cannot be empty");
 		}
-	}
-
-
-	let button;
-	if (!available) {
-		button = <Button onClick={handleSearch} color="primary"> Create </Button>
-	} else {
-		button = <Button onClick={handleCreate}  color="primary"> Confirm </Button>
 	}
 
 	return (
@@ -84,7 +78,9 @@ export default function CreateOrg() {
 				<Button onClick={handleClickClose} color="primary">
 					Cancel
 				</Button>
-				{button}
+				<Button onClick={handleCreate} color="primary"> 
+					Create 
+				</Button>
 				</DialogActions>
 			</Dialog>
 		</div>

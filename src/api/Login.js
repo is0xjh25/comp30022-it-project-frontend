@@ -1,3 +1,6 @@
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+// Handle sign in
 function handleSignIn(email, password) {
 
     const info = {
@@ -5,8 +8,9 @@ function handleSignIn(email, password) {
         headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
         body: JSON.stringify({"email": email, "password": password})
     };
+
     return new Promise((resolve, reject) => {
-        fetch(process.env.REACT_APP_BASE_URL + "/user/login", info)
+        fetch(process.env.BASE_URL + "/user/login", info)
         .then(res => {
             resolve(res)
         })
@@ -14,6 +18,7 @@ function handleSignIn(email, password) {
     })
 }
 
+// Handle Resend
 function handleResend(email) {
 
     const info = {
@@ -34,6 +39,7 @@ function handleResend(email) {
     })
 }
 
+// Handle sign up
 function handleSignUp (email, password, firstName, lastName, phone, organisation) {
 
     const info = {
@@ -42,11 +48,11 @@ function handleSignUp (email, password, firstName, lastName, phone, organisation
         body: JSON.stringify({"email": email, "password": password, 
             "firstName": firstName, "lastName": lastName, "phone": phone, "organisation": organisation})
     };
+
     return new Promise((resolve, reject) => {
-    fetch(process.env.REACT_APP_BASE_URL + "/user", info)
+    fetch(BASE_URL + "/user", info)
     .then(res => {
         if (res.ok) {
-            alert("Welcom to join ConnecTI !");
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
@@ -55,6 +61,8 @@ function handleSignUp (email, password, firstName, lastName, phone, organisation
     })
 }
 
-
-
-export default {handleSignIn, handleResend, handleSignUp};
+module.exports = {
+    handleSignIn, 
+    handleResend, 
+    handleSignUp
+}
