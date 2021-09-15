@@ -5,14 +5,10 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import Box from '@material-ui/core/Box';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-
-import CreateOrg from '../../components/Popup/CreateOrg';
-import JoinOrg from '../../components/Popup/JoinOrg';
-import CreateDep from '../../components/Popup/CreateDep';
-import JoinDep from '../../components/Popup/JoinDep';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -37,9 +33,7 @@ const useStyles = makeStyles((theme) => ({
         color: "primary.main",
     },
 
-    // 一个box的class，规定box css
-    // 三个不同颜色的css
-    orgGrid: {
+    manageGrid: {
         alignItems: 'flex-start',
         direction: 'column',
         justifyContent: 'space-around',
@@ -56,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     ownBox: {
         // marginTop: theme.spacing(3),
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -69,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     },
     memberBox: {
         display: 'flex',
-        flexDirection: 'rous',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -80,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
     plusBox: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         height: 60,
         border: 4,
@@ -89,13 +83,25 @@ const useStyles = makeStyles((theme) => ({
         // alignItems: 'center',
         // color: theme.palette.success.main,
     },
+    transferOwnerButton: {
+        position: 'absolute',
+        right: 300
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: 250,
+    }
 }));
 
-export default function Organisation() {
+export default function Department() {
     // read in the user's organisation info from backend api
 
     const [loading, setLoading] = useState(true);
-    const [organizations, setOrganizations] = useState([]);
+    const [departments, setDepartments] = useState([]);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [])
 
     useEffect(() => {
         // fetch(url)
@@ -105,93 +111,63 @@ export default function Organisation() {
         // make up some fake data for testing
         const data = [
             {
-                "organization_id": 1,
-                "name": "University of Melbourne",
+                "department_id": 1,
+                "name": "Department of Informatics",
                 "owner_id": 100,
                 "ownership": "own"
             },
             {
-                "organization_id": 2,
-                "name": "University of Sydeny",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "organization_id": 3,
-                "name": "Peking University",
+                "department_id": 3,
+                "name": "Department of Room Service",
                 "owner_id": 200,
                 "ownership": "member"
             },
             {
-                "organization_id": 4,
-                "name": "University of Tokyo",
+                "department_id": 4,
+                "name": "Department of Department",
                 "owner_id": 300,
                 "ownership": "member"
             }
         ]
         return () => {
-            // setLoading(false);
-            setOrganizations(data);
+            setDepartments(data);
         }
     }, [loading])
-    
-
-    // identify organisation data from json
-    // create different boxes for different authority levels
-    // boxes has link buttons directs to department pages
- 
         
     const classes = useStyles();
 
-    // console.log(this.state.loading);
-    // console.log(this.state.organisations);
-
-    const testButton = <div>
-            <Button onClick = {() => setLoading(false)}>test</Button>
-        </div>;
-
     if (loading) {
         return <div>loading...
-        {testButton}
         </div>
     }
 
-    // if (this.state.organisations.length()==0) {
-    //     return <div>No valid organisation</div>
-    // }
+    const output = [];
+    departments.map((department) => {
+        output.push(
+            department.ownership === "own" ? 
+                <Grid item alignItems={'center'} xs={8}>
+                    <Box className={classes.ownBox} bgcolor="success.main">
+                        <Button alignItems='center'>
+                            {department.name}
+                        </Button>
 
-    
-    const orgs = [];
-    organizations.map((org) => {
-        orgs.push(
-            org.ownership === "own" ? 
-                // <div key={org.organization_id}>
-                    <Grid item alignItems={'center'} xs={8}>
-                        <Box className={classes.ownBox} bgcolor="success.main">
-                            <Button alignItems='center'>
-                                {org.name}
-                            </Button>
-
-                            <IconButton aria-label="personOutlined">
-                                <PersonOutlineOutlinedIcon />
-                            </IconButton>
-                            
-                            <IconButton aria-label="delete">
-                                <DeleteIcon />
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                // </div>
+                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
+                            <PersonOutlineOutlinedIcon />
+                        </IconButton>
+                        
+                        <IconButton aria-label="delete" className={classes.deleteButton}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
+                </Grid>
             :
-                // <div key={org.organization_id}>
-                    <Grid item alignItems="center" xs={8}>
-                        <Box className={classes.memberBox} bgcolor="info.main">
-                            <Button>
-                                {org.name}
-                            </Button>
-                        </Box>
-                    </Grid>
-                // </div>
+                <Grid item alignItems="center" xs={8}>
+                    <Box className={classes.memberBox} bgcolor="info.main">
+                        <Button>
+                            {department.name}
+                        </Button>
+                    </Box>
+                </Grid>
         )
         
     });
@@ -199,14 +175,14 @@ export default function Organisation() {
     return (
         <div>
             <Typography className={classes.topic}>
-                My Orgnizations
+                My Departments
             </Typography>
-            <Grid className={classes.orgGrid} container spacing={5}>
-                {orgs}
+            <Grid className={classes.manageGrid} container spacing={5}>
+                {output}
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateDep /> + <JoinDep />
+                            +
                         </Button>
                     </Box>
                 </Grid>
