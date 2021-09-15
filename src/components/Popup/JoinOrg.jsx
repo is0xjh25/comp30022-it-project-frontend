@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -43,8 +42,6 @@ export default function JoinOrg() {
             setResults(data);
         }
     }, [available])
-	
-	let history = useHistory();
 
 	const handleClickOpen = () => {
 	  setFirstTry(true);
@@ -73,7 +70,7 @@ export default function JoinOrg() {
 
 		if (organisation === "") {
 			alert("Searching box cannot be empty")
-			setAvailable(true);
+			setAvailable(false);
 		} else if (organisation === "uni") {
 			setAvailable(true);
 		} else {

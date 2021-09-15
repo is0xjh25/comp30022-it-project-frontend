@@ -8,11 +8,9 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
-import CreateDep from '../../components/Popup/CreateDep';
-import JoinDep from '../../components/Popup/JoinDep';
+
 
 import Department from './Department';
 
@@ -210,7 +208,7 @@ export default function Organization({changePage}) {
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateDep /> + <JoinDep />
+                        <CreateOrg /> + <JoinOrg />
                         </Button>
                     </Box>
                 </Grid>

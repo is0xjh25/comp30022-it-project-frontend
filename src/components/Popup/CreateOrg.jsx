@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,8 +13,6 @@ export default function CreateOrg() {
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
   	const [organisation, setOrganisation] = useState("");
-
-	let history = useHistory();
 
   	const handleClickOpen = () => {
     	setFirstTry(true);
@@ -36,7 +33,6 @@ export default function CreateOrg() {
 
 	const handleCreate = () =>{
 		handleClickClose();
-		history.push('/org');
 	}
 
   	const handleSearch = () => {
@@ -51,23 +47,6 @@ export default function CreateOrg() {
 				setAvailable(true);
 			}
 		}
-		
-		// Handle API *await
-		/*const info = {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-			body: JSON.stringify({"organisation": organisation})
-		};
-		const results = await fetch(process.env.REACT_APP_BASE_URL + "/organisation/search", info)
-		.then(res => {
-			if (res.ok) {
-				await setResults(res.json());
-				setAvailable(true);
-			} else {
-				setAvailable(false);
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-			}})
-		.catch(error => {alert(error);})*/
 	}
 
 

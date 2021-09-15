@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,8 +13,6 @@ export default function CreateDep() {
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
   	const [department, setDepartment] = useState("");
-
-	let history = useHistory();
 
   	const handleClickOpen = () => {
     	setFirstTry(true);
@@ -36,7 +33,6 @@ export default function CreateDep() {
 
 	const handleCreate = () =>{
 		handleClickClose();
-		history.push('/org');
 	}
 
   	const handleSearch = () => {

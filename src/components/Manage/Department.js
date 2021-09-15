@@ -9,6 +9,8 @@ import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router-dom';
+import CreateDep from '../../components/Popup/CreateDep';
+import JoinDep from '../../components/Popup/JoinDep';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -182,7 +184,7 @@ export default function Department() {
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            +
+                        <CreateDep />+
                         </Button>
                     </Box>
                 </Grid>

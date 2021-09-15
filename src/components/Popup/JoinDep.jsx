@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -41,8 +40,6 @@ export default function JoinDep() {
         }
     })
 	
-	let history = useHistory();
-
 	const handleClickOpen = () => {
 	  setOpen(true);
 	};
@@ -72,7 +69,6 @@ export default function JoinDep() {
 				))}			
 	  			</ToggleButtonGroup>;
 	} else {
-		console.log("!!!");
 		join = "Back";
 		display = <div style = {{color:"red"}}>There is no department in this organisation</div>;
 	}
