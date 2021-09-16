@@ -1,6 +1,5 @@
 // Reference: https://material-ui.com/components/tables/#sorting-amp-selecting
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -28,30 +27,19 @@ import Button from '@material-ui/core/Button';
 import Delete from '@material-ui/icons/Delete';
 import Mail from '@material-ui/icons/MailOutline';
 import EditPermission from '@material-ui/icons/Person';
-
-import {getAllUsers, acceptUser, declineUser} from '../../api/Manage';
+import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
+import SelectDialog from '../Dialog/SelectDialog';
 
-function createData(name, email, permissionLevel, recentActivity) {
-  const manage = permissionLevel === 0 ? 0 : 6 - permissionLevel;
-  return { name, email, permissionLevel, recentActivity, manage };
-}
 
-const rows = [
-  createData('Member1', 'example@email.com', 1, 'timestamp'),
-  createData('Member2', 'example@email.com', 2, 'timestamp'),
-  createData('Member3', 'example@email.com', 1, 'timestamp'),
-  createData('Member4', 'example@email.com', 1, 'timestamp'),
-  createData('Member5', 'example@email.com', 1, 'timestamp'),
-  createData('Member6', 'example@email.com', 1, 'timestamp'),
-  createData('Member7', 'example@email.com', 1, 'timestamp'),
-  createData('Member8', 'example@email.com', 1, 'timestamp'),
-  createData('Member9', 'example@email.com', 1, 'timestamp'),
-  createData('Member10', 'example@email.com', 1, 'timestamp'),
-  createData('Member11', 'example@email.com', 0, 'timestamp'),
-  createData('Member12', 'example@email.com', 0, 'timestamp'),
-  createData('Member13', 'example@email.com', 5, 'timestamp'),
-];
+
+// function createData(name, email, authorityLevel, recentActivity) {
+
+//   const manage = authorityLevel === 0 ? 0 : 6 - authorityLevel;
+//   return { name, email, authorityLevel, recentActivity, manage };
+// }
+
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -167,14 +155,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const permissionLevels = [
+  'Pending to join',
+  'Member',
+  'Department admin',
+  'Department admin',
+  'Department admin',
+  'Organization Owner'
+]
+
+// Table to display members
 export default function EnhancedTable(props) {
+  //================ Data from parent ==================
   const currentUser = props.currentUser;
+  const departmentId = props.departmentId
+
+  //================ Table settings ==================
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('manage');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('manage');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
+  useEffect(function fetchTableData() {
+    if (departmentId) {
+      getAllUsers(departmentId, 1).then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          const data = res.data
+          const records = data.records
+          records.forEach(row => {
+            row.name = row.firstName + ' ' + row.lastName
+          });
+          console.log(records);
+          setRows(records);
+        }
+
+      });
+    }
+  }, [])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -210,7 +230,6 @@ export default function EnhancedTable(props) {
 
     setSelected(newSelected);
   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -220,17 +239,51 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  // const handleChangeDense = (event) => {
-  //   setDense(event.target.checked);
-  // };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+
+  //================ Alert Dialog ==================
+  const [alertTitle, setAlertTitle] = useState('Delete Confirm')
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [handleConfirm, setHandleConfirm] = useState(() => () => {});
+
+
+  //================ Select Dialog ==================
+  const items = permissionLevels.map((item, index) => {
+    return {value: index, name: item}
+  });
+  var currentSelect;
+  const [selectOpen, setSelectOpen] = useState(true);
+  const [selectChange, setSelectChange] = useState(() => () => {});
+  const [selectClose, setSelectClose] = useState(() => () => {});
+  const [selectConfirm, setSelectConfirm] = useState(() => () => {});
+
+
+
+
+
   return (
     <div className={classes.root}>
-      <AlertDialog alertTitle='Delete Confirm' alertMessage='Do you want to kick this member?' open/>
+      <AlertDialog alertTitle={alertTitle}
+        alertMessage={alertMessage}
+        open={alertOpen}
+        handleClose={() => { setAlertOpen(false) }}
+        handleConfirm={handleConfirm}
+        handleCancel={() => { setAlertOpen(false) }} />
+
+      <SelectDialog
+        items={items}
+        currentSelected={currentSelect}
+        title="Change the role of this member"
+        label="Role"
+        open={selectOpen}
+        handlleChange={selectChange}
+        handleClose={selectClose}
+        handleConfirm={selectConfirm}
+      />
       <Paper className={classes.paper}>
         {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
@@ -253,50 +306,68 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  if (row.permissionLevel < 0) {
+                    return;
+                  }
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const handleDelete = () => {
+                    setAlertOpen(true);
+                    setAlertMessage('Do you want to kick ' + row.name + '?');
+                    setHandleConfirm(() => () => {
+                      deleteUser(row.userId, departmentId);
+                      alert(row.name + 'is kicked!');
+                      setAlertOpen(false);
+                    });
+                  }
+
+                  const handleAccept = () => {
+                    acceptUser(row.userId, departmentId);
+                    alert(row.name + 'is accepted');
+                    row.permissionLevel = 1;
+                  }
+
+                  const handleDecline = () => {
+                    declineUser(row.userId, departmentId);
+                    alert(row.name + 'is declined');
+                    row.authorityLevel = -1;
+                  }
+
                   var manage;
-                  if(row.permissionLevel === 0) {
+                  if (row.authorityLevel === 0) {
                     manage = (
                       <div>
-                        <Button variant='contained'>
-                            Accept
+                        <Button variant='contained' onClick={handleAccept}>
+                          Accept
                         </Button>
-                        <Button variant='outlined'>
-                            Decline
+                        <Button variant='outlined' onClick={handleDecline}>
+                          Decline
                         </Button>
                       </div>)
-                  }else if(currentUser && currentUser.permissionLevel > row.permissionLevel) {
+                  } else if (currentUser && currentUser.authorityLevel > row.authorityLevel) {
                     manage = (
-                      <div> 
+                      <div>
                         <IconButton>
-                          <EditPermission/>
+                          <EditPermission />
                         </IconButton>
                         <IconButton>
-                          <Mail/>
+                          <Mail />
                         </IconButton>
-                        <IconButton>
-                          <Delete/>
+                        <IconButton onClick={handleDelete}>
+                          <Delete />
                         </IconButton>
                       </div>
                     )
-                  }else {
+                  } else {
                     manage = (
-                      <div> 
+                      <div>
                         <IconButton>
-                          <Mail/>
+                          <Mail />
                         </IconButton>
                       </div>
                     )
                   }
-                  const permissionLevels = {
-                    0: 'Pending to join',
-                    1: 'Member',
-                    2: 'Department admin',
-                    3: 'Department admin',
-                    4: 'Department admin',
-                    5: 'Organization Owner'
-                  }
+
 
                   return (
                     <TableRow
@@ -305,18 +376,18 @@ export default function EnhancedTable(props) {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.userId}
                     >
                       <TableCell padding="normal">
                         <Avatar>
-                          <ImageIcon/>
+                          <ImageIcon />
                         </Avatar>
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{permissionLevels[row.permissionLevel]}</TableCell>
+                      <TableCell align="center">{permissionLevels[row.authorityLevel]}</TableCell>
                       <TableCell align="center">{row.recentActivity}</TableCell>
                       <TableCell align="center">
                         {manage}

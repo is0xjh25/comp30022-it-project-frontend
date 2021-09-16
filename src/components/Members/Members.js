@@ -120,7 +120,7 @@ class Members extends React.Component {
             <div>
                 <SearchBar />
                 <div className='table-container'>
-                    <Table className='table' currentUser={mockUser}></Table>
+                    <Table className='table' currentUser={mockUser} departmentId={5}></Table>
                 </div>
                 
             </div>
