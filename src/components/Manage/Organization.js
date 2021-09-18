@@ -10,9 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
-
-
-import Department from './Department';
+import {getOrganization} from '../../api/Manage';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -99,54 +97,27 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Organization({changePage}) {
+export default function Organization(props) {
     // read in the user's organisation info from backend api
-
-    const [login] = useState(true);
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
 
     useEffect(() => {
-        setLoading(false);
+        getOrganization().then(res => {
+            if (res.ok) {
+                res.json().then(body => {setOrganizations(body.data)});
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        }).then(() => {
+            setLoading(false);
+            if (organizations.length === 0) {
+                return <div>You have not joined any organization yet.</div>
+            }
+        })
     }, [])
 
-    useEffect(() => {
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(json => console.log(json))
 
-        // make up some fake data for testing
-        const data = [
-            {
-                "organization_id": 1,
-                "name": "University of Melbourne",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "organization_id": 2,
-                "name": "University of Sydeny",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "organization_id": 3,
-                "name": "Peking University",
-                "owner_id": 200,
-                "ownership": "member"
-            },
-            {
-                "organization_id": 4,
-                "name": "University of Tokyo",
-                "owner_id": 300,
-                "ownership": "member"
-            }
-        ]
-        return () => {
-            setOrganizations(data);
-        }
-    }, [loading])
-    
     const classes = useStyles();
  
     if (loading) {
@@ -160,9 +131,12 @@ export default function Organization({changePage}) {
     //     }, [onNameChange])
     // }
 
-    const showDepartment = (orgName) => {
+    const showDepartment = (event, e) => {
         // login ? 
-        changePage('Department');
+        console.log(event)
+        console.log("*********")
+        props.changePage('Department');
+        // props.changeOrg(e);
         // return <Department></Department> 
         // : <Typography>Not logged in QAQ</Typography>
     };
@@ -173,7 +147,7 @@ export default function Organization({changePage}) {
             org.ownership === "own" ? 
                 <Grid item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center' onClick={() => showDepartment(org.name)}>
+                        <Button alignItems='center' value={org.id} onClick={showDepartment}>
                             {org.name}
                         </Button>
 
@@ -189,7 +163,7 @@ export default function Organization({changePage}) {
             :
                 <Grid item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
-                        <Button onClick={() => showDepartment(org.name)}>
+                        <Button onClick={() => showDepartment(org.organization_id)}>
                             {org.name}
                         </Button>
                     </Box>

@@ -17,9 +17,11 @@ class Home extends React.Component {
     super(props);
     // Use state to control current viewing page
     this.state = {
-      selectedPage: 'dashboard'
+      selectedPage: 'dashboard',
+      organizationDisplay: -1
     };
     this.changePage = this.changePage.bind(this);
+    this.changeOrg = this.changeOrg.bind(this);
   }
 
   changePage(nowSelected) {
@@ -28,18 +30,25 @@ class Home extends React.Component {
     })
   }
 
+  changeOrg(organization_id) {
+    this.setState({
+      organizationDisplay: organization_id
+    })
+  }
+
   render() {
     var body;
 
     if(this.state.selectedPage === 'Manage') {
       body = (
-        <Organization changePage={this.changePage}></Organization>
+        <Organization changePage={this.changePage} changeOrg={this.changeOrg}/>
       )
     }
 
     if(this.state.selectedPage === 'Department') {
+      console.log(this.state.organizationDisplay)
       body = (
-        <Department></Department>
+        <Department organization_id={this.state.organizationDisplay}/>
       )
     }
 

@@ -148,6 +148,48 @@ function handleCreateDep(organisationId, department) {
     })
 }
 
+function getOrganization() {
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getToken()},
+    }
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + '/organization/myOrganization', info)
+        .then(res => {
+            if (res.ok) {
+                resolve(res);
+            } else {
+                res.json().then(bodyRes => {alert(bodyRes.msg)});
+            }
+        })
+        .catch(error => {reject(error)})
+    })
+}
+
+function getDepartment(organization_id) {
+    console.log(organization_id);
+    const info = {
+        method: 'GET',
+        headers: {
+            'Authorization': getToken(),
+            'Origin': process.env.ORIGIN_URL
+    },
+    }
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + `/organization/departments?organization_id=${organization_id}`, info)
+        
+        // 'https://comp30022-team35-backend.herokuapp.com/organization/departments?organization_id=65'
+        .then(res => {
+            if (res.ok) {
+                resolve(res);
+            } else {
+                res.json().then(bodyRes => {alert(bodyRes.msg)});
+            }
+        })
+        .catch(error => {reject(error)})
+    })
+}
+
 module.exports = {
     getAllUsers,
     acceptUser,
@@ -155,5 +197,7 @@ module.exports = {
     handleSearchOrg,
     handleJoinOrg,
     handleCreateOrg,
-    handleCreateDep
+    handleCreateDep,
+    getOrganization,
+    getDepartment
 }
