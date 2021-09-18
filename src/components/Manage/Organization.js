@@ -102,7 +102,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Organization({changePage}) {
     // read in the user's organisation info from backend api
 
-    const [login] = useState(true);
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
 
@@ -111,10 +110,6 @@ export default function Organization({changePage}) {
     }, [])
 
     useEffect(() => {
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(json => console.log(json))
-
         // make up some fake data for testing
         const data = [
             {
@@ -153,18 +148,8 @@ export default function Organization({changePage}) {
         return <div>loading...</div>
     }
 
-    // function MyChild({ name, onNameChange }) {
-
-    //     const handleInputChange = useCallback(event => {
-    //       onNameChange(event.target.value)
-    //     }, [onNameChange])
-    // }
-
     const showDepartment = (orgName) => {
-        // login ? 
         changePage('Department');
-        // return <Department></Department> 
-        // : <Typography>Not logged in QAQ</Typography>
     };
     
     const orgs = [];
