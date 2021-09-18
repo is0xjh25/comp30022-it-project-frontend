@@ -1,18 +1,21 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+function getToken() {
+    return sessionStorage.getItem('Token');
+}
+
 // Get customer's information
-function handleShowCustomer (customerId) {
+function handleDisplayCustomer (customerId) {
 
     const info = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"email":customerId})
+        method: 'GET',
+        headers: {'Authorization': getToken()},
     };
+
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/contact/detail", info)
+    fetch(BASE_URL + `/contact/detail?client_id=${customerId}`, info)
     .then(res => {
-        if (res.ok) {
-            alert("Welcom to join ConnecTI !");
+        if (res.ok) {   
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
@@ -22,5 +25,5 @@ function handleShowCustomer (customerId) {
 }
 
 module.exports = {
-    handleShowCustomer
+    handleDisplayCustomer
 }

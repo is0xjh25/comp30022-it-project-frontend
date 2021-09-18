@@ -19,7 +19,6 @@ function getAllUsers(departmentId) {
         method: 'GET',
         headers: {
             Authorization: getToken(),
-
         }
     }
 

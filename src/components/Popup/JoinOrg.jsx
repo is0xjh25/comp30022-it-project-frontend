@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -65,7 +65,7 @@ export default function JoinOrg() {
 	}
 
 	const handleResult = () => {
-		return (
+		 return (
 			<div>
 			<ToggleButtonGroup orientation="vertical" value={selected} exclusive onChange={handleSelected}>
 				{results.map((org) => (
