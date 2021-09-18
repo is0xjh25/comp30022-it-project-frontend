@@ -13,7 +13,7 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
-import handleSignIn from '../../api/Login';
+import { handleSignIn } from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {

@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {handleCreateOrg} from '../../api/Manage';
 
 export default function CreateOrg() {
 	
@@ -28,33 +29,26 @@ export default function CreateOrg() {
 	const handleOnChange = (e) => {
 		if (e.target.id === "organisation") {
 			setOrganisation(e.target.value);
+			setFirstTry(true);
 		}
     };
 
 	const handleCreate = () =>{
-		handleClickClose();
-	}
-
-  	const handleSearch = () => {
-		setFirstTry(false);
-		if (organisation === "") {
-			alert("Searching box cannot be empty") 
-			setAvailable(false);
-		} else {
-			if (organisation === "yyds") {
-				setAvailable(false);
-			} else {
+		if (organisation !== "") {
+			handleCreateOrg(organisation).then(res => {
+			if (res.ok) {
+				alert("Successfully created");
 				setAvailable(true);
+				handleClickClose();
+            } else {
+				setAvailable(false);
+				setFirstTry(false);
+                res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
+			})
+		} else {
+			alert("Typing box cannot be empty");
 		}
-	}
-
-
-	let button;
-	if (!available) {
-		button = <Button onClick={handleSearch} color="primary"> Create </Button>
-	} else {
-		button = <Button onClick={handleCreate}  color="primary"> Confirm </Button>
 	}
 
 	return (
@@ -84,7 +78,9 @@ export default function CreateOrg() {
 				<Button onClick={handleClickClose} color="primary">
 					Cancel
 				</Button>
-				{button}
+				<Button onClick={handleCreate} color="primary"> 
+					Create 
+				</Button>
 				</DialogActions>
 			</Dialog>
 		</div>
