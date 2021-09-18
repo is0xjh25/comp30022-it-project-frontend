@@ -48,7 +48,7 @@ class Home extends React.Component {
     if(this.state.selectedPage === 'Department') {
       console.log(this.state.organizationDisplay)
       body = (
-        <Department organization_id={this.state.organizationDisplay}/>
+        <Department organization={this.state.organizationDisplay}/>
       )
     }
 

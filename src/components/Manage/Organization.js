@@ -127,10 +127,7 @@ export default function Organization(props) {
 
 
     const showDepartment = (id) => {
-        // login ? 
-        console.log(organizations)
-        console.log(id)
-        console.log("*********")
+        // // login ? 
         props.changePage('Department');
         props.changeOrg(id);
         // return <Department></Department> 
@@ -139,7 +136,6 @@ export default function Organization(props) {
     
     const orgs = 
         organizations.map((org) => {
-            console.log(org.id)
             return(
                 org.ownership === "own" ? 
                     <Grid item alignItems={'center'} xs={8}>
@@ -160,7 +156,7 @@ export default function Organization(props) {
                 :
                     <Grid item alignItems="center" xs={8}>
                         <Box className={classes.memberBox} bgcolor="info.main">
-                            <Button onClick={() => showDepartment(org.organization_id)}>
+                            <Button onClick={() => showDepartment(org.id)}>
                                 {org.name}
                             </Button>
                         </Box>

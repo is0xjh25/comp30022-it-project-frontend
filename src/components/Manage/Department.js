@@ -94,17 +94,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Department(organization_id) {
+export default function Department(organization) {
     // read in the user's organisation info from backend api
 
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
-        console.log("!!!!!!!!!!")
-        console.log(organization_id)
-        getDepartment(organization_id).then(res => {
-            console.log(res);
+        // console.log("!!!!!!!!!!")
+        // console.log(JSON.stringify(organization_id))
+        // console.log(organization)
+        const id = organization.organization_id;
+        getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {setDepartments(body.data)});
             } else {
@@ -117,37 +118,6 @@ export default function Department(organization_id) {
             }
         })
     }, [])
-
-    // useEffect(() => {
-    //     // fetch(url)
-    //     //     .then(response => response.json())
-    //     //     .then(json => console.log(json))
-
-    //     // make up some fake data for testing
-    //     const data = [
-    //         {
-    //             "department_id": 1,
-    //             "name": "Department of Informatics",
-    //             "owner_id": 100,
-    //             "ownership": "own"
-    //         },
-    //         {
-    //             "department_id": 3,
-    //             "name": "Department of Room Service",
-    //             "owner_id": 200,
-    //             "ownership": "member"
-    //         },
-    //         {
-    //             "department_id": 4,
-    //             "name": "Department of Department",
-    //             "owner_id": 300,
-    //             "ownership": "member"
-    //         }
-    //     ]
-    //     return () => {
-    //         setDepartments(data);
-    //     }
-    // }, [loading])
 
     const classes = useStyles();
 

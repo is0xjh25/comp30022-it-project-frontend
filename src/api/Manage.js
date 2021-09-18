@@ -167,7 +167,6 @@ function getOrganization() {
 }
 
 function getDepartment(organization_id) {
-    console.log(organization_id);
     const info = {
         method: 'GET',
         headers: {
