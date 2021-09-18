@@ -124,53 +124,50 @@ export default function Organization(props) {
         return <div>loading...</div>
     }
 
-    // function MyChild({ name, onNameChange }) {
 
-    //     const handleInputChange = useCallback(event => {
-    //       onNameChange(event.target.value)
-    //     }, [onNameChange])
-    // }
 
-    const showDepartment = (event, e) => {
+    const showDepartment = (id) => {
         // login ? 
-        console.log(event)
+        console.log(organizations)
+        console.log(id)
         console.log("*********")
         props.changePage('Department');
-        // props.changeOrg(e);
+        props.changeOrg(id);
         // return <Department></Department> 
         // : <Typography>Not logged in QAQ</Typography>
     };
     
-    const orgs = [];
-    organizations.map((org) => {
-        orgs.push(
-            org.ownership === "own" ? 
-                <Grid item alignItems={'center'} xs={8}>
-                    <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center' value={org.id} onClick={showDepartment}>
-                            {org.name}
-                        </Button>
+    const orgs = 
+        organizations.map((org) => {
+            console.log(org.id)
+            return(
+                org.ownership === "own" ? 
+                    <Grid item alignItems={'center'} xs={8}>
+                        <Box className={classes.ownBox} bgcolor="success.main">
+                            <Button alignItems='center' value={org.id} onClick={() => showDepartment(org.id)}>
+                                {org.name}
+                            </Button>
 
-                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
-                            <PersonOutlineOutlinedIcon />
-                        </IconButton>
-                        
-                        <IconButton aria-label="delete" className={classes.deleteButton}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
+                            <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
+                                <PersonOutlineOutlinedIcon />
+                            </IconButton>
+                            
+                            <IconButton aria-label="delete" className={classes.deleteButton}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Box>
                     </Grid>
-            :
-                <Grid item alignItems="center" xs={8}>
-                    <Box className={classes.memberBox} bgcolor="info.main">
-                        <Button onClick={() => showDepartment(org.organization_id)}>
-                            {org.name}
-                        </Button>
-                    </Box>
-                </Grid>
-        )
-        
-    });
+                :
+                    <Grid item alignItems="center" xs={8}>
+                        <Box className={classes.memberBox} bgcolor="info.main">
+                            <Button onClick={() => showDepartment(org.organization_id)}>
+                                {org.name}
+                            </Button>
+                        </Box>
+                    </Grid>
+            )
+            
+        });
 
     return (
         <div>
