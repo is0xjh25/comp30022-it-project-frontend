@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {handleCreateDep} from '../../api/Login';
+import {handleCreateDep} from '../../api/Manage';
 
 export default function CreateDep(organisationId) {
 	
@@ -29,20 +29,20 @@ export default function CreateDep(organisationId) {
 	const handleOnChange = (e) => {
 		if (e.target.id === "department") {
 			setDepartment(e.target.value);
+			setFirstTry(true);
 		}
     };
 
 	const handleCreate = () =>{
-		if (department !== true) {
-			setFirstTry(false);
-			handleCreateDep(organisationId).then(res => {
+		if (department !== "") {
+			handleCreateDep(organisationId, department).then(res => {
 			if (res.ok) {
 				alert("Successfully created");
 				setAvailable(true);
 				handleClickClose();
             } else {
-				// 重複名字會返回什麼？
 				setAvailable(false);
+				setFirstTry(false);
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 			})

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {handleSearchOrg, handleJoinOrg} from '../../api/Login';
+import {handleSearchOrg, handleJoinOrg} from '../../api/Manage';
 
 export default function JoinOrg() {
 	
@@ -19,39 +19,21 @@ export default function JoinOrg() {
 	const [selected, setSelected] = useState(0);
 	const [results, setResults] = useState([]);
 
-	/*        const data = [
-            {
-                "name": "University of Melbourne",
-                "owner_id": 111,
-            },
-            {
-                "name": "University of Sydeny",
-                "owner_id": 222,
-            },
-            {
-                "name": "Peking University",
-                "owner_id": 333,
-            },
-            {
-                "name": "University of Tokyo",
-                "owner_id": 444,
-            }
-        ]*/
-
 	const handleClickOpen = () => {
-	  setFirstTry(true);
-	  setOpen(true);
+	  	setFirstTry(true);
+	  	setOpen(true);
 	};
 
 	const handleClickClose = () => {
-	  setOrganisation("");
-	  setAvailable(false);
-	  setOpen(false);
+	  	setOrganisation("");
+	  	setAvailable(false);
+	  	setOpen(false);
 	};
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "organisation") {
 			setOrganisation(e.target.value);
+			setAvailable(false);
 		}
     };
 
@@ -60,23 +42,23 @@ export default function JoinOrg() {
 	}
 
   	const handleSearch = () => {
-		
-		if (organisation !== true) {
-			setFirstTry(false);
+		//console.log(organisation);
+		if (organisation !== "") {
 			handleSearchOrg(organisation).then(res => {
 			if (res.ok) {
-				let data = JSON.parse(res.json());
-				if (data !== null) {
-					setResults(data);
-					setAvailable(true)
-					handleResult();
-				} else {
-					setAvailable(false);
-				}
+				res.json().then(bodyRes=>{setResults(bodyRes.data);});
             } else {
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
-			})
+			}).then(()=>{
+				//console.log(results);
+				if (results.length !== 0) {
+					setAvailable(true);
+					handleResult();
+				} else {
+					setAvailable(false);
+					setFirstTry(false);
+				}});
 		} else {
 			alert("Typing box cannot be empty") 
 		}
@@ -87,7 +69,7 @@ export default function JoinOrg() {
 			<div>
 			<ToggleButtonGroup orientation="vertical" value={selected} exclusive onChange={handleSelected}>
 				{results.map((org) => (
-					<ToggleButton value={org.id} aria-label={org.name}>
+					<ToggleButton key={org.id} value={org.id} aria-label={org.name}>
 						{org.name}
 					</ToggleButton>
 				))}			
@@ -97,19 +79,24 @@ export default function JoinOrg() {
 	}
 
 	const handleJoin = () =>{
-		handleJoinOrg(selected).then(res => {
-			if (res.ok) {
-				alert("Successfully join");
-            } else {
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
-			}
-		})
-		handleClickClose();
+		if (selected===0) {
+			alert("please select an organisation!")
+		} else {
+			handleJoinOrg(selected).then(res => {
+				if (res.ok) {
+					alert("Successfully join");
+				} else {
+					res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				}
+			})
+			setSelected(0);
+			handleClickClose();
+		}	
 	}
 
 	let button;
 	let display;
-	if (!available) {
+	if (!available || !firstTry) {
 		button = <Button onClick={handleSearch} color="primary"> Search </Button>
 		display = null;
 	} else {
@@ -137,7 +124,7 @@ export default function JoinOrg() {
 				fullWidth
 				onChange={handleOnChange}
 				error={!available && !firstTry ? true : false}
-				helperText={!available ? "Ready to join" : "Organisation does not exist"}
+				helperText={available || firstTry ? "Ready to join" : "Organisation does not exist"}
 			/>
 			{display}
 			</DialogContent>

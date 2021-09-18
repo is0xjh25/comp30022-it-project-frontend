@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {handleCreateOrg} from '../../api/Login';
+import {handleCreateOrg} from '../../api/Manage';
 
 export default function CreateOrg() {
 	
@@ -29,20 +29,20 @@ export default function CreateOrg() {
 	const handleOnChange = (e) => {
 		if (e.target.id === "organisation") {
 			setOrganisation(e.target.value);
+			setFirstTry(true);
 		}
     };
 
 	const handleCreate = () =>{
 		if (organisation !== "") {
-			setFirstTry(false);
 			handleCreateOrg(organisation).then(res => {
 			if (res.ok) {
 				alert("Successfully created");
 				setAvailable(true);
 				handleClickClose();
             } else {
-				// 重複名字會返回什麼？
 				setAvailable(false);
+				setFirstTry(false);
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 			})

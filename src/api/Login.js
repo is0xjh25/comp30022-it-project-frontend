@@ -10,7 +10,7 @@ function handleSignIn(email, password) {
     };
 
     return new Promise((resolve, reject) => {
-        fetch(process.env.BASE_URL + "/user/login", info)
+        fetch(BASE_URL + "/user/login", info)
         .then(res => {
             resolve(res)
         })
@@ -28,7 +28,7 @@ function handleResend(email) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(`https://comp30022-team35-backend.herokuapp.com/user/resetPassword?email=${email}`, info)
+    fetch(BASE_URL + `/user/resetPassword?email=${email}`, info)
     .then(res => {
         if (res.ok) {
             resolve(res);

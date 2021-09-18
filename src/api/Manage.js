@@ -1,5 +1,7 @@
 // import { getToken } from './Util'
 
+const { formatMs } = require('@material-ui/core');
+
 require('dotenv').config();
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -60,13 +62,12 @@ function declineUser(userId, departmentId) {
 function handleSearchOrg(organisation) {
     
     const info = {
-        method: 'POST',
-        headers: {'Authorization': getToken(), 'Content-Type': 'application/json', 'Origin': BASE_URL},
-        body: JSON.stringify({"organisation": organisation})
+        method: 'GET',
+        headers: {'Authorization': getToken()},
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/organization/search", info)
+    fetch(BASE_URL + `/organization/name?organization_name=${organisation}`, info)
     .then(res => {
         if (res.ok) {
             resolve(res);
@@ -79,11 +80,14 @@ function handleSearchOrg(organisation) {
 
 // Join an organisation
 function handleJoinOrg(organisationId) {
-    
+
+    const body = new FormData();
+    body.append("organization_id", organisationId);
+
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken(), 'Content-Type': 'application/json', 'Origin': BASE_URL},
-        body: JSON.stringify({"organisation": organisationId})
+        headers: {'Authorization': getToken()},
+        body: body
     };
 
     return new Promise((resolve, reject) => {
@@ -101,10 +105,13 @@ function handleJoinOrg(organisationId) {
 // Create an organisation
 function handleCreateOrg(organisation) {
     
+    const body = new FormData();
+    body.append("organization_name", organisation);
+    
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken(), 'Content-Type': 'application/json', 'Origin': BASE_URL},
-        body: JSON.stringify({"organisation": organisation})
+        headers: {'Authorization': getToken()},
+        body: body
     };
 
     return new Promise((resolve, reject) => {
@@ -125,7 +132,7 @@ function handleCreateDep(organisationId, department) {
     
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken(), 'Content-Type': 'application/json', 'Origin': BASE_URL},
+        headers: {'Authorization': getToken()},
         body: JSON.stringify({"organisation": organisationId, "organisation": department})
     };
 
