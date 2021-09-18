@@ -29,23 +29,19 @@ function getAllUsers(departmentId, currentPage) {
 
 // Change a user's permission
 function changePermission(userId, permissionLevel, departmentId) {
-    const url = BASE_URL + '/permission';
-    const body = new FormData();
-    body.append('user_id', userId);
-    body.append('permission_level', permissionLevel);
-    body.append('department_id', departmentId);
+    const url = BASE_URL + `/permission?user_id=${userId}&department_id=${departmentId}&permission_level=${permissionLevel}`;
 
     const requestInit = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             Authorization: getToken(),
         },
-        body: body
-
     }
     fetch(url, requestInit).then(res => {
-        console.log(res);
-        return res.body.data;
+        res.json.then(resJson => {
+            console.log(resJson)
+            return resJson;
+        })
     }).catch(err => {
 
     })
@@ -57,7 +53,7 @@ function acceptUser(userId, departmentId) {
 }
 
 function deleteUser(userId, departmentId) {
-    const url = BASE_URL + '/permission' + '?user_id=' + userId + '&department_id=' + departmentId;
+    const url = BASE_URL + '/permission?user_id=' + userId + '&department_id=' + departmentId;
     const requestInit = {
         method: 'DELETE',
         headers: {
