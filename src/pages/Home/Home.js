@@ -11,7 +11,6 @@ import Department from '../../components/Manage/Department';
 
 require('dotenv').config();
 
-
 class Home extends React.Component {
   constructor(props) {
     super(props);

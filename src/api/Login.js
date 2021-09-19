@@ -1,6 +1,14 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-// Handle sign in
+// Set cookie when login
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+// Login page signin
 function handleSignIn(email, password) {
 
     const info = {
@@ -18,7 +26,8 @@ function handleSignIn(email, password) {
     })
 }
 
-// Handle Resend
+
+// Request email for reset passward
 function handleResend(email) {
 
     const info = {
@@ -28,7 +37,7 @@ function handleResend(email) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/user/resetPassword?email=${email}`, info)
+    fetch(BASE_URL + `/resetPassword?email=${email}`, info)
     .then(res => {
         if (res.ok) {
             resolve(res);
@@ -39,7 +48,8 @@ function handleResend(email) {
     })
 }
 
-// Handle sign up
+
+// Sign up as a new member
 function handleSignUp (email, password, firstName, lastName, phone, organisation) {
 
     const info = {
@@ -56,13 +66,15 @@ function handleSignUp (email, password, firstName, lastName, phone, organisation
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        }
+    })
     .catch(error => {reject(error);})
     })
 }
 
 module.exports = {
-    handleSignIn, 
-    handleResend, 
+    setCookie,
+    handleSignIn,
+    handleResend,
     handleSignUp
 }
