@@ -128,7 +128,8 @@ export default function Department(organization) {
     const member = [];
     const other = [];
     departments.map((department) => {
-        if (department.owmership==="own") {
+        console.log(department.status)
+        if (department.status==="owner") {
             own.push(
                 <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
@@ -146,7 +147,7 @@ export default function Department(organization) {
                     </Box>
                 </Grid>
             )
-        } else if(department.owmership==="member") {
+        } else if(department.status==="member") {
             member.push(
                 <Grid key={department.id} item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
@@ -186,6 +187,14 @@ export default function Department(organization) {
 
             <Grid className={classes.manageGrid} container spacing={5}>
                 {other}
+                
+                <Grid key="createNew" item xs={8}>
+                    <Box className={classes.plusBox} bgcolor="text.disabled">
+                        <Button>
+                            <CreateDep />
+                        </Button>
+                    </Box>
+                </Grid>
             </Grid>
         </div>
     )
