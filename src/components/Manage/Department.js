@@ -14,9 +14,10 @@ import {getDepartment} from '../../api/Manage';
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
-          default: '#757ce8'
+            default: '#757ce8'
         }
-      },
+    },
+
     typography: {
         button: {
             textTransform: 'none'
@@ -101,9 +102,6 @@ export default function Department(organization) {
     const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
-        // console.log("!!!!!!!!!!")
-        // console.log(JSON.stringify(organization_id))
-        // console.log(organization)
         const id = organization.organization_id;
         getDepartment(id).then(res => {
             if (res.ok) {
@@ -117,6 +115,7 @@ export default function Department(organization) {
                 return <div>You have not joined any department yet.</div>
             }
         })
+        getOtherDepartInOrg
     }, [])
 
     const classes = useStyles();
@@ -130,7 +129,7 @@ export default function Department(organization) {
     departments.map((department) => {
         output.push(
             department.ownership === "own" ? 
-                <Grid item alignItems={'center'} xs={8}>
+                <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
                         <Button alignItems='center'>
                             {department.name}
@@ -146,7 +145,7 @@ export default function Department(organization) {
                     </Box>
                 </Grid>
             :
-                <Grid item alignItems="center" xs={8}>
+                <Grid key={department.id} item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
                         <Button>
                             {department.name}
@@ -154,20 +153,35 @@ export default function Department(organization) {
                     </Box>
                 </Grid>
         )
-        
     });
 
     return (
         <div>
             <Typography className={classes.topic}>
-                My Departments
+                Joined Departments
             </Typography>
+
             <Grid className={classes.manageGrid} container spacing={5}>
                 {output}
+
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateDep /> +
+                            <CreateDep /> +
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
+
+            <Typography className={classes.topic}>
+                Not Joined Departments
+            </Typography>
+
+            <Grid className={classes.manageGrid} container spacing={5}>
+                <Grid item xs={8}>
+                    <Box className={classes.plusBox} bgcolor="text.disabled">
+                        <Button>
+                            <CreateDep /> +
                         </Button>
                     </Box>
                 </Grid>

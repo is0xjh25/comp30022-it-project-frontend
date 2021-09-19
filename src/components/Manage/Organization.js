@@ -15,9 +15,10 @@ import {getOrganization} from '../../api/Manage';
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
-          default: '#757ce8'
+            default: '#757ce8'
         }
-      },
+    },
+
     typography: {
         button: {
             textTransform: 'none'
@@ -127,18 +128,16 @@ export default function Organization(props) {
 
 
     const showDepartment = (id) => {
-        // // login ? 
         props.changePage('Department');
         props.changeOrg(id);
-        // return <Department></Department> 
-        // : <Typography>Not logged in QAQ</Typography>
     };
     
     const orgs = 
         organizations.map((org) => {
+            console.log(org)
             return(
-                org.ownership === "own" ? 
-                    <Grid item alignItems={'center'} xs={8}>
+                org.isOwner === true ? 
+                    <Grid key={org.id} item alignItems={'center'} xs={8}>
                         <Box className={classes.ownBox} bgcolor="success.main">
                             <Button alignItems='center' value={org.id} onClick={() => showDepartment(org.id)}>
                                 {org.name}
@@ -154,7 +153,7 @@ export default function Organization(props) {
                         </Box>
                     </Grid>
                 :
-                    <Grid item alignItems="center" xs={8}>
+                    <Grid key={org.id} item alignItems="center" xs={8}>
                         <Box className={classes.memberBox} bgcolor="info.main">
                             <Button onClick={() => showDepartment(org.id)}>
                                 {org.name}
@@ -162,7 +161,6 @@ export default function Organization(props) {
                         </Box>
                     </Grid>
             )
-            
         });
 
     return (
@@ -170,12 +168,14 @@ export default function Organization(props) {
             <Typography className={classes.topic}>
                 My Orgnizations
             </Typography>
+
             <Grid className={classes.orgGrid} container spacing={5}>
                 {orgs}
+
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateOrg /> + <JoinOrg />
+                            <CreateOrg /> + <JoinOrg />
                         </Button>
                     </Box>
                 </Grid>
