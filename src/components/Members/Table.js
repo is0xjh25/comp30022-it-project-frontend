@@ -27,6 +27,7 @@ import SelectDialog from '../Dialog/SelectDialog';
 
 
 
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -107,6 +108,170 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
+const permissionLevels = [
+  {authorityLevel: 0, name: 'Pending to join'},
+  {authorityLevel: 1, name: 'Member'},
+  {authorityLevel: 2, name: 'Department admin'},
+  {authorityLevel: 3, name: 'Department admin'},
+  {authorityLevel: 4, name: 'Department admin'},
+  {authorityLevel: 5, name: 'Organization Owner'}
+]
+
+const permissionLevelMap = {
+  0 : 'Pending to join',
+  1 : 'Member',
+  2 : 'Department admin',
+  3 : 'Department admin',
+  4 : 'Department admin',
+  5 : 'Organization Owner'
+}
+
+// Each row of the table, containing states about popups
+function EnhancedTableRow(props) {
+  const {row, currentUser, departmentId, update} = props;
+  //================ Delete Member ==================
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const alertTitle = 'Delete Confirm';
+  const alertMessage = `Do you want to delete ${row.name}?`;
+  const handleDeleteMember = function() {
+    setAlertOpen(true);
+  }
+  const handleAlertConfirm = function() {
+    deleteUser(row.userId, departmentId);
+    alert(`${row.name} is deleted`);
+    setAlertOpen(false);
+    update();
+  }
+
+
+  //================ Change permission level ==================
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [currentSelected, setCurrentSelected] = useState(-1);
+  
+  const selectItems = permissionLevels
+  .filter((item) => {
+    return (item.authorityLevel !== 0) && (item.authorityLevel < currentUser.authorityLevel);
+  })
+  .map((item) => {
+    return {value: item.authorityLevel, name: item.name};
+  });
+
+  // Closes the selected dialog, reset current selected
+  const selectClose = function() {
+    setSelectOpen(false);
+    setCurrentSelected(-1);
+  }
+
+  const selectChange = function(event) {
+    console.log(event.target.value);
+    setCurrentSelected(Number(event.target.value) || -1);
+  }
+  const handleChangeRole = function() {
+    setSelectOpen(true);
+  }
+  const handleSelectConfirm = function() {
+    if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
+      alert(`${row.userId} is now assigned to ${permissionLevelMap[currentSelected]}`);
+      changePermission(row.userId, currentSelected, departmentId);
+    } else {
+      alert('Select a valid role!');
+    }
+    update();
+  }
+
+  const handleAccept = function() {
+    acceptUser(row.userId, departmentId);
+    update();
+  }
+
+  const handleDecline = function() {
+    declineUser(row.userId, departmentId);
+    update();
+  }
+
+  var manage;
+  if (row.authorityLevel === 0) {
+    manage = (
+      <div>
+        <Button variant='contained' onClick={handleAccept}>
+          Accept
+        </Button>
+        <Button variant='outlined' onClick={handleDecline}>
+          Decline
+        </Button>
+      </div>)
+  } else if (currentUser && currentUser.authorityLevel > row.authorityLevel) {
+    manage = (
+      <div>
+        <IconButton onClick={handleChangeRole}>
+          <EditPermission />
+        </IconButton>
+        <IconButton>
+          <Mail />
+        </IconButton>
+        <IconButton onClick={handleDeleteMember}>
+          <Delete />
+        </IconButton>
+      </div>
+    )
+  } else {
+    manage = (
+      <div>
+        <IconButton>
+          <Mail />
+        </IconButton>
+      </div>
+    )
+  }
+
+
+  return (
+    <TableRow
+      hover
+      role="checkbox"
+      tabIndex={-1}
+      key={row.userId}
+    >
+      
+      <TableCell padding="normal">
+        <Avatar>
+          <ImageIcon />
+        </Avatar>
+      </TableCell>
+      <TableCell component="th" scope="row" padding="none">
+        {row.name}
+      </TableCell>
+      <TableCell align="center">{row.email}</TableCell>
+      <TableCell align="center">{permissionLevelMap[row.authorityLevel]}</TableCell>
+      <TableCell align="center">{row.recentActivity}</TableCell>
+      <TableCell align="center">
+        {manage}
+      </TableCell>
+      
+      <AlertDialog alertTitle={alertTitle}
+      alertMessage={alertMessage}
+      open={alertOpen}
+      handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+      handleConfirm={handleAlertConfirm}
+      handleCancel={() => { setAlertOpen(false) }}
+      />
+
+      <SelectDialog
+        items={selectItems}
+        currentSelected={currentSelected}
+        title={`Change role for ${row.name}`}
+        label="Role"
+        open={selectOpen}
+        handleChange={selectChange}
+        handleClose={selectClose}
+        handleConfirm={handleSelectConfirm}
+      />
+
+    </TableRow>
+  )
+}
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,23 +297,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const permissionLevels = [
-  {authorityLevel: 0, name: 'Pending to join'},
-  {authorityLevel: 1, name: 'Member'},
-  {authorityLevel: 2, name: 'Department admin'},
-  {authorityLevel: 3, name: 'Department admin'},
-  {authorityLevel: 4, name: 'Department admin'},
-  {authorityLevel: 5, name: 'Organization Owner'}
-]
 
-const permissionLevelMap = {
-  0 : 'Pending to join',
-  1 : 'Member',
-  2 : 'Department admin',
-  3 : 'Department admin',
-  4 : 'Department admin',
-  5 : 'Organization Owner'
-}
 
 // Table to display members
 export default function EnhancedTable(props) {
@@ -164,7 +313,14 @@ export default function EnhancedTable(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState([]);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  const update = function() {
+    setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+  }
+
   useEffect(function fetchTableData() {
+    console.log(updateCount)
     if (departmentId) {
       getAllUsers(departmentId, 1).then(res => {
         console.log(res);
@@ -176,11 +332,18 @@ export default function EnhancedTable(props) {
           });
           console.log(records);
           setRows(records);
+        }else {
+          console.log('Failed to fetch table data, using mock data')
+          const records = [
+            {name: 'Yiyang Huang', userId: 100, email:'abc', authorityLevel: 5},
+            {name: 'regular member', userId: 101, email: 'def', authorityLevel: 1}
+          ]
+          setRows(records)
         }
 
       });
     }
-  }, [])
+  }, [updateCount])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -189,100 +352,15 @@ export default function EnhancedTable(props) {
   };
 
 
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-
-  //================ Alert Dialog ==================
-  const [alertTitle, setAlertTitle] = useState('Delete Confirm')
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [handleConfirm, setHandleConfirm] = useState(() => () => {});
-
-
-  //================ Select Dialog ==================
-  const items = permissionLevels
-  .filter((item) => {
-    return (item.authorityLevel !== 0) && (item.authorityLevel < currentUser.authorityLevel);
-  })
-  .map((item) => {
-    return {value: item.authorityLevel, name: item.name};
-  });
-  const [currentSelect, setCurrentSelect] = useState(-1); // -1 to indicate not selecting any
-  const [selectOpen, setSelectOpen] = useState(false);
-  // const [selectChange, setSelectChange] = useState(() => () => {});
-  // const [selectClose, setSelectClose] = useState(() => () => {});
-  const [selectConfirm, setSelectConfirm] = useState(() => () => {});
-
-  const selectClose = () => {
-    setSelectOpen(false);
-    setCurrentSelect(-1);
-  }
-
-  const selectChange = (event) => {
-    console.log(event.target.value);
-    setCurrentSelect(Number(event.target.value) || -1)
-    setSelectConfirm(() => () => {
-    })
-  }
-
-  const handleSelectConfirm = (userId) => {
-    if(currentSelect && currentSelect > 0) { // -1 and 0 are not valid
-      alert(`${userId} is now assigned to ${permissionLevelMap[currentSelect]}`);
-      changePermission(userId, currentSelect, departmentId);
-    } else {
-      alert('Select a valid role!');
-    }
-  }
 
   return (
     <div className={classes.root}>
-      <AlertDialog alertTitle={alertTitle}
-        alertMessage={alertMessage}
-        open={alertOpen}
-        handleClose={() => { setAlertOpen(false) }}
-        handleConfirm={handleConfirm}
-        handleCancel={() => { setAlertOpen(false) }} />
-
-      <SelectDialog
-        items={items}
-        currentSelected={currentSelect}
-        title="Change the role of this member"
-        label="Role"
-        open={selectOpen}
-        handleChange={selectChange}
-        handleClose={selectClose}
-        handleConfirm={selectConfirm}
-      />
       <Paper className={classes.paper}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             className={classes.table}
@@ -299,100 +377,9 @@ export default function EnhancedTable(props) {
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  if (row.permissionLevel < 0) {
-                    return;
-                  }
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  const handleDelete = () => {
-                    setAlertOpen(true);
-                    setAlertMessage('Do you want to kick ' + row.name + '?');
-                    setHandleConfirm(() => () => {
-                      deleteUser(row.userId, departmentId);
-                      alert(row.name + 'is kicked!');
-                      setAlertOpen(false);
-                    });
-                  }
-
-                  const handleAccept = () => {
-                    acceptUser(row.userId, departmentId);
-                    // alert(row.name + 'is accepted');
-                    row.permissionLevel = 1;
-                  }
-
-                  const handleDecline = () => {
-                    declineUser(row.userId, departmentId);
-                    // alert(row.name + 'is declined');
-                    row.authorityLevel = -1;
-                  }
-
-                  const handleChangeRole = () => {
-                    setSelectOpen(true);
-                    setSelectConfirm(() => () => {
-                      handleSelectConfirm(row.userId);
-                      setSelectOpen(false);
-                    });
-                  }
-
-                  var manage;
-                  if (row.authorityLevel === 0) {
-                    manage = (
-                      <div>
-                        <Button variant='contained' onClick={handleAccept}>
-                          Accept
-                        </Button>
-                        <Button variant='outlined' onClick={handleDecline}>
-                          Decline
-                        </Button>
-                      </div>)
-                  } else if (currentUser && currentUser.authorityLevel > row.authorityLevel) {
-                    manage = (
-                      <div>
-                        <IconButton onClick={handleChangeRole}>
-                          <EditPermission />
-                        </IconButton>
-                        <IconButton>
-                          <Mail />
-                        </IconButton>
-                        <IconButton onClick={handleDelete}>
-                          <Delete />
-                        </IconButton>
-                      </div>
-                    )
-                  } else {
-                    manage = (
-                      <div>
-                        <IconButton>
-                          <Mail />
-                        </IconButton>
-                      </div>
-                    )
-                  }
-
-
+                .map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.userId}
-                    >
-                      <TableCell padding="normal">
-                        <Avatar>
-                          <ImageIcon />
-                        </Avatar>
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{permissionLevelMap[row.authorityLevel]}</TableCell>
-                      <TableCell align="center">{row.recentActivity}</TableCell>
-                      <TableCell align="center">
-                        {manage}
-                      </TableCell>
-                    </TableRow>
+                    <EnhancedTableRow row={row} currentUser={currentUser} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (
