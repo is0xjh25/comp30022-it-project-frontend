@@ -1,8 +1,6 @@
 // Reference: https://material-ui.com/components/tables/#sorting-amp-selecting
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,46 +10,23 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import Button from '@material-ui/core/Button';
 import Delete from '@material-ui/icons/Delete';
 import Mail from '@material-ui/icons/MailOutline';
 import EditPermission from '@material-ui/icons/Person';
-
-import {getAllUsers, acceptUser, declineUser} from '../../api/Manage';
+import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
+import SelectDialog from '../Dialog/SelectDialog';
 
-function createData(name, email, permissionLevel, recentActivity) {
-  const manage = permissionLevel === 0 ? 0 : 6 - permissionLevel;
-  return { name, email, permissionLevel, recentActivity, manage };
-}
 
-const rows = [
-  createData('Member1', 'example@email.com', 1, 'timestamp'),
-  createData('Member2', 'example@email.com', 2, 'timestamp'),
-  createData('Member3', 'example@email.com', 1, 'timestamp'),
-  createData('Member4', 'example@email.com', 1, 'timestamp'),
-  createData('Member5', 'example@email.com', 1, 'timestamp'),
-  createData('Member6', 'example@email.com', 1, 'timestamp'),
-  createData('Member7', 'example@email.com', 1, 'timestamp'),
-  createData('Member8', 'example@email.com', 1, 'timestamp'),
-  createData('Member9', 'example@email.com', 1, 'timestamp'),
-  createData('Member10', 'example@email.com', 1, 'timestamp'),
-  createData('Member11', 'example@email.com', 0, 'timestamp'),
-  createData('Member12', 'example@email.com', 0, 'timestamp'),
-  createData('Member13', 'example@email.com', 5, 'timestamp'),
-];
+
+
+
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -88,7 +63,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -97,12 +72,6 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          {/* <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -134,13 +103,174 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
 };
+
+const permissionLevels = [
+  {authorityLevel: 0, name: 'Pending to join'},
+  {authorityLevel: 1, name: 'Member'},
+  {authorityLevel: 2, name: 'Department admin'},
+  {authorityLevel: 3, name: 'Department admin'},
+  {authorityLevel: 4, name: 'Department admin'},
+  {authorityLevel: 5, name: 'Organization Owner'}
+]
+
+const permissionLevelMap = {
+  0 : 'Pending to join',
+  1 : 'Member',
+  2 : 'Department admin',
+  3 : 'Department admin',
+  4 : 'Department admin',
+  5 : 'Organization Owner'
+}
+
+// Each row of the table, containing states about popups
+function EnhancedTableRow(props) {
+  const {row, currentUser, departmentId, update} = props;
+  //================ Delete Member ==================
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const alertTitle = 'Delete Confirm';
+  const alertMessage = `Do you want to delete ${row.name}?`;
+  const handleDeleteMember = function() {
+    setAlertOpen(true);
+  }
+  const handleAlertConfirm = function() {
+    deleteUser(row.userId, departmentId);
+    alert(`${row.name} is deleted`);
+    setAlertOpen(false);
+    update();
+  }
+
+
+  //================ Change permission level ==================
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [currentSelected, setCurrentSelected] = useState(-1);
+  
+  const selectItems = permissionLevels
+  .filter((item) => {
+    return (item.authorityLevel !== 0) && (item.authorityLevel < currentUser.authorityLevel);
+  })
+  .map((item) => {
+    return {value: item.authorityLevel, name: item.name};
+  });
+
+  // Closes the selected dialog, reset current selected
+  const selectClose = function() {
+    setSelectOpen(false);
+    setCurrentSelected(-1);
+  }
+
+  const selectChange = function(event) {
+    console.log(event.target.value);
+    setCurrentSelected(Number(event.target.value) || -1);
+  }
+  const handleChangeRole = function() {
+    setSelectOpen(true);
+  }
+  const handleSelectConfirm = function() {
+    if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
+      alert(`${row.userId} is now assigned to ${permissionLevelMap[currentSelected]}`);
+      changePermission(row.userId, currentSelected, departmentId);
+    } else {
+      alert('Select a valid role!');
+    }
+    update();
+  }
+
+  const handleAccept = function() {
+    acceptUser(row.userId, departmentId);
+    update();
+  }
+
+  const handleDecline = function() {
+    declineUser(row.userId, departmentId);
+    update();
+  }
+
+  var manage;
+  if (row.authorityLevel === 0) {
+    manage = (
+      <div>
+        <Button variant='contained' onClick={handleAccept}>
+          Accept
+        </Button>
+        <Button variant='outlined' onClick={handleDecline}>
+          Decline
+        </Button>
+      </div>)
+  } else if (currentUser && currentUser.authorityLevel > row.authorityLevel) {
+    manage = (
+      <div>
+        <IconButton onClick={handleChangeRole}>
+          <EditPermission />
+        </IconButton>
+        <IconButton>
+          <Mail />
+        </IconButton>
+        <IconButton onClick={handleDeleteMember}>
+          <Delete />
+        </IconButton>
+      </div>
+    )
+  } else {
+    manage = (
+      <div>
+        <IconButton>
+          <Mail />
+        </IconButton>
+      </div>
+    )
+  }
+
+
+  return (
+    <TableRow
+      hover
+      role="checkbox"
+      tabIndex={-1}
+      key={row.userId}
+    >
+      
+      <TableCell padding="normal">
+        <Avatar>
+          <ImageIcon />
+        </Avatar>
+      </TableCell>
+      <TableCell component="th" scope="row" padding="none">
+        {row.name}
+      </TableCell>
+      <TableCell align="center">{row.email}</TableCell>
+      <TableCell align="center">{permissionLevelMap[row.authorityLevel]}</TableCell>
+      <TableCell align="center">{row.recentActivity}</TableCell>
+      <TableCell align="center">
+        {manage}
+      </TableCell>
+      
+      <AlertDialog alertTitle={alertTitle}
+      alertMessage={alertMessage}
+      open={alertOpen}
+      handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+      handleConfirm={handleAlertConfirm}
+      handleCancel={() => { setAlertOpen(false) }}
+      />
+
+      <SelectDialog
+        items={selectItems}
+        currentSelected={currentSelected}
+        title={`Change role for ${row.name}`}
+        label="Role"
+        open={selectOpen}
+        handleChange={selectChange}
+        handleClose={selectClose}
+        handleConfirm={handleSelectConfirm}
+      />
+
+    </TableRow>
+  )
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -167,14 +297,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
+// Table to display members
 export default function EnhancedTable(props) {
+  //================ Data from parent ==================
   const currentUser = props.currentUser;
+  const departmentId = props.departmentId
+
+  //================ Table settings ==================
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('manage');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('manage');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  const update = function() {
+    setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+  }
+
+  useEffect(function fetchTableData() {
+    console.log(updateCount)
+    if (departmentId) {
+      getAllUsers(departmentId, 1).then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          const data = res.data
+          const records = data.records
+          records.forEach(row => {
+            row.name = row.firstName + ' ' + row.lastName
+          });
+          console.log(records);
+          setRows(records);
+        }else {
+          console.log('Failed to fetch table data, using mock data')
+          const records = [
+            {name: 'Yiyang Huang', userId: 100, email:'abc', authorityLevel: 5},
+            {name: 'regular member', userId: 101, email: 'def', authorityLevel: 1}
+          ]
+          setRows(records)
+        }
+
+      });
+    }
+  }, [updateCount])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -182,57 +351,16 @@ export default function EnhancedTable(props) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // const handleChangeDense = (event) => {
-  //   setDense(event.target.checked);
-  // };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
-      <AlertDialog alertTitle='Delete Confirm' alertMessage='Do you want to kick this member?' open/>
       <Paper className={classes.paper}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             className={classes.table}
@@ -242,86 +370,16 @@ export default function EnhancedTable(props) {
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  var manage;
-                  if(row.permissionLevel === 0) {
-                    manage = (
-                      <div>
-                        <Button variant='contained'>
-                            Accept
-                        </Button>
-                        <Button variant='outlined'>
-                            Decline
-                        </Button>
-                      </div>)
-                  }else if(currentUser && currentUser.permissionLevel > row.permissionLevel) {
-                    manage = (
-                      <div> 
-                        <IconButton>
-                          <EditPermission/>
-                        </IconButton>
-                        <IconButton>
-                          <Mail/>
-                        </IconButton>
-                        <IconButton>
-                          <Delete/>
-                        </IconButton>
-                      </div>
-                    )
-                  }else {
-                    manage = (
-                      <div> 
-                        <IconButton>
-                          <Mail/>
-                        </IconButton>
-                      </div>
-                    )
-                  }
-                  const permissionLevels = {
-                    0: 'Pending to join',
-                    1: 'Member',
-                    2: 'Department admin',
-                    3: 'Department admin',
-                    4: 'Department admin',
-                    5: 'Organization Owner'
-                  }
-
+                .map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                    >
-                      <TableCell padding="normal">
-                        <Avatar>
-                          <ImageIcon/>
-                        </Avatar>
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{permissionLevels[row.permissionLevel]}</TableCell>
-                      <TableCell align="center">{row.recentActivity}</TableCell>
-                      <TableCell align="center">
-                        {manage}
-                      </TableCell>
-                    </TableRow>
+                    <EnhancedTableRow row={row} currentUser={currentUser} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (
@@ -333,13 +391,11 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

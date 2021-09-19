@@ -15,98 +15,10 @@ import Table from './Table';
 import './Members.css'
 
 
-const mockData = [
-    {
-        name: "Member1",
-        email: "something@email.com",
-        permissionLevel: 5,
-        recentActivity: "Today",
 
-    },
-    {
-        name: "Member1",
-        email: "something@email.com",
-        permissionLevel: 5,
-        recentActivity: "Today",
-
-    },
-    {
-        name: "Member1",
-        email: "something@email.com",
-        permissionLevel: 5,
-        recentActivity: "Today",
-
-    },
-    {
-        name: "Member1",
-        email: "something@email.com",
-        permissionLevel: 5,
-        recentActivity: "Today",
-
-    },
-
-]
-
-const useStyles = makeStyles((theme) => ({
-    searchBar: {
-        background: 'rgba(136,90,248,0.2)'
-    }
-    
-}))
-
-function MySearchBar() {
-    const classes = useStyles();
-    return (
-        <SearchBar className={classes.searchBar} fullWidth 
-        placeholder="Search for a member" type="search" 
-        variant="outlined" InputProps={{
-            startAdornment: (
-                <InputAdornment position="start">
-                <SearchIcon />
-                </InputAdornment>
-            )
-        }}/>
-    );
-}
-
-function MembersTable(props) {
-    const classes = useStyles();
-    const columns = [
-        {
-            field: 'name',
-            headerName: 'Name',
-            width: 200,
-        },
-        {
-            field: 'email',
-            headerName: 'Email',
-            width: 200,
-        },
-        {
-            field: 'permissionLevel',
-            headerName: 'Permission Level',
-            width: 200,
-        },
-        {
-            field: 'recentActivity',
-            headerName: 'Recent Activity',
-            width: 200,
-        },
-        {
-            field: 'manage',
-            headerName: 'Manage',
-            width: 200,
-        },
-    ]
-
-    return (
-        <div></div>
-
-    )
-}
 
 const mockUser = {
-    permissionLevel: 4
+    authorityLevel: 5
 }
 
 
@@ -120,7 +32,7 @@ class Members extends React.Component {
             <div>
                 <SearchBar />
                 <div className='table-container'>
-                    <Table className='table' currentUser={mockUser}></Table>
+                    <Table className='table' currentUser={mockUser} departmentId={5}></Table>
                 </div>
                 
             </div>
