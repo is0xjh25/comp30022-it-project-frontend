@@ -8,8 +8,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {handleCreateDep} from '../../api/Manage';
 
-export default function CreateDep(organisationId) {
-	console.log(organisationId);
+export default function CreateDep(organizationId) {
+
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
@@ -34,9 +34,9 @@ export default function CreateDep(organisationId) {
     };
 
 	const handleCreate = () =>{
+		
 		if (department !== "") {
-			
-			handleCreateDep(organisationId, department).then(res => {
+			handleCreateDep(organizationId.organizationId, department).then(res => {
 			if (res.ok) {
 				alert("Successfully created");
 				setAvailable(true);

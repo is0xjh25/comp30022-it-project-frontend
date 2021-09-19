@@ -1,5 +1,3 @@
-// import { getToken } from './Util'
-
 const { formatMs } = require('@material-ui/core');
 
 require('dotenv').config();
@@ -48,7 +46,7 @@ function changePermission(userId, permissionLevel, departmentId) {
     const requestInit = {
         method: 'PUT',
         headers: {
-            Authorization: getToken(),
+            Authorization: getCookie('token'),
         },
     }
     fetch(url, requestInit).then(res => {
@@ -187,7 +185,10 @@ function handleCreateDep(organisationId, department) {
 function getOrganization() {
     const info = {
         method: 'GET',
-        headers: {'Authorization': getToken()},
+        headers: {
+            'Authorization': getCookie('token'),
+            'Origin': process.env.ORIGIN_URL
+        },
     }
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + '/organization/myOrganization', info)
@@ -206,9 +207,9 @@ function getDepartment(organization_id) {
     const info = {
         method: 'GET',
         headers: {
-            'Authorization': getToken(),
+            'Authorization': getCookie('token'),
             'Origin': process.env.ORIGIN_URL
-    },
+        },
     }
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/organization/departments?organization_id=${organization_id}`, info)
