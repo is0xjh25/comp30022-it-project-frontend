@@ -10,16 +10,15 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
-
-
-import Department from './Department';
+import {getOrganization} from '../../api/Manage';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
-          default: '#757ce8'
+            default: '#757ce8'
         }
-      },
+    },
+
     typography: {
         button: {
             textTransform: 'none'
@@ -99,116 +98,83 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Organization({changePage}) {
+export default function Organization(props) {
     // read in the user's organisation info from backend api
-
-    const [login] = useState(true);
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
 
     useEffect(() => {
-        setLoading(false);
+        getOrganization().then(res => {
+            if (res.ok) {
+                res.json().then(body => {setOrganizations(body.data)});
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        }).then(() => {
+            setLoading(false);
+            if (organizations.length === 0) {
+                return <div>You have not joined any organization yet.</div>
+            }
+        })
     }, [])
 
-    useEffect(() => {
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(json => console.log(json))
 
-        // make up some fake data for testing
-        const data = [
-            {
-                "organization_id": 1,
-                "name": "University of Melbourne",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "organization_id": 2,
-                "name": "University of Sydeny",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "organization_id": 3,
-                "name": "Peking University",
-                "owner_id": 200,
-                "ownership": "member"
-            },
-            {
-                "organization_id": 4,
-                "name": "University of Tokyo",
-                "owner_id": 300,
-                "ownership": "member"
-            }
-        ]
-        return () => {
-            setOrganizations(data);
-        }
-    }, [loading])
-    
     const classes = useStyles();
  
     if (loading) {
         return <div>loading...</div>
     }
 
-    // function MyChild({ name, onNameChange }) {
 
-    //     const handleInputChange = useCallback(event => {
-    //       onNameChange(event.target.value)
-    //     }, [onNameChange])
-    // }
 
-    const showDepartment = (orgName) => {
-        // login ? 
-        changePage('Department');
-        // return <Department></Department> 
-        // : <Typography>Not logged in QAQ</Typography>
+    const showDepartment = (id) => {
+        props.changePage('Department');
+        props.changeOrg(id);
     };
     
-    const orgs = [];
-    organizations.map((org) => {
-        orgs.push(
-            org.ownership === "own" ? 
-                <Grid item alignItems={'center'} xs={8}>
-                    <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center' onClick={() => showDepartment(org.name)}>
-                            {org.name}
-                        </Button>
+    const orgs = 
+        organizations.map((org) => {
+            return(
+                org.owner === true ? 
+                    <Grid key={org.id} item alignItems={'center'} xs={8}>
+                        <Box className={classes.ownBox} bgcolor="success.main">
+                            <Button alignItems='center' onClick={() => showDepartment(org.id)}>
+                                {org.name}
+                            </Button>
 
-                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
-                            <PersonOutlineOutlinedIcon />
-                        </IconButton>
-                        
-                        <IconButton aria-label="delete" className={classes.deleteButton}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
+                            <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
+                                <PersonOutlineOutlinedIcon />
+                            </IconButton>
+                            
+                            <IconButton aria-label="delete" className={classes.deleteButton}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Box>
                     </Grid>
-            :
-                <Grid item alignItems="center" xs={8}>
-                    <Box className={classes.memberBox} bgcolor="info.main">
-                        <Button onClick={() => showDepartment(org.name)}>
-                            {org.name}
-                        </Button>
-                    </Box>
-                </Grid>
-        )
-        
-    });
+                :
+                    <Grid key={org.id} item alignItems="center" xs={8}>
+                        <Box className={classes.memberBox} bgcolor="info.main">
+                            <Button onClick={() => showDepartment(org.id)}>
+                                {org.name}
+                            </Button>
+                        </Box>
+                    </Grid>
+            )
+        });
 
     return (
         <div>
             <Typography className={classes.topic}>
                 My Orgnizations
             </Typography>
+
             <Grid className={classes.orgGrid} container spacing={5}>
                 {orgs}
+
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateOrg /> + <JoinOrg />
+                            <CreateOrg /> + <JoinOrg />
                         </Button>
                     </Box>
                 </Grid>
