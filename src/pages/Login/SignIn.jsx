@@ -3,8 +3,6 @@ import Favicon from '../../images/favicon.png'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import { handleSignIn } from '../../api/Login';
+import { setCookie } from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -58,7 +57,6 @@ export default function SignIn(props) {
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [remember, setRemember] = useState(false);
 	const [error, setError] = useState("");
 	
 	let history = useHistory();
@@ -68,8 +66,6 @@ export default function SignIn(props) {
 			setEmail(e.target.value);
 		} else if (e.target.id === "password") {
 			setPassword(e.target.value);
-		} else if (e.target.id === "remember") {
-			setRemember(e.target.checked);
 		}
     };
 
@@ -110,8 +106,7 @@ export default function SignIn(props) {
 		if (handleValidation()) {
 			handleSignIn(email, password).then(res => {
 			if (res.ok) {
-                if (remember) localStorage.setItem('Token', res.headers.get("Authorization"));
-                sessionStorage.setItem('Token', res.headers.get("Authorization"));
+				setCookie('token', res.headers.get("Authorization"), 1)
                 history.push('/');
             } else {
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
@@ -158,12 +153,6 @@ export default function SignIn(props) {
 				type="password"
 				id="password"
 				autoComplete="current-password"
-				onChange={handleOnChange}
-			/>
-			<FormControlLabel
-				control={<Checkbox value="remember" color="primary" />}
-				label="Remember me"
-				id="remember"
 				onChange={handleOnChange}
 			/>
 			<Button

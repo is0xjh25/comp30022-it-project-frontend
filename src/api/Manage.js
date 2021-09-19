@@ -6,18 +6,30 @@ require('dotenv').config();
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function getToken() {
-    return sessionStorage.getItem('Token');
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
 }
 
+// Gets all users from a department
+function getAllUsers(departmentId) {
+    const url = BASE_URL + '/';
 
-// Gets users from a department
-function getAllUsers(departmentId, currentPage) {
-    const url = BASE_URL + '/department/member?department_id=' + departmentId + '&size=10&current=' + currentPage;
     const requestInit = {
         method: 'GET',
         headers: {
-            Authorization: getToken(),
+            Authorization: getCookie('token'),
         }
     }
     return new Promise((resovle) => {
@@ -59,7 +71,7 @@ function deleteUser(userId, departmentId) {
     const requestInit = {
         method: 'DELETE',
         headers: {
-            Authorization: getToken(),
+            Authorization: getCookie('token'),
         }
     }
     fetch(url, requestInit).then(res => {
@@ -79,7 +91,7 @@ function handleSearchOrg(organisation) {
 
     const info = {
         method: 'GET',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
     };
 
     return new Promise((resolve, reject) => {
@@ -103,7 +115,7 @@ function handleJoinOrg(organisationId) {
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 
@@ -128,7 +140,7 @@ function handleCreateOrg(organisation) {
     
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 
@@ -149,10 +161,14 @@ function handleCreateOrg(organisation) {
 // Create a department
 function handleCreateDep(organisationId, department) {
     
+    const body = new FormData();
+    body.append("organization_id", organisationId);
+    body.append("department_name", department);
+
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
-        body: JSON.stringify({"organisation": organisationId, "organisation": department})
+        headers: {'Authorization': getCookie('token')},
+        body: body
     };
 
     return new Promise((resolve, reject) => {
@@ -210,6 +226,7 @@ function getDepartment(organization_id) {
 }
 
 module.exports = {
+    getCookie,
     getAllUsers,
     changePermission,
     acceptUser,

@@ -1,5 +1,12 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+// Set cookie when login
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 // Login page signin
 function handleSignIn(email, password) {
@@ -66,7 +73,8 @@ function handleSignUp (email, password, firstName, lastName, phone, organisation
 }
 
 module.exports = {
-    handleSignIn, 
-    handleResend, 
+    setCookie,
+    handleSignIn,
+    handleResend,
     handleSignUp
 }
