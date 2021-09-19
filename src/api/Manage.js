@@ -180,8 +180,6 @@ function getDepartment(organization_id) {
     }
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/organization/departments?organization_id=${organization_id}`, info)
-        
-        // 'https://comp30022-team35-backend.herokuapp.com/organization/departments?organization_id=65'
         .then(res => {
             if (res.ok) {
                 resolve(res);

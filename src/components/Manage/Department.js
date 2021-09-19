@@ -162,7 +162,7 @@ export default function Department(organization) {
                 <Grid key={department.id} item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            <CreateDep /> {department.name}
+                            {department.name}
                         </Button>
                     </Box>
                 </Grid>
