@@ -102,7 +102,7 @@ export default function Department(organization) {
     const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
-        const id = organization.organization_id;
+        const id = organization.organization;
         getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {setDepartments(body.data)});
@@ -115,7 +115,6 @@ export default function Department(organization) {
                 return <div>You have not joined any department yet.</div>
             }
         })
-        getOtherDepartInOrg
     }, [])
 
     const classes = useStyles();
@@ -125,10 +124,12 @@ export default function Department(organization) {
         </div>
     }
 
-    const output = [];
+    const own = [];
+    const member = [];
+    const other = [];
     departments.map((department) => {
-        output.push(
-            department.ownership === "own" ? 
+        if (department.owmership==="own") {
+            own.push(
                 <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
                         <Button alignItems='center'>
@@ -144,7 +145,9 @@ export default function Department(organization) {
                         </IconButton>
                     </Box>
                 </Grid>
-            :
+            )
+        } else if(department.owmership==="member") {
+            member.push(
                 <Grid key={department.id} item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
                         <Button>
@@ -152,7 +155,18 @@ export default function Department(organization) {
                         </Button>
                     </Box>
                 </Grid>
-        )
+            )
+        } else {
+            other.push(
+                <Grid key={department.id} item xs={8}>
+                    <Box className={classes.plusBox} bgcolor="text.disabled">
+                        <Button>
+                            <CreateDep /> {department.name}
+                        </Button>
+                    </Box>
+                </Grid>
+            )
+        }
     });
 
     return (
@@ -162,15 +176,8 @@ export default function Department(organization) {
             </Typography>
 
             <Grid className={classes.manageGrid} container spacing={5}>
-                {output}
-
-                <Grid item xs={8}>
-                    <Box className={classes.plusBox} bgcolor="text.disabled">
-                        <Button>
-                            <CreateDep /> +
-                        </Button>
-                    </Box>
-                </Grid>
+                {own}
+                {member}
             </Grid>
 
             <Typography className={classes.topic}>
@@ -178,13 +185,7 @@ export default function Department(organization) {
             </Typography>
 
             <Grid className={classes.manageGrid} container spacing={5}>
-                <Grid item xs={8}>
-                    <Box className={classes.plusBox} bgcolor="text.disabled">
-                        <Button>
-                            <CreateDep /> +
-                        </Button>
-                    </Box>
-                </Grid>
+                {other}
             </Grid>
         </div>
     )

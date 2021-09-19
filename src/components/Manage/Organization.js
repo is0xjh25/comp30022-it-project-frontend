@@ -134,12 +134,11 @@ export default function Organization(props) {
     
     const orgs = 
         organizations.map((org) => {
-            console.log(org)
             return(
-                org.isOwner === true ? 
+                org.owner === true ? 
                     <Grid key={org.id} item alignItems={'center'} xs={8}>
                         <Box className={classes.ownBox} bgcolor="success.main">
-                            <Button alignItems='center' value={org.id} onClick={() => showDepartment(org.id)}>
+                            <Button alignItems='center' onClick={() => showDepartment(org.id)}>
                                 {org.name}
                             </Button>
 
