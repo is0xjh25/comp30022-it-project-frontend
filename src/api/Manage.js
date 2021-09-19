@@ -11,38 +11,39 @@ function getToken() {
 }
 
 
-// Gets all users from a department
-function getAllUsers(departmentId) {
-    const url = BASE_URL + '/';
-
+// Gets users from a department
+function getAllUsers(departmentId, currentPage) {
+    const url = BASE_URL + '/department/member?department_id=' + departmentId + '&size=10&current=' + currentPage;
     const requestInit = {
         method: 'GET',
         headers: {
             Authorization: getToken(),
         }
     }
-
-    fetch(url, requestInit).then(res => {
-
-    }).catch(err => {
-
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            res.json().then(value => resovle(value));    
+        }).catch(err => {
+    
+        })
     })
-
 }
 
 // Change a user's permission
-async function changePermission(userId, permissionLevel, departmentId) {
-    const url = BASE_URL + '/permission';
+function changePermission(userId, permissionLevel, departmentId) {
+    const url = BASE_URL + `/permission?user_id=${userId}&department_id=${departmentId}&permission_level=${permissionLevel}`;
+
     const requestInit = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             Authorization: getToken(),
-        }
+        },
     }
     fetch(url, requestInit).then(res => {
-        console.log();
-        return res.body.data;
-
+        res.json.then(resJson => {
+            console.log(resJson)
+            return resJson;
+        })
     }).catch(err => {
 
     })
@@ -53,8 +54,24 @@ function acceptUser(userId, departmentId) {
     changePermission(userId, 1, departmentId)
 }
 
-function declineUser(userId, departmentId) {
+function deleteUser(userId, departmentId) {
+    const url = BASE_URL + '/permission?user_id=' + userId + '&department_id=' + departmentId;
+    const requestInit = {
+        method: 'DELETE',
+        headers: {
+            Authorization: getToken(),
+        }
+    }
+    fetch(url, requestInit).then(res => {
+        console.log(res);
+        return res.body.data;
+    }).catch(err => {
 
+    })
+}
+
+function declineUser(userId, departmentId) {
+    deleteUser(userId, departmentId)
 }
 
 // Search an organisation
@@ -151,12 +168,57 @@ function handleCreateDep(organisationId, department) {
     })
 }
 
+function getOrganization() {
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getToken()},
+    }
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + '/organization/myOrganization', info)
+        .then(res => {
+            if (res.ok) {
+                resolve(res);
+            } else {
+                res.json().then(bodyRes => {alert(bodyRes.msg)});
+            }
+        })
+        .catch(error => {reject(error)})
+    })
+}
+
+function getDepartment(organization_id) {
+    const info = {
+        method: 'GET',
+        headers: {
+            'Authorization': getToken(),
+            'Origin': process.env.ORIGIN_URL
+    },
+    }
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + `/organization/departments?organization_id=${organization_id}`, info)
+        
+        // 'https://comp30022-team35-backend.herokuapp.com/organization/departments?organization_id=65'
+        .then(res => {
+            if (res.ok) {
+                resolve(res);
+            } else {
+                res.json().then(bodyRes => {alert(bodyRes.msg)});
+            }
+        })
+        .catch(error => {reject(error)})
+    })
+}
+
 module.exports = {
     getAllUsers,
+    changePermission,
     acceptUser,
+    deleteUser,
     declineUser,
     handleSearchOrg,
     handleJoinOrg,
     handleCreateOrg,
-    handleCreateDep
+    handleCreateDep,
+    getOrganization,
+    getDepartment
 }

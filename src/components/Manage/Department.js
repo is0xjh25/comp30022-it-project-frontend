@@ -5,18 +5,19 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import Box from '@material-ui/core/Box';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Redirect } from 'react-router-dom';
 import CreateDep from '../../components/Popup/CreateDep';
+import {getDepartment} from '../../api/Manage';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
-          default: '#757ce8'
+            default: '#757ce8'
         }
-      },
+    },
+
     typography: {
         button: {
             textTransform: 'none'
@@ -94,47 +95,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Department() {
+export default function Department(organization) {
     // read in the user's organisation info from backend api
 
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
-        setLoading(false);
+        const id = organization.organization;
+        getDepartment(id).then(res => {
+            if (res.ok) {
+                res.json().then(body => {setDepartments(body.data)});
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        }).then(() => {
+            setLoading(false);
+            if (departments.length === 0) {
+                return <div>You have not joined any department yet.</div>
+            }
+        })
     }, [])
 
-    useEffect(() => {
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(json => console.log(json))
-
-        // make up some fake data for testing
-        const data = [
-            {
-                "department_id": 1,
-                "name": "Department of Informatics",
-                "owner_id": 100,
-                "ownership": "own"
-            },
-            {
-                "department_id": 3,
-                "name": "Department of Room Service",
-                "owner_id": 200,
-                "ownership": "member"
-            },
-            {
-                "department_id": 4,
-                "name": "Department of Department",
-                "owner_id": 300,
-                "ownership": "member"
-            }
-        ]
-        return () => {
-            setDepartments(data);
-        }
-    }, [loading])
-        
     const classes = useStyles();
 
     if (loading) {
@@ -142,11 +124,14 @@ export default function Department() {
         </div>
     }
 
-    const output = [];
+    const own = [];
+    const member = [];
+    const other = [];
     departments.map((department) => {
-        output.push(
-            department.ownership === "own" ? 
-                <Grid item alignItems={'center'} xs={8}>
+        console.log(department.status)
+        if (department.status==="owner") {
+            own.push(
+                <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
                         <Button alignItems='center'>
                             {department.name}
@@ -161,29 +146,52 @@ export default function Department() {
                         </IconButton>
                     </Box>
                 </Grid>
-            :
-                <Grid item alignItems="center" xs={8}>
+            )
+        } else if(department.status==="member") {
+            member.push(
+                <Grid key={department.id} item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
                         <Button>
                             {department.name}
                         </Button>
                     </Box>
                 </Grid>
-        )
-        
+            )
+        } else {
+            other.push(
+                <Grid key={department.id} item xs={8}>
+                    <Box className={classes.plusBox} bgcolor="text.disabled">
+                        <Button>
+                            <CreateDep /> {department.name}
+                        </Button>
+                    </Box>
+                </Grid>
+            )
+        }
     });
 
     return (
         <div>
             <Typography className={classes.topic}>
-                My Departments
+                Joined Departments
             </Typography>
+
             <Grid className={classes.manageGrid} container spacing={5}>
-                {output}
-                <Grid item xs={8}>
+                {own}
+                {member}
+            </Grid>
+
+            <Typography className={classes.topic}>
+                Not Joined Departments
+            </Typography>
+
+            <Grid className={classes.manageGrid} container spacing={5}>
+                {other}
+                
+                <Grid key="createNew" item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                        <CreateDep /> +
+                            <CreateDep />
                         </Button>
                     </Box>
                 </Grid>
