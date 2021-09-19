@@ -19,7 +19,6 @@ function getAllUsers(departmentId) {
         method: 'GET',
         headers: {
             Authorization: getToken(),
-
         }
     }
 
@@ -60,7 +59,7 @@ function declineUser(userId, departmentId) {
 
 // Search an organisation
 function handleSearchOrg(organisation) {
-    
+
     const info = {
         method: 'GET',
         headers: {'Authorization': getToken()},
@@ -73,7 +72,8 @@ function handleSearchOrg(organisation) {
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        }
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -97,7 +97,8 @@ function handleJoinOrg(organisationId) {
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        }
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -121,7 +122,8 @@ function handleCreateOrg(organisation) {
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        }
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -143,7 +145,8 @@ function handleCreateDep(organisationId, department) {
             resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        }
+    })
     .catch(error => {reject(error);})
     })
 }

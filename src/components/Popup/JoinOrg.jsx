@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -20,20 +20,22 @@ export default function JoinOrg() {
 	const [results, setResults] = useState([]);
 
 	const handleClickOpen = () => {
-	  	setFirstTry(true);
 	  	setOpen(true);
 	};
 
 	const handleClickClose = () => {
+		setOpen(false);
 	  	setOrganisation("");
+		setSelected(0);
 	  	setAvailable(false);
-	  	setOpen(false);
+		setFirstTry(true);
 	};
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "organisation") {
 			setOrganisation(e.target.value);
 			setAvailable(false);
+			setFirstTry(true);
 		}
     };
 
@@ -41,31 +43,32 @@ export default function JoinOrg() {
 		setSelected(e);
 	}
 
+	// Search button
   	const handleSearch = () => {
-		//console.log(organisation);
 		if (organisation !== "") {
 			handleSearchOrg(organisation).then(res => {
 			if (res.ok) {
-				res.json().then(bodyRes=>{setResults(bodyRes.data);});
+				res.json().then(bodyRes=>{
+					setResults(bodyRes.data);
+					if (bodyRes.data.length !== 0) {
+						setAvailable(true);
+					} else {
+						setAvailable(false);
+						setFirstTry(false);
+					}
+				});
             } else {
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
-			}).then(()=>{
-				//console.log(results);
-				if (results.length !== 0) {
-					setAvailable(true);
-					handleResult();
-				} else {
-					setAvailable(false);
-					setFirstTry(false);
-				}});
+		})	
 		} else {
 			alert("Typing box cannot be empty") 
 		}
 	}
 
+	// Display result
 	const handleResult = () => {
-		return (
+		 return (
 			<div>
 			<ToggleButtonGroup orientation="vertical" value={selected} exclusive onChange={handleSelected}>
 				{results.map((org) => (
@@ -78,6 +81,7 @@ export default function JoinOrg() {
 		);
 	}
 
+	// Join button
 	const handleJoin = () =>{
 		if (selected===0) {
 			alert("please select an organisation!")
@@ -89,14 +93,13 @@ export default function JoinOrg() {
 					res.json().then(bodyRes=>{alert(bodyRes.msg);});
 				}
 			})
-			setSelected(0);
 			handleClickClose();
 		}	
 	}
 
 	let button;
 	let display;
-	if (!available || !firstTry) {
+	if (!available) {
 		button = <Button onClick={handleSearch} color="primary"> Search </Button>
 		display = null;
 	} else {
@@ -134,7 +137,6 @@ export default function JoinOrg() {
 			</Button>
 				{button}
 			</DialogActions>
-			
 		</Dialog>
 		</div>
 	);
