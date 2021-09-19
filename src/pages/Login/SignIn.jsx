@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function SignIn(props) {
+export default function SignIn(props) {
 
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
@@ -73,6 +73,7 @@ function SignIn(props) {
 		}
     };
 
+	// Email and password validation check
 	const handleValidation = () => {
 
 		let formIsValid = true;
@@ -109,9 +110,8 @@ function SignIn(props) {
 		if (handleValidation()) {
 			handleSignIn(email, password).then(res => {
 			if (res.ok) {
-                let data = res.headers.get("Authorization");
-                if (remember) localStorage.setItem('Token', data);
-                sessionStorage.setItem('Token', data);
+                if (remember) localStorage.setItem('Token', res.headers.get("Authorization"));
+                sessionStorage.setItem('Token', res.headers.get("Authorization"));
                 history.push('/');
             } else {
                 res.json().then(bodyRes=>{alert(bodyRes.msg);});
@@ -196,4 +196,3 @@ function SignIn(props) {
 		</Container>
 	);
 }
-export default SignIn;
