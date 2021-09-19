@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function SignUp(props) {
+export default function SignUp(props) {
 
 	const classes = useStyles();	
 	const [firstName, setFirstName] = useState("");
@@ -74,6 +74,7 @@ function SignUp(props) {
 		}
     };
 
+	// Email and password validation check
 	const handleValidation = () => {
 
 		let formIsValid = true;
@@ -262,4 +263,3 @@ function SignUp(props) {
 		</Container>
 	);
 }
-export default SignUp;
