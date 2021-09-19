@@ -84,9 +84,9 @@ class Sidebar extends React.Component {
                             <ImageIcon/>
                         </Avatar>
                     </div>
-                    <text>
+                    <div className='sidebar-user-text'>
                         Edit Profile
-                    </text>
+                    </div>
                 </div>
                 <div className='sidebar-user-main'>
                     <div className='sidebar-user-name'>
