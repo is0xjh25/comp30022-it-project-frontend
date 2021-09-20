@@ -118,14 +118,11 @@ export default function Organization(props) {
         })
     }, [])
 
-
     const classes = useStyles();
  
     if (loading) {
         return <div>loading...</div>
     }
-
-
 
     const showDepartment = (id) => {
         props.changePage('Department');

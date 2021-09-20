@@ -8,6 +8,8 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
+import Contacts from '../../components/Contact/Contact'
+import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 require('dotenv').config();
 
@@ -50,6 +52,12 @@ class Home extends React.Component {
       )
     }
 
+    if(this.state.selectedPage === 'Contacts') {
+      body = (
+        <Contacts/>
+      )
+    }
+
     return(
       <div className='home-main-container'>
         <div className='sidebar-container'>
@@ -57,10 +65,7 @@ class Home extends React.Component {
         </div>
         <div className='sidebar-body'>
           {body}
-          
         </div>
-        
-
       </div>
     )
   }
