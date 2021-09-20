@@ -17,6 +17,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import SettingsIcon from '@material-ui/icons/MoreHoriz'
 import LogOutIcon from '@material-ui/icons/ExitToApp';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import Logout from '../Popup/Logout';
 
 
 import './Sidebar.css';
@@ -152,6 +153,7 @@ class Sidebar extends React.Component {
                 <ListItem button>
                     <ListItemIcon>
                         <LogOutIcon/>
+                        <Logout />
                     </ListItemIcon>
                     <ListItemText primary="Log out"></ListItemText>
                 </ListItem>
