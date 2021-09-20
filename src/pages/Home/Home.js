@@ -13,7 +13,6 @@ import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 require('dotenv').config();
 
-
 class Home extends React.Component {
   constructor(props) {
     super(props);

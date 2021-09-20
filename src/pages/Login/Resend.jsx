@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function Resend(props) {
+export default function Resend(props) {
 
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
@@ -50,6 +50,7 @@ function Resend(props) {
 		}
     };
 
+	// Email validation check
 	const handleValidation = () => {
 
 		let formIsValid = true;
@@ -140,4 +141,3 @@ function Resend(props) {
 		</Container>
 	);
 }
-export default Resend;
