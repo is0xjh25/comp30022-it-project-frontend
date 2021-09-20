@@ -21,8 +21,8 @@ function getCookie(cname) {
 }
 
 // Gets all users from a department
-function getAllUsers(departmentId) {
-    const url = BASE_URL + '/';
+function getAllUsers(departmentId, currentPage) {
+    const url = BASE_URL + '/department/member?department_id=' + departmentId + '&size=10&current=' + currentPage;
 
     const requestInit = {
         method: 'GET',
@@ -203,7 +203,7 @@ function getOrganization() {
     })
 }
 
-function getDepartment(organization_id) {
+function getDepartment(organizationId) {
     const info = {
         method: 'GET',
         headers: {
@@ -212,7 +212,7 @@ function getDepartment(organization_id) {
         },
     }
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + `/organization/departments?organization_id=${organization_id}`, info)
+        fetch(BASE_URL + `/organization/departments?organization_id=${organizationId}`, info)
         .then(res => {
             if (res.ok) {
                 resolve(res);
@@ -221,6 +221,25 @@ function getDepartment(organization_id) {
             }
         })
         .catch(error => {reject(error)})
+    })
+}
+
+function deleteOrganization(origanizationId) {
+    const url = `${BASE_URL}/organization?organization_id=${origanizationId}`;
+    const info = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': getCookie('token'),
+        }
+    }
+    return new Promise((resolve, reject) => {
+        fetch(url, info)
+        .then(res => {
+            res.json().then(resBody => {
+                console.log(resBody);
+                resolve(resBody);
+            })
+        })
     })
 }
 
@@ -236,5 +255,6 @@ module.exports = {
     handleCreateOrg,
     handleCreateDep,
     getOrganization,
-    getDepartment
+    getDepartment,
+    deleteOrganization
 }

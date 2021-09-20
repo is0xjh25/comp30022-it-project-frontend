@@ -9,17 +9,15 @@ import Member from '../components/Members/Members'
 function PageNavigator() {
     return (
         <Switch>
-            <Route exact path='/'>
-                <Home/>
-            </Route>
+
             <Route path='/swagger'>
                 <Swagger/>
             </Route>
             <Route path ='/login'>
                 <Login/>
             </Route>
-            <Route path ='/member'>
-                <Member/>
+            <Route path='/'>
+                <Home/>
             </Route>
         </Switch>
     );
