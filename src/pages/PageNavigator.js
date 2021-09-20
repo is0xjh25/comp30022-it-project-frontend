@@ -4,6 +4,8 @@ import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Login from './Login/Login';
 
+import Member from '../components/Members/Members'
+
 function PageNavigator() {
     return (
         <Switch>
@@ -15,6 +17,9 @@ function PageNavigator() {
             </Route>
             <Route path ='/login'>
                 <Login/>
+            </Route>
+            <Route path ='/member'>
+                <Member/>
             </Route>
         </Switch>
     );

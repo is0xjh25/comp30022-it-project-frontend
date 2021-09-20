@@ -136,10 +136,6 @@ export default function Department(organization) {
                         <Button alignItems='center'>
                             {department.name}
                         </Button>
-
-                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
-                            <PersonOutlineOutlinedIcon />
-                        </IconButton>
                         
                         <IconButton aria-label="delete" className={classes.deleteButton}>
                             <DeleteIcon />
