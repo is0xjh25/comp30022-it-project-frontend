@@ -191,8 +191,17 @@ export default function Department(props) {
     departments.map((department) => {
         if (department.status==="owner") {
             own.push(
-                <OwnedDepartment department={department} update={update} showMembers={showMembers}/>
-
+                <Grid key={department.id} item alignItems={'center'} xs={8}>
+                    <Box className={classes.ownBox} bgcolor="success.main">
+                        <Button alignItems='center'>
+                            {department.name}
+                        </Button>
+                        
+                        <IconButton aria-label="delete" className={classes.deleteButton}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
+                </Grid>
             )
         } else if(department.status==="member") {
             member.push(

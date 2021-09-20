@@ -7,7 +7,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
-import Contacts from '../../components/Contact/Contact'
+import Customer from '../../components/Contact/Customer'
 import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import {
@@ -54,6 +54,11 @@ function Home(props) {
     history.push(`/${toPage}`);
   }
 
+    if(this.state.selectedPage === 'Contacts') {
+      body = (
+        <Customer/>
+      )
+    }
 
   return(
     <div className='home-main-container'>
