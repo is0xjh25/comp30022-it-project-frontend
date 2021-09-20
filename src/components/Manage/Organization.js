@@ -198,7 +198,6 @@ export default function Organization(props) {
         return <div>loading...</div>
     }
 
-
     return (
         <div>
             <Typography className={classes.topic}>

@@ -73,6 +73,9 @@ function Home(props) {
           <Route path={`${url}Dashboard`}>
             
           </Route>
+          <Route path={`${url}Contacts`}>
+            <Customer/>
+          </Route>
           <Route path={`${url}Manage`}>
             <Manage/>
           </Route>

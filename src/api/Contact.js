@@ -5,9 +5,9 @@ function getToken() {
 }
 
 // get all customer of an organization and department
-function getAllCustomer () {
-    const orgId = 3
-    const departId = 4
+function getAllCustomer (orgId, departId) {
+    // const orgId = 3
+    // const departId = 4
     const info = {
         method: 'GET',
         headers: {'Authorization': getToken()},
