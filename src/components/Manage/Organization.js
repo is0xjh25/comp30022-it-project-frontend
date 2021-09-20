@@ -10,7 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
-import {getOrganization} from '../../api/Manage';
+import {getOrganization, deleteOrganization} from '../../api/Manage';
+import AlertDialog from '../Dialog/AlertDialog';
+
+import { useHistory,  useRouteMatch } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     palette: {
@@ -98,15 +101,82 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function EachOrganization(props) {
+    const {org, update} = props;
+    const classes = useStyles();
+    const history = useHistory();
+    let {path, url} = useRouteMatch();
+    const showDepartment = (id) => {
+        history.push(`${url}/${id}`)
+
+    };
+
+    //================ Delete Member ==================
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${org.name}?`;
+    const handleDeleteOrg = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        deleteOrganization(org.id);
+        setAlertOpen(false);
+        update();
+    }
+
+    return(
+        org.owner === true ? 
+            <Grid key={org.id} item alignItems={'center'} xs={8}>
+                <Box className={classes.ownBox} bgcolor="success.main">
+                    <Button alignItems='center' onClick={() => showDepartment(org.id)}>
+                        {org.name}
+                    </Button>
+
+                    <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
+                        <PersonOutlineOutlinedIcon />
+                    </IconButton>
+                    
+                    <IconButton onClick={handleDeleteOrg} aria-label="delete" className={classes.deleteButton}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
+                <AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+                />
+            </Grid>
+        :
+            <Grid key={org.id} item alignItems="center" xs={8}>
+                <Box className={classes.memberBox} bgcolor="info.main">
+                    <Button onClick={() => showDepartment(org.id)}>
+                        {org.name}
+                    </Button>
+                </Box>
+            </Grid>
+    )
+
+
+}
+
 export default function Organization(props) {
     // read in the user's organisation info from backend api
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
 
+    const [updateCount, setUpdateCount] = useState(0);
+
+
     useEffect(() => {
         getOrganization().then(res => {
             if (res.ok) {
-                res.json().then(body => {setOrganizations(body.data)});
+                res.json().then(body => {
+                    console.log(body);
+                    setOrganizations(body.data)
+                });
             } else {
                 res.json().then(body => {alert(body.msg)});
             }
@@ -116,7 +186,11 @@ export default function Organization(props) {
                 return <div>You have not joined any organization yet.</div>
             }
         })
-    }, [])
+    }, [updateCount])
+
+    const update = function() {
+        setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+    }
 
 
     const classes = useStyles();
@@ -126,42 +200,6 @@ export default function Organization(props) {
     }
 
 
-
-    const showDepartment = (id) => {
-        props.changePage('Department');
-        props.changeOrg(id);
-    };
-    
-    const orgs = 
-        organizations.map((org) => {
-            return(
-                org.owner === true ? 
-                    <Grid key={org.id} item alignItems={'center'} xs={8}>
-                        <Box className={classes.ownBox} bgcolor="success.main">
-                            <Button alignItems='center' onClick={() => showDepartment(org.id)}>
-                                {org.name}
-                            </Button>
-
-                            <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
-                                <PersonOutlineOutlinedIcon />
-                            </IconButton>
-                            
-                            <IconButton aria-label="delete" className={classes.deleteButton}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                :
-                    <Grid key={org.id} item alignItems="center" xs={8}>
-                        <Box className={classes.memberBox} bgcolor="info.main">
-                            <Button onClick={() => showDepartment(org.id)}>
-                                {org.name}
-                            </Button>
-                        </Box>
-                    </Grid>
-            )
-        });
-
     return (
         <div>
             <Typography className={classes.topic}>
@@ -169,12 +207,14 @@ export default function Organization(props) {
             </Typography>
 
             <Grid className={classes.orgGrid} container spacing={5}>
-                {orgs}
+                {organizations.map((org) => {
+                    return (<EachOrganization key={org.id} org={org} update={update}/>)
+                })}
 
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            <CreateOrg /> + <JoinOrg />
+                            <CreateOrg update={update} /> + <JoinOrg update={update}/>
                         </Button>
                     </Box>
                 </Grid>

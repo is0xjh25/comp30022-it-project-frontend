@@ -10,7 +10,8 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {handleSearchOrg, handleJoinOrg} from '../../api/Manage';
 
-export default function JoinOrg() {
+export default function JoinOrg(props) {
+	const update = props.update;
 	
 	const [open, setOpen] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
@@ -88,6 +89,7 @@ export default function JoinOrg() {
 		} else {
 			handleJoinOrg(selected).then(res => {
 				if (res.ok) {
+					update();
 					alert("Successfully join");
 				} else {
 					res.json().then(bodyRes=>{alert(bodyRes.msg);});

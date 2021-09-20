@@ -7,14 +7,15 @@ import Login from './Login/Login';
 function PageNavigator() {
     return (
         <Switch>
-            <Route exact path='/'>
-                <Home/>
-            </Route>
+
             <Route path='/swagger'>
                 <Swagger/>
             </Route>
             <Route path ='/login'>
                 <Login/>
+            </Route>
+            <Route path='/'>
+                <Home/>
             </Route>
         </Switch>
     );

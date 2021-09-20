@@ -8,7 +8,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {handleCreateOrg} from '../../api/Manage';
 
-export default function CreateOrg() {
+export default function CreateOrg(props) {
+	const update = props.update;
 	
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
@@ -37,6 +38,7 @@ export default function CreateOrg() {
 		if (organisation !== "") {
 			handleCreateOrg(organisation).then(res => {
 			if (res.ok) {
+				update();
 				alert("Successfully created");
 				setAvailable(true);
 				handleClickClose();
