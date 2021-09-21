@@ -243,6 +243,25 @@ function deleteOrganization(origanizationId) {
     })
 }
 
+function deleteDepartment(departmentId) {
+    const url = `${BASE_URL}/department?department_id=${departmentId}`;
+    const info = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': getCookie('token'),
+        }
+    }
+    return new Promise((resolve, reject) => {
+        fetch(url, info)
+        .then(res => {
+            res.json().then(resBody => {
+                console.log(resBody);
+                resolve(resBody);
+            })
+        })
+    })
+}
+
 module.exports = {
     getCookie,
     getAllUsers,
@@ -256,5 +275,6 @@ module.exports = {
     handleCreateDep,
     getOrganization,
     getDepartment,
-    deleteOrganization
+    deleteOrganization,
+    deleteDepartment
 }
