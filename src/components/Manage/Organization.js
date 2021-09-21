@@ -111,7 +111,7 @@ function EachOrganization(props) {
 
     };
 
-    //================ Delete Member ==================
+    //================ Delete Organization ==================
 
     const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Delete Confirm';
