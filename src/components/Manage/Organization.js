@@ -192,7 +192,6 @@ export default function Organization(props) {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
-
     const classes = useStyles();
  
     if (loading) {

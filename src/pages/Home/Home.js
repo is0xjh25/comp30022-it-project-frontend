@@ -7,6 +7,8 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
+import Contacts from '../../components/Contact/Contact'
+import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import {
   Switch,
