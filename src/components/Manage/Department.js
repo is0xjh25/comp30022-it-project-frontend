@@ -11,6 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import CreateDep from '../../components/Popup/CreateDep';
 import {getDepartment} from '../../api/Manage';
 
+import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
+
+
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
@@ -95,14 +98,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Department(organization) {
+export default function Department(props) {
     // read in the user's organisation info from backend api
 
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
+    const history = useHistory();
+    let {path, url} = useRouteMatch();
+    let {orgId} = useParams();
+
+    const [updateCount, setUpdateCount] = useState(0);
+    const update = function() {
+        setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+    }
 
     useEffect(() => {
-        const id = organization.organization;
+        const id = orgId;
         getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {setDepartments(body.data)});
@@ -115,7 +126,7 @@ export default function Department(organization) {
                 return <div>You have not joined any department yet.</div>
             }
         })
-    }, [])
+    }, [updateCount])
 
     const classes = useStyles();
 
@@ -124,22 +135,22 @@ export default function Department(organization) {
         </div>
     }
 
+    const showMembers = (depId) => {
+        history.push(`${url}/${depId}`);
+    }
+
     const own = [];
     const member = [];
     const other = [];
     departments.map((department) => {
-        console.log(department.status)
         if (department.status==="owner") {
             own.push(
                 <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center'>
+                        <Button onClick={() => showMembers(department.id)} alignItems='center'>
                             {department.name}
                         </Button>
 
-                        <IconButton aria-label="personOutlined" className={classes.transferOwnerButton}>
-                            <PersonOutlineOutlinedIcon />
-                        </IconButton>
                         
                         <IconButton aria-label="delete" className={classes.deleteButton}>
                             <DeleteIcon />
@@ -191,7 +202,7 @@ export default function Department(organization) {
                 <Grid key="createNew" item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            <CreateDep organizationId={organization.organization} />
+                            <CreateDep organizationId={orgId} update={update}/>
                         </Button>
                     </Box>
                 </Grid>

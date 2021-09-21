@@ -174,6 +174,8 @@ function EnhancedTableRow(props) {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
       alert(`${row.userId} is now assigned to ${permissionLevelMap[currentSelected]}`);
       changePermission(row.userId, currentSelected, departmentId);
+      setSelectOpen(false);
+      setCurrentSelected(-1);
     } else {
       alert('Select a valid role!');
     }
@@ -379,7 +381,7 @@ export default function EnhancedTable(props) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <EnhancedTableRow row={row} currentUser={currentUser} departmentId={departmentId} update={update} />
+                    <EnhancedTableRow key={row.userId} row={row} currentUser={currentUser} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (
