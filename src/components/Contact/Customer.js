@@ -36,15 +36,6 @@ export default function Customer() {
             <TableContainer sx={{ maxHeight: 600 }}>
                 <CustomerTable aria-label="contact" stickyHeader />
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
         </Paper>
     );
 }
