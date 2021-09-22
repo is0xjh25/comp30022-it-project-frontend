@@ -27,26 +27,26 @@ function descendingComparator(a, b, orderBy) {
     return 0;
     }
 
-    function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-    }
+function getComparator(order, orderBy) {
+return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
-    function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-        return order;
-        }
-        return a[1] - b[1];
-    });
+function stableSort(array, comparator) {
+const stabilizedThis = array.map((el, index) => [el, index]);
+stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+    return order;
+    }
+    return a[1] - b[1];
+});
     return stabilizedThis.map((el) => el[0]);
 }
 
 const columns = [
-    { id: 'Name', label: 'Name', minWidth: 200},
+    { id: 'name', label: 'Name', minWidth: 200},
     { id: 'email', label: 'Email', minWidth: 280},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
     {
@@ -79,11 +79,11 @@ const permissionLevelMap = {
 }
 
 function EnhancedTableRow(props) {
-    const {row, currentUser, organizationId, departmentId, update} = props;
+    const {row, permissionLevel, organizationId, departmentId, update} = props;
 
     //=============== Display Delete Button =============
     var display;
-    if (currentUser.authorityLevel > 3) {
+    if (permissionLevel > 3) {
         display = (
                 <div>
                     <IconButton onClick={handleDeleteCustomer}>
@@ -110,7 +110,7 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customerId}>
-            {/* <TableCell component="th" scope="row" padding="none">
+            <TableCell component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
             <TableCell align="center">
@@ -127,14 +127,14 @@ function EnhancedTableRow(props) {
             </TableCell>
             <TableCell align="center">
                 {display}
-            </TableCell> */}
+            </TableCell>
 
-            {/* <AlertDialog alertTitle={alertTitle} 
+            <AlertDialog alertTitle={alertTitle} 
                 alertMessage={alertMessage}
                 open={alertOpen}
                 handleClose={() => {setAlertOpen(false)}}
                 handleConfirm={handleAlertConfirm}
-                handleCancel={() => {setAlertOpen(false)}}/> */}
+                handleCancel={() => {setAlertOpen(false)}}/>
 
             
             {/* <SelectDialog
@@ -177,9 +177,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomerTable(props) {
     //=============== Data from Parent ==================
-    const currentUser = props.currentUser;
+    const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
     const departmentId = props.departmentId;
+    console.log(permissionLevel)
+    console.log(organizationId)
+    console.log(departmentId)
 
     //=============== Table Settings ==================
     const classes = useStyles();
@@ -188,17 +191,24 @@ export default function CustomerTable(props) {
     // const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
-    const [loading, setLoading] = useState(true);
     const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
+    // const [pageSize, setPageSize] = useState(25);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const update = function() {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
     useEffect(() => {
-        getAllCustomer(organizationId, departmentId).then(res => {
+        console.log("**************")
+        console.log(permissionLevel)
+        console.log(organizationId)
+        console.log(departmentId)
+        getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
             if (res.code === 200) {
+                console.log("Log res data of getAllCustomer")
+                console.log(res.data)
                 const data = res.data
                 const records = data.records
                 records.forEach(row => {
@@ -332,7 +342,7 @@ export default function CustomerTable(props) {
         alert("clicked")
     }
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -361,7 +371,7 @@ export default function CustomerTable(props) {
                                     role="checkbox" 
                                     tabIndex={-1} 
                                     key={row.customerId}
-                                    currentUser={currentUser}
+                                    permissionLevel={permissionLevel}
                                     organizationId={organizationId}
                                     departmentId={departmentId}
                                     update={update}

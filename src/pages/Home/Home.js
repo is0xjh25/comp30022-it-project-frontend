@@ -7,7 +7,6 @@ import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
 import Customer from '../../components/Contact/Customer';
-import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
@@ -38,6 +37,7 @@ import {
   Redirect,
   useHistory
 } from "react-router-dom";
+
 
 require('dotenv').config();
 
@@ -81,6 +81,7 @@ function Contacts(props) {
         // fetch departments in this organization
         getDepartment(orgId).then(res => {
             res.json().then(resBody => {
+                console.log("++++++++++++++++")
                 console.log(resBody);
                 if(resBody.code === 200) {
                     // TODO now can select departments
@@ -101,6 +102,7 @@ function Contacts(props) {
 
     const handleDepChange = function(event) {
         const depId = event.target.value;
+        console.log(depId)
         setCurrentDepartment(depId);
     }
 
@@ -108,6 +110,7 @@ function Contacts(props) {
         // fetch organization
         getOrganization().then(res => {
             res.json().then(resBody => {
+                console.log("--------------")
                 console.log(resBody);
                 if(resBody.code === 200) {
                     const data = resBody.data;
@@ -164,7 +167,8 @@ function Contacts(props) {
                     <Button onClick={handleDialogClose}>Ok</Button>
                 </DialogActions>
             </Dialog>
-            <Route exact path={`${path}/:orgId/:depId`}>
+            <Route exact path={`${path}/:orgId/:depId`} 
+            >
                 <Customer />
             </Route>
             <Route exact path={`${path}`} >
@@ -222,6 +226,9 @@ function Home(props) {
             </Route>
             <Route path={`${url}Manage`}>
                 <Manage/>
+            </Route>
+            <Route path={`${url}TestContact/:orgId/:depId`}>
+                <Customer/>
             </Route>
         </Switch>
       </div>
