@@ -10,6 +10,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import { makeStyles } from '@material-ui/core';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer } from '../../api/Contact';
@@ -110,7 +112,7 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customerId}>
-            <TableCell component="th" scope="row" padding="none">
+            {/* <TableCell component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
             <TableCell align="center">
@@ -127,14 +129,14 @@ function EnhancedTableRow(props) {
             </TableCell>
             <TableCell align="center">
                 {display}
-            </TableCell>
+            </TableCell> */}
 
-            <AlertDialog alertTitle={alertTitle} 
+            {/* <AlertDialog alertTitle={alertTitle} 
                 alertMessage={alertMessage}
                 open={alertOpen}
                 handleClose={() => {setAlertOpen(false)}}
                 handleConfirm={handleAlertConfirm}
-                handleCancel={() => {setAlertOpen(false)}}/>
+                handleCancel={() => {setAlertOpen(false)}}/> */}
 
             
             {/* <SelectDialog

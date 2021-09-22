@@ -1,6 +1,6 @@
 import SearchBar from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import SearchIcon from '@material-ui/icons/Search';
 
