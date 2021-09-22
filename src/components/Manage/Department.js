@@ -9,9 +9,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import CreateDep from '../../components/Popup/CreateDep';
-import {getDepartment} from '../../api/Manage';
+import {getDepartment, deleteDepartment, handleJoinDep} from '../../api/Manage';
+import AlertDialog from '../Dialog/AlertDialog';
 
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +101,86 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+function OwnedDepartment(props) {
+    const {department, update, showMembers} = props;
+    const classes = useStyles();
+
+    //================ Delete Department ==================
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${department.name}?`;
+    const handleDeleteDep = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        deleteDepartment(department.id);
+        setAlertOpen(false);
+        update();
+    }
+
+    return(
+        <Grid key={department.id} item alignItems={'center'} xs={8}>
+            <Box className={classes.ownBox} bgcolor="success.main">
+                <Button onClick={() => showMembers(department.id)} alignItems='center'>
+                    {department.name}
+                </Button>
+
+                
+                <IconButton onClick={handleDeleteDep} aria-label="delete" className={classes.deleteButton}>
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
+            <AlertDialog alertTitle={alertTitle}
+            alertMessage={alertMessage}
+            open={alertOpen}
+            handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+            handleConfirm={handleAlertConfirm}
+            handleCancel={() => { setAlertOpen(false) }}
+            />
+        </Grid>
+    )
+
+}
+
+function NotJoinedDepartment(props) {
+    const {department, update} = props;
+    const classes = useStyles();
+
+    //================ Delete Department ==================
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Join department Confirm';
+    const alertMessage = `Do you want to join ${department.name}?`;
+    const handleJoinDepartment = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        handleJoinDep(department.id);
+        setAlertOpen(false);
+        alert('Your request has been sent');
+        update();
+    }
+
+    return (
+        <Grid key={department.id} item xs={8}>
+            <Box className={classes.plusBox} bgcolor="text.disabled">
+                <Button onClick={handleJoinDepartment}>
+                    {department.name}
+                </Button>
+            </Box>
+            <AlertDialog alertTitle={alertTitle}
+            alertMessage={alertMessage}
+            open={alertOpen}
+            handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+            handleConfirm={handleAlertConfirm}
+            handleCancel={() => { setAlertOpen(false) }}
+            />
+        </Grid>
+    )
+}
+
 export default function Department(props) {
     // read in the user's organisation info from backend api
 
@@ -147,7 +230,7 @@ export default function Department(props) {
             own.push(
                 <Grid key={department.id} item alignItems={'center'} xs={8}>
                     <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button onClick={() => showMembers(department.id)} alignItems='center'>
+                        <Button alignItems='center'>
                             {department.name}
                         </Button>
                         
@@ -161,7 +244,7 @@ export default function Department(props) {
             member.push(
                 <Grid key={department.id} item alignItems="center" xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
-                        <Button>
+                        <Button onClick={() => showMembers(department.id)}>
                             {department.name}
                         </Button>
                     </Box>
@@ -169,13 +252,14 @@ export default function Department(props) {
             )
         } else {
             other.push(
-                <Grid key={department.id} item xs={8}>
-                    <Box className={classes.plusBox} bgcolor="text.disabled">
-                        <Button>
-                            {department.name}
-                        </Button>
-                    </Box>
-                </Grid>
+                <NotJoinedDepartment department={department} update={update}/>
+                // <Grid key={department.id} item xs={8}>
+                //     <Box className={classes.plusBox} bgcolor="text.disabled">
+                //         <Button>
+                //             {department.name}
+                //         </Button>
+                //     </Box>
+                // </Grid>
             )
         }
     });

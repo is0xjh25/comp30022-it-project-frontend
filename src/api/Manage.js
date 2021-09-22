@@ -130,6 +130,30 @@ function handleJoinOrg(organisationId) {
     })
 }
 
+// Join a department
+function handleJoinDep(departmentId) {
+    const body = new FormData();
+    body.append("department_id", departmentId);
+
+    const info = {
+        method: 'POST',
+        headers: {'Authorization': getCookie('token')},
+        body: body
+    };
+
+    return new Promise((resolve, reject) => {
+    fetch(BASE_URL + "/department/join", info)
+    .then(res => {
+        if (res.ok) {
+            resolve(res);
+        } else {
+            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+        }
+    })
+    .catch(error => {reject(error);})
+    })
+}
+
 // Create an organisation
 function handleCreateOrg(organisation) {
     
@@ -243,6 +267,25 @@ function deleteOrganization(origanizationId) {
     })
 }
 
+function deleteDepartment(departmentId) {
+    const url = `${BASE_URL}/department?department_id=${departmentId}`;
+    const info = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': getCookie('token'),
+        }
+    }
+    return new Promise((resolve, reject) => {
+        fetch(url, info)
+        .then(res => {
+            res.json().then(resBody => {
+                console.log(resBody);
+                resolve(resBody);
+            })
+        })
+    })
+}
+
 module.exports = {
     getCookie,
     getAllUsers,
@@ -252,9 +295,11 @@ module.exports = {
     declineUser,
     handleSearchOrg,
     handleJoinOrg,
+    handleJoinDep,
     handleCreateOrg,
     handleCreateDep,
     getOrganization,
     getDepartment,
-    deleteOrganization
+    deleteOrganization,
+    deleteDepartment
 }

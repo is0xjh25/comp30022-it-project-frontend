@@ -1,29 +1,27 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
-
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CustomerTable from './CustomerTable';
+import { getAllCustomer } from '../../api/Contact';
+
+// const createData()
 
 export default function Customer() {
     const [loading, setLoading] = useState(true);
-
-    const {orgId, depId} = useParams();
-
-    const mockUser = {
-        authorityLevel: 5
-    }
+    const [rows, setRows] = useState([]);
 
     useEffect(() => {
         setLoading(false);
     }, [])
-
     const handleClick = () => {
         alert("clicked")
     }
@@ -33,13 +31,20 @@ export default function Customer() {
         </div>
     }    
 
-    
-
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 600 }}>
-                <CustomerTable aria-label="contact" stickyHeader currentUser={mockUser} organizationId={orgId} departmentId={depId}/>
+                <CustomerTable aria-label="contact" stickyHeader />
             </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </Paper>
     );
 }

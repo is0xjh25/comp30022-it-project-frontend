@@ -6,7 +6,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { handleDeleteCustomer } from '../../api/Contact';
 
 const useStyles = makeStyles((theme) => ({
 	header: {
@@ -165,7 +165,11 @@ export default function DisplayCustomer(customerID) {
         </div>
     }
 
-	
+	const handleDelete = () => {}
+
+	const handleBack = () => {}
+
+	const handleEdit = () => {}
 
 	return (
 		
@@ -233,17 +237,17 @@ export default function DisplayCustomer(customerID) {
 				</Grid>
 				<Grid container className={classes.button_div}>
 					<Grid item xs={4}>
-						<Button className={classes.back_button}>
+						<Button className={classes.back_button} onclick={handleBack}>
 							Back
 						</Button>
 					</Grid>
 					<Grid item xs={4}>
-						<Button className={classes.delete_button}>
+						<Button className={classes.delete_button} onclick={handleDelete}>
 							Delete
 						</Button>
 					</Grid>
 					<Grid item xs={4}>
-						<Button className={classes.edit_button}>
+						<Button className={classes.edit_button} onclick={handleEdit}>
 							Edit
 						</Button>
 					</Grid>
