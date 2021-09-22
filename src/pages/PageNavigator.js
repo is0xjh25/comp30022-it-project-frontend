@@ -19,7 +19,10 @@ function PageNavigator() {
 
             <Route path ='/member'>
                 <Member/>
+            </Route>
 
+            <Route path='/'>
+                <Home/>
             </Route>
         </Switch>
     );

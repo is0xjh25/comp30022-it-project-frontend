@@ -6,7 +6,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
-import Contact from '../../components/Contact/CustomerTable';
+import CustomerTable from '../../components/Contact/CustomerTable';
 import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import { getDepartment, getOrganization } from '../../api/Manage';
@@ -166,7 +166,7 @@ function Contacts(props) {
                 </DialogActions>
             </Dialog>
             <Route exact path={`${path}/:orgId/:depId`}>
-                <Contact />
+                <CustomerTable />
             </Route>
             <Route exact path={`${path}`} >
                 Try again
@@ -188,11 +188,6 @@ function Home(props) {
     history.push(`/${toPage}`);
   }
 
-    if(this.state.selectedPage === 'Contacts') {
-      body = (
-        <Customer/>
-      )
-    }
 
   return(
     <div className='home-main-container'>

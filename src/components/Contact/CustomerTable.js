@@ -10,6 +10,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import { makeStyles } from '@material-ui/core';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer } from '../../api/Contact';
@@ -81,35 +83,35 @@ function EnhancedTableRow(props) {
     const {row, currentUser, organizationId, departmentId, update} = props;
 
     //=============== Display Delete Button =============
-    const display;
-    if (currentUser.authorityLevel > 3) {
-        display = (
-                <div>
-                    <IconButton onClick={handleDeleteCustomer}>
-                        <DeleteIcon />
-                    </IconButton>
-                </div>)
-    } else {
-        display = (<div></div>)
-    }
+    var display;
+    // if (currentUser.authorityLevel > 3) {
+    //     display = (
+    //             <div>
+    //                 <IconButton onClick={handleDeleteCustomer}>
+    //                     <DeleteIcon />
+    //                 </IconButton>
+    //             </div>)
+    // } else {
+    //     display = (<div></div>)
+    // }
 
     //=============== Delete Customer ==================
-    const [alertOpen, setAlertOpen] = useState(false);
-    const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${row.name}?`;
-    const handleDeleteCustomer = function() {
-        setAlertOpen(true);
-    }
-    const handleAlertConfirm = function() {
-        deleteCustomer(row.customerId, organizationId, departmentId);
-        alert(`${row.name} is deleted`);
-        setAlertOpen(false);
-        update();
-    }
+    // const [alertOpen, setAlertOpen] = useState(false);
+    // const alertTitle = 'Delete Confirm';
+    // const alertMessage = `Do you want to delete ${row.name}?`;
+    // const handleDeleteCustomer = function() {
+    //     setAlertOpen(true);
+    // }
+    // const handleAlertConfirm = function() {
+    //     deleteCustomer(row.customerId, organizationId, departmentId);
+    //     alert(`${row.name} is deleted`);
+    //     setAlertOpen(false);
+    //     update();
+    // }
 
     return (
         <TableRow hover role="checkbox" key={row.customerId}>
-            <TableCell component="th" scope="row" padding="none">
+            {/* <TableCell component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
             <TableCell align="center">
@@ -126,14 +128,14 @@ function EnhancedTableRow(props) {
             </TableCell>
             <TableCell align="center">
                 {display}
-            </TableCell>
+            </TableCell> */}
 
-            <AlertDialog alertTitle={alertTitle} 
+            {/* <AlertDialog alertTitle={alertTitle} 
                 alertMessage={alertMessage}
                 open={alertOpen}
                 handleClose={() => {setAlertOpen(false)}}
                 handleConfirm={handleAlertConfirm}
-                handleCancel={() => {setAlertOpen(false)}}/>
+                handleCancel={() => {setAlertOpen(false)}}/> */}
 
             
             {/* <SelectDialog
