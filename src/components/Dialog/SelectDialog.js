@@ -16,29 +16,29 @@ export default function DialogSelect(props) {
     return (
     <div>
         <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
-            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="demo-dialog-native">{label}</InputLabel>
-                <Select
-                native
-                value={currentSelected}
-                onChange={handleChange}
-                input={<OutlinedInput label={label}/>}
-                >
-                <option aria-label="None" value={-1} />
-                {items.map(item => {
-                    return (<option key={item.value} value={item.value}>{item.name}</option>)
-                })}
-                </Select>
-            </FormControl>
-            </Box>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleConfirm}>Ok</Button>
-        </DialogActions>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogContent>
+                <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel htmlFor="demo-dialog-native">{label}</InputLabel>
+                    <Select
+                    native
+                    value={currentSelected}
+                    onChange={handleChange}
+                    input={<OutlinedInput label={label}/>}
+                    >
+                    <option aria-label="None" value={-1} />
+                    {items.map(item => {
+                        return (<option key={item.value} value={item.value}>{item.name}</option>)
+                    })}
+                    </Select>
+                </FormControl>
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleConfirm}>Ok</Button>
+            </DialogActions>
         </Dialog>
     </div>
     );
