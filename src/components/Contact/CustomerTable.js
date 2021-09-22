@@ -13,6 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer } from '../../api/Contact';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 
 
 // functions for sorting 
@@ -81,7 +82,7 @@ function EnhancedTableRow(props) {
     const {row, currentUser, organizationId, departmentId, update} = props;
 
     //=============== Display Delete Button =============
-    const display;
+    var display;
     if (currentUser.authorityLevel > 3) {
         display = (
                 <div>
@@ -101,7 +102,7 @@ function EnhancedTableRow(props) {
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        deleteCustomer(row.customerId, organizationId, departmentId);
+        // deleteCustomer(row.customerId, organizationId, departmentId);
         alert(`${row.name} is deleted`);
         setAlertOpen(false);
         update();
@@ -206,6 +207,113 @@ export default function CustomerTable(props) {
                 setRows(records);
             } else {
                 alert("Failed to fetch table data")
+                const data = [
+                    {
+                        "firstName": "Lingxiao",
+                        "lastName": "Li",
+                        "email": "lingxiao1@student.unimelb.edu.au",
+                        "gender": "male",
+                        "age": 22,
+                        "organization": "yyds"
+                    },
+                    {
+                        "firstName": "Yiyang",
+                        "lastName": "Huang",
+                        "email": "yiyahuang@student.unimelb.edu.au",
+                        "gender": "male",
+                        "age": 22,
+                        "organization": "yyds"
+                    },
+                    {
+                        "firstName": "Kaiyuan",
+                        "lastName": "Zheng",
+                        "email": "kzzhe@student.unimelb.edu.au",
+                        "gender": "male",
+                        "age": 3,
+                        "organization": "yyds"
+                    },
+                    {
+                        "firstName": "Yongfeng",
+                        "lastName": "Qin",
+                        "email": "yongfengq@student.unimelb.edu.au",
+                        "gender": "male",
+                        "age": 22,
+                        "organization": "yyds"
+                    },
+                    {
+                        "firstName": "Yun-Chi",
+                        "lastName": "Hsiao",
+                        "email": "yunchi@student.unimelb.edu.au",
+                        "gender": "male",
+                        "age": 22,
+                        "organization": "yyds"
+                    },
+                    {
+                        "firstName": "Jonathan",
+                        "lastName": "Joestar",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 19,
+                        "organization": "JOJO1"
+                    },
+                    {
+                        "firstName": "Joseph",
+                        "lastName": "Joestar",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 19,
+                        "organization": "JOJO2"
+                    },
+                    {
+                        "firstName": "Jotaro",
+                        "lastName": "Cujoh",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 19,
+                        "organization": "JOJO3"
+                    },
+                    {
+                        "firstName": "Jousuke",
+                        "lastName": "Higashikata",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 19,
+                        "organization": "JOJO4"
+                    },
+                    {
+                        "firstName": "Gioruno",
+                        "lastName": "Giobana",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 16,
+                        "organization": "JOJO5"
+                    },
+                    {
+                        "firstName": "Jolyn",
+                        "lastName": "Cujoh",
+                        "email": "123@456.com",
+                        "gender": "female",
+                        "age": 19,
+                        "organization": "JOJO6"
+                    },
+                    {
+                        "firstName": "Jonny",
+                        "lastName": "Joestar",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 22,
+                        "organization": "JOJO7"
+                    },
+                    {
+                        "firstName": "Jousuke",
+                        "lastName": "Higashikata",
+                        "email": "123@456.com",
+                        "gender": "male",
+                        "age": 17,
+                        "organization": "JOJO8"
+                    }
+                ]
+                setRows(data);
             }
         })
     }, [updateCount])
@@ -229,7 +337,7 @@ export default function CustomerTable(props) {
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 600 }}>
-                <Table Contact aria-label="contact" stickyHeader>
+                <Table Contact aria-label="contact" stickyHeader height={100}>
                     <TableHead>
                         <TableRow>
                         {columns.map((column) => (
@@ -258,16 +366,6 @@ export default function CustomerTable(props) {
                                     departmentId={departmentId}
                                     update={update}
                                 >
-                                    {/* {columns.map((column) => {
-                                    const value = row[column.id];
-                                    return (
-                                        <TableCell key={column.id} align={column.align}>
-                                        {column.format && typeof value === 'number'
-                                            ? column.format(value)
-                                            : value}
-                                        </TableCell>
-                                    );
-                                    })} */}
                                 </EnhancedTableRow>
                                 );
                         })}
