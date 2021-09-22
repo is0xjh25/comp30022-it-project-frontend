@@ -1,38 +1,32 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import SearchBar from '../SearchBar/SearchBar';
-import InputAdornment from '@material-ui/core/InputAdornment';
-
-
-
-import SearchIcon from '@material-ui/icons/Search';
-
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 
 import Table from './Table';
 
 
 import './Members.css'
+import { getMyPermissionLevel } from '../../api/Manage';
 
-
-
-
-const mockUser = {
-    authorityLevel: 5
-}
 
 
 function Members() {
-    let {path, url} = useRouteMatch();
-    let {orgId, depId} = useParams();
+    let {depId} = useParams();
+    const [myPremissionLevel, setMyPermissionLevel] = useState(0);
+    useEffect(() => {
+        getMyPermissionLevel(depId).then(res => {
+            console.log(res);
+            setMyPermissionLevel(res.data);
+        })
 
+    }, [])
     return(
         <div>
             <SearchBar />
             <div className='table-container'>
-                <Table className='table' currentUser={mockUser} departmentId={depId}></Table>
+                <Table className='table' myPremissionLevel={myPremissionLevel}  departmentId={depId}></Table>
             </div>
             
         </div>

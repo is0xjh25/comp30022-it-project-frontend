@@ -1,7 +1,7 @@
 // Reference: https://material-ui.com/components/tables/#sorting-amp-selecting
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -111,8 +111,8 @@ EnhancedTableHead.propTypes = {
 const permissionLevels = [
   {authorityLevel: 0, name: 'Pending to join'},
   {authorityLevel: 1, name: 'Member'},
-  {authorityLevel: 2, name: 'Department admin'},
-  {authorityLevel: 3, name: 'Department admin'},
+  {authorityLevel: 2, name: 'Department supervisor'},
+  {authorityLevel: 3, name: 'Department manager'},
   {authorityLevel: 4, name: 'Department admin'},
   {authorityLevel: 5, name: 'Organization Owner'}
 ]
@@ -120,15 +120,15 @@ const permissionLevels = [
 const permissionLevelMap = {
   0 : 'Pending to join',
   1 : 'Member',
-  2 : 'Department admin',
-  3 : 'Department admin',
+  2 : 'Department supervisor',
+  3 : 'Department manager',
   4 : 'Department admin',
   5 : 'Organization Owner'
 }
 
 // Each row of the table, containing states about popups
 function EnhancedTableRow(props) {
-  const {row, currentUser, departmentId, update} = props;
+  const {row, myPremissionLevel, departmentId, update} = props;
   //================ Delete Member ==================
 
   const [alertOpen, setAlertOpen] = useState(false);
@@ -151,7 +151,7 @@ function EnhancedTableRow(props) {
   
   const selectItems = permissionLevels
   .filter((item) => {
-    return (item.authorityLevel !== 0) && (item.authorityLevel < currentUser.authorityLevel);
+    return (item.authorityLevel !== 0) && (item.authorityLevel < myPremissionLevel);
   })
   .map((item) => {
     return {value: item.authorityLevel, name: item.name};
@@ -203,7 +203,7 @@ function EnhancedTableRow(props) {
           Decline
         </Button>
       </div>)
-  } else if (currentUser && currentUser.authorityLevel > row.authorityLevel) {
+  } else if (myPremissionLevel > row.authorityLevel) {
     manage = (
       <div>
         <IconButton onClick={handleChangeRole}>
@@ -304,14 +304,13 @@ const useStyles = makeStyles((theme) => ({
 // Table to display members
 export default function EnhancedTable(props) {
   //================ Data from parent ==================
-  const currentUser = props.currentUser;
   const departmentId = props.departmentId
+  const myPremissionLevel = props.myPremissionLevel;
 
   //================ Table settings ==================
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('manage');
-  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState([]);
@@ -326,7 +325,7 @@ export default function EnhancedTable(props) {
     if (departmentId) {
       getAllUsers(departmentId, 1).then(res => {
         console.log(res);
-        if (res.code == 200) {
+        if (res.code === 200) {
           const data = res.data
           const records = data.records
           records.forEach(row => {
@@ -381,7 +380,7 @@ export default function EnhancedTable(props) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <EnhancedTableRow key={row.userId} row={row} currentUser={currentUser} departmentId={departmentId} update={update} />
+                    <EnhancedTableRow key={row.userId} row={row} myPremissionLevel={myPremissionLevel} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (

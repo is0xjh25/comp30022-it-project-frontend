@@ -1,9 +1,25 @@
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
 function getUserInfo() {
     return new Promise((resolve, reject) => {
-        const token = sessionStorage.getItem('Token');
+        const token = getCookie('token');
         const url = BASE_URL + '/user'
         fetch(url, {
             method: 'GET',
@@ -11,8 +27,9 @@ function getUserInfo() {
                 Authorization: token,
             }
         }).then(res => {
-            
-            resolve(res);
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         }).catch(err => {
             reject(err);
         })
@@ -20,5 +37,5 @@ function getUserInfo() {
 }
 
 module.exports = {
-    getUserInfo
+    getUserInfo,
 }

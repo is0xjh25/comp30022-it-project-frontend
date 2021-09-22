@@ -10,6 +10,7 @@ import CustomerTable from '../../components/Contact/CustomerTable';
 import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import { getDepartment, getOrganization } from '../../api/Manage';
+import { getUserInfo } from '../../api/Util';
 
 import {
     Button,
@@ -33,8 +34,6 @@ import {
 import {
   Switch,
   Route,
-  Link,
-  useParams,
   useRouteMatch,
   Redirect,
   useHistory
@@ -43,7 +42,7 @@ import {
 require('dotenv').config();
 
 function Manage(props) {
-  let {path, url} = useRouteMatch();
+  let {path} = useRouteMatch();
 
   return(
     <Switch>
@@ -110,7 +109,7 @@ function Contacts(props) {
         getOrganization().then(res => {
             res.json().then(resBody => {
                 console.log(resBody);
-                if(resBody.code == 200) {
+                if(resBody.code === 200) {
                     const data = resBody.data;
                     if(data.length === 0) {
                         alert('You have not joined any organizations!\nJoin an organization first!');
@@ -178,10 +177,11 @@ function Contacts(props) {
 
 // A home component is rendered when path '/' is matched
 function Home(props) {
-  let {path, url} = useRouteMatch();
+  let {url} = useRouteMatch();
   const history = useHistory();
 
   const [selectedPage, setSelectedPage] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
 
   const changePage = function(toPage) {
     setSelectedPage(toPage);
@@ -189,10 +189,24 @@ function Home(props) {
   }
 
 
+
+  // Fetch user data, if not logged in, redirect to /Login
+  useEffect(() => {
+    getUserInfo().then(res => {
+        if(res.code === 200) {
+            console.log('Currently logged in');
+            setCurrentUser(res.data);
+        }else {
+            history.push('/Login');
+        }
+    })
+  }, [])
+
+
   return(
     <div className='home-main-container'>
       <div className='sidebar-container'>
-        <Sidebar selectedPage={selectedPage} changePage={changePage}/>
+        <Sidebar selectedPage={selectedPage} changePage={changePage} currentUser={currentUser}/>
       </div>
       <div className='sidebar-body'>
         <Switch>
