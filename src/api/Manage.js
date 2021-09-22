@@ -286,6 +286,24 @@ function deleteDepartment(departmentId) {
     })
 }
 
+function getMyPermissionLevel(departmentId) {
+    const url = `${BASE_URL}/permission/myPermission?department_id=${departmentId}`;
+    const info = {
+        method: 'GET',
+        headers: {
+            'Authorization': getCookie('token'),
+        }
+    }
+    return new Promise((resolve, reject) => {
+        fetch(url, info)
+        .then(res => {
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+        })
+    })
+}
+
 module.exports = {
     getCookie,
     getAllUsers,
@@ -301,5 +319,6 @@ module.exports = {
     getOrganization,
     getDepartment,
     deleteOrganization,
-    deleteDepartment
+    deleteDepartment,
+    getMyPermissionLevel
 }
