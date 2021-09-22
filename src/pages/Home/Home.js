@@ -6,7 +6,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
-import Contact from '../../components/Contact/Contact'
+import Contact from '../../components/Contact/CustomerTable';
 import DisplayCustomer from '../../components/Contact/DisplayCustomer'
 
 import { getDepartment, getOrganization } from '../../api/Manage';
@@ -188,6 +188,11 @@ function Home(props) {
     history.push(`/${toPage}`);
   }
 
+    if(this.state.selectedPage === 'Contacts') {
+      body = (
+        <Customer/>
+      )
+    }
 
   return(
     <div className='home-main-container'>
@@ -196,6 +201,7 @@ function Home(props) {
       </div>
       <div className='sidebar-body'>
         <Switch>
+
             <Route exact path={`${url}`}>
                 <Redirect to={`${url}Dashboard`}/>
             </Route>
