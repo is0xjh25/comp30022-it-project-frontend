@@ -46,7 +46,28 @@ function handleDisplayCustomer (customerId) {
     })
 }
 
+// Delete one customer's information
+function handleDeleteCustomer (customerId) {
+
+    const info = {
+        method: 'DELETE',
+        headers: {'Authorization': getToken()},
+    };
+
+    return new Promise((resolve, reject) => {
+    fetch(BASE_URL + `/contact?client_id=${customerId}`, info)
+    .then(res => {
+        if (res.ok) {   
+            resolve(res);
+        } else {
+            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+        }})
+    .catch(error => {reject(error);})
+    })
+}
+
 module.exports = {
     getAllCustomer,
-    handleDisplayCustomer
+    handleDisplayCustomer,
+    handleDeleteCustomer
 }
