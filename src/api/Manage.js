@@ -130,6 +130,30 @@ function handleJoinOrg(organisationId) {
     })
 }
 
+// Join a department
+function handleJoinDep(departmentId) {
+    const body = new FormData();
+    body.append("department_id", departmentId);
+
+    const info = {
+        method: 'POST',
+        headers: {'Authorization': getCookie('token')},
+        body: body
+    };
+
+    return new Promise((resolve, reject) => {
+    fetch(BASE_URL + "/department/join", info)
+    .then(res => {
+        if (res.ok) {
+            resolve(res);
+        } else {
+            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+        }
+    })
+    .catch(error => {reject(error);})
+    })
+}
+
 // Create an organisation
 function handleCreateOrg(organisation) {
     
@@ -271,6 +295,7 @@ module.exports = {
     declineUser,
     handleSearchOrg,
     handleJoinOrg,
+    handleJoinDep,
     handleCreateOrg,
     handleCreateDep,
     getOrganization,
