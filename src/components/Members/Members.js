@@ -18,7 +18,7 @@ function Members() {
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
             console.log(res);
-            setMyPermissionLevel(res.data);
+            setMyPermissionLevel(res.data.authorityLevel);
         })
 
     }, [])
