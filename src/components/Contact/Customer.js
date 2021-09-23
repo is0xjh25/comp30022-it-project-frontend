@@ -38,7 +38,7 @@ export default function Customer() {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 600 }}>
+            <TableContainer sx={{minHeight:400, maxHeight: 600 }}>
                 <CustomerTable aria-label="contact" stickyHeader permissionLevel={myPremissionLevel} organizationId={orgId} departmentId={depId}/>
             </TableContainer>
         </Paper>

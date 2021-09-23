@@ -64,15 +64,18 @@ function Contacts(props) {
     const [dialogOpen, setDialogOpen] = useState(true);
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
-    const [currentOrganiztion, setCurrentOrganization] = useState(0);
+    const [currentOrganization, setCurrentOrganization] = useState(0);
     const [currentDepartment, setCurrentDepartment] = useState(0);
-
-    console.log(path);
-    console.log(url);
+    const history = useHistory();
 
     const handleDialogClose = function() {
         setDialogOpen(false);
 
+    }
+
+    const handleDialogConfirm = function() {
+        history.push(`${path}/${currentOrganization}/${currentDepartment}`);
+        setDialogOpen(false);
     }
 
     const handleOrgChange = function(event) {
@@ -81,8 +84,6 @@ function Contacts(props) {
         // fetch departments in this organization
         getDepartment(orgId).then(res => {
             res.json().then(resBody => {
-                console.log("++++++++++++++++")
-                console.log(resBody);
                 if(resBody.code === 200) {
                     // TODO now can select departments
                     const data = resBody.data.filter(dep => {
@@ -102,7 +103,6 @@ function Contacts(props) {
 
     const handleDepChange = function(event) {
         const depId = event.target.value;
-        console.log(depId)
         setCurrentDepartment(depId);
     }
 
@@ -110,8 +110,6 @@ function Contacts(props) {
         // fetch organization
         getOrganization().then(res => {
             res.json().then(resBody => {
-                console.log("--------------")
-                console.log(resBody);
                 if(resBody.code === 200) {
                     const data = resBody.data;
                     if(data.length === 0) {
@@ -127,7 +125,7 @@ function Contacts(props) {
     }, [])
 
     return(
-        <Switch>
+        <div>
             <Dialog disableEscapeKeyDown open={dialogOpen} onClose={handleDialogClose}>
                 <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
                 <DialogContent>
@@ -136,7 +134,7 @@ function Contacts(props) {
                             <InputLabel>{"Organization"}</InputLabel>
                             <Select
                             native
-                            value={currentOrganiztion}
+                            value={currentOrganization}
                             onChange={handleOrgChange}
                             input={<OutlinedInput label={'Organization'}/>}
                             >
@@ -164,17 +162,18 @@ function Contacts(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose}>Cancel</Button>
-                    <Button onClick={handleDialogClose}>Ok</Button>
+                    <Button onClick={handleDialogConfirm}>Ok</Button>
                 </DialogActions>
             </Dialog>
-            <Route exact path={`${path}/:orgId/:depId`} 
-            >
-                <Customer />
-            </Route>
-            <Route exact path={`${path}`} >
-                Try again
-            </Route>
-        </Switch>
+            <Switch>
+                <Route path={`${path}/:orgId/:depId`} >
+                    <Customer />
+                </Route>
+                <Route exact path={`${path}`} >
+                    Try again
+                </Route>
+            </Switch>
+        </div>
     )
 }
 

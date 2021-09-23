@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
-import { getAllCustomer } from '../../api/Contact';
+import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 
 
@@ -79,33 +79,33 @@ const permissionLevelMap = {
 }
 
 function EnhancedTableRow(props) {
-    const {row, permissionLevel, organizationId, departmentId, update} = props;
+    const {row, permissionLevel, update} = props;
+
+    //=============== Delete Customer ==================
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${row.name}?`;
+    const deleteCustomer = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        handleDeleteCustomer(row.customerId);
+        alert(`${row.name} is deleted`);
+        setAlertOpen(false);
+        update();
+    }
 
     //=============== Display Delete Button =============
     var display;
     if (permissionLevel > 3) {
         display = (
                 <div>
-                    <IconButton onClick={handleDeleteCustomer}>
+                    <IconButton onClick={deleteCustomer}>
                         <DeleteIcon />
                     </IconButton>
                 </div>)
     } else {
         display = (<div></div>)
-    }
-
-    //=============== Delete Customer ==================
-    const [alertOpen, setAlertOpen] = useState(false);
-    const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${row.name}?`;
-    const handleDeleteCustomer = function() {
-        setAlertOpen(true);
-    }
-    const handleAlertConfirm = function() {
-        // deleteCustomer(row.customerId, organizationId, departmentId);
-        alert(`${row.name} is deleted`);
-        setAlertOpen(false);
-        update();
     }
 
     return (
@@ -326,7 +326,7 @@ export default function CustomerTable(props) {
                 setRows(data);
             }
         })
-    }, [updateCount])
+    }, [])
 
 
     const handleChangePage = (event, newPage) => {
@@ -371,9 +371,8 @@ export default function CustomerTable(props) {
                                     role="checkbox" 
                                     tabIndex={-1} 
                                     key={row.customerId}
+                                    row={row}
                                     permissionLevel={permissionLevel}
-                                    organizationId={organizationId}
-                                    departmentId={departmentId}
                                     update={update}
                                 >
                                 </EnhancedTableRow>
