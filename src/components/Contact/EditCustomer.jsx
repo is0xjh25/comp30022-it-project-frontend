@@ -10,17 +10,19 @@ import { handleUpdateCustomer } from '../../api/Contact';
 
 export default function EditCustomer(props) {
 
-	const [firstName, setFirstName] = useState(props.data[0].firstName);
-	const [lastName, setLastName] = useState(props.data[0].LastName);
-	const [middleName, setMiddleName] = useState(props.data[0].middleName);
-	const [phone, setPhone] = useState(props.data[0].phone);
-	const [email, setEmail] = useState(props.data[0].email);
-	const [address, setAddress] = useState(props.data[0].address);
-	const [gender, setGender] = useState(props.data[0].gender);
-	const [dob, setDob] = useState(props.data[0].dob);
-	const [description, setDescription] = useState(props.data[0].description);
-	const [organisation, setOrganisation] = useState(props.data[0].organisation);
-	const [customerType, setCustomerType] = useState(props.data[0].customerType);
+	const customerId = props.customerId;
+	const departmentId = props.data.department_id;
+	const [firstName, setFirstName] = useState(props.data.first_name);
+	const [lastName, setLastName] = useState(props.data.last_name);
+	const [middleName, setMiddleName] = useState(props.data.middle_name);
+	const [phone, setPhone] = useState(props.data.phone);
+	const [email, setEmail] = useState(props.data.email);
+	const [address, setAddress] = useState(props.data.address);
+	const [gender, setGender] = useState(props.data.gender);
+	const [birthday, setbirthday] = useState(props.data.birthday);
+	const [description, setDescription] = useState(props.data.description);
+	const [organization, setorganization] = useState(props.data.organization);
+	const [customerType, setCustomerType] = useState(props.data.customer_type);
 	const classes = {
 		title: {
 		  	fontSize:30,
@@ -74,8 +76,8 @@ export default function EditCustomer(props) {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
-		} else if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		} else if (e.target.id === "organization") {
+			setorganization(e.target.value);
 		} else if (e.target.id === "address") {
 			setAddress(e.target.value);
 		} else if (e.target.id === "description") {
@@ -84,25 +86,52 @@ export default function EditCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} else if (e.target.id === "dob") {
-			setDob(e.target.value);
+		} else if (e.target.id === "birthday") {
+			setbirthday(e.target.value);
 		}
     };
 
 	const handleDiscard = () => {
-		// need Alert Dialog to confirm
 		props.setStatus('display');
 	}
 
 	const handleUpdate = () => {
-		handleUpdateCustomer(props.data[0]).then(res => {
-			if (res.ok) {
+
+		const data = {
+			"departmentId":departmentId,
+			"firstName":firstName,
+			"lastName":lastName,
+			"middleName":middleName,
+			"email":email,
+			"phone":phone,
+			"description":description,
+			"gender":gender,
+			"birthday":birthday,
+			"address":address,
+			"organization":organization,
+			"customerType":customerType
+		}
+
+		handleUpdateCustomer(data, customerId).then(res => {
+			if (res.code===200) {
 				alert("Successfully updated");
 				props.setStatus('display');
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
+	}
+
+	// Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+	const alertTitle = 'Delete Confirm';
+	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+	const handleDiscard = function() {
+		setAlertOpen(true);
+	}
+	const handleAlertConfirm = function() {
+		confirmDiscard();
+		setAlertOpen(false);
 	}
 
 	return (
@@ -126,12 +155,12 @@ export default function EditCustomer(props) {
 						<TextField id="middleName"  defaultValue={middleName} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Organisation</Box>
-						<TextField id="organisation"  defaultValue={organisation} onChange={handleOnChange}/>
+						<Box sx={classes.title}>organization</Box>
+						<TextField id="organization"  defaultValue={organization} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="dob" defaultValue={dob} onChange={handleOnChange}/>
+						<TextField id="birthday" defaultValue={birthday} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -178,6 +207,13 @@ export default function EditCustomer(props) {
 						<Button variant="outlined" style={classes.updateButton} onClick={handleUpdate}>Update</Button>
 					</Grid>
 				</Grid>
+				<AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+                />
 			</Grid> 
 	)
 }

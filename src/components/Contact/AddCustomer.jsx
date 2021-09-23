@@ -10,7 +10,7 @@ import { handleCreateCustomer } from '../../api/Contact';
 
 export default function AddCustomer(props) {
 
-	const departmentId = props;
+	const departmentId = props.departmentId;
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
@@ -18,10 +18,20 @@ export default function AddCustomer(props) {
 	const [email, setEmail] = useState("");
 	const [address, setAddress] = useState("");
 	const [gender, setGender] = useState("");
-	const [dob, setDob] = useState("");
+	const [birthday, setbirthday] = useState("");
 	const [description, setDescription] = useState("");
-	const [organisation, setOrganisation] = useState("");
+	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
+	const [open, setOpen] = useState(false);
+	
+	const handleClickOpen = () => {
+		setOpen(true);
+  	};
+
+ 	 const handleClickClose = () => {
+	  	setOpen(false);
+  	};
+
 	const classes = {
 		title: {
 		  	fontSize:30,
@@ -55,7 +65,7 @@ export default function AddCustomer(props) {
 			fontSize: '20px',
 			fontWeight: 'bold'	
 		},
-		updateButton: {
+		createButton: {
 			borderRadius: 20,
 			backgroundColor: 'ForestGreen',
 			color: '#FFFFFF',
@@ -75,8 +85,8 @@ export default function AddCustomer(props) {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
-		} else if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		} else if (e.target.id === "organization") {
+			setOrganization(e.target.value);
 		} else if (e.target.id === "address") {
 			setAddress(e.target.value);
 		} else if (e.target.id === "description") {
@@ -85,26 +95,58 @@ export default function AddCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} else if (e.target.id === "dob") {
-			setDob(e.target.value);
+		} else if (e.target.id === "birthday") {
+			setbirthday(e.target.value);
 		}
     };
 
-	const handleDiscard = () => {
-		// need Alert Dialog to confirm
-	}
-
 	const handleCreate = () => {
-		handleCreateCustomer(props.data[0]).then(res => {
-			if (res.ok) {
+		
+		const data = {
+			"firstName":firstName,
+			"lastName":lastName,
+			"middleName":middleName,
+			"email":email,
+			"phone":phone,
+			"description":description,
+			"gender":gender,
+			"birthday":birthday,
+			"address":address,
+			"organization":organization,
+			"customerType":customerType
+		}
+
+		handleCreateCustomer(data, departmentId).then(res => {
+			if (res.code===200) {
 				alert("Successfully created");
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
 	}
 
+	// Go back to table
+	const confirmDiscard = () => {
+
+	}
+
+	// Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+	const alertTitle = 'Delete Confirm';
+	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+	const handleDiscard = function() {
+		setAlertOpen(true);
+	}
+	const handleAlertConfirm = function() {
+		confirmDiscard();
+		setAlertOpen(false);
+	}
+
 	return (
+		<div>
+		<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+		Create Customer
+		</Button>
 		<Grid container rowSpacing={5} sx={{pt:5, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
@@ -125,12 +167,12 @@ export default function AddCustomer(props) {
 						<TextField id="middleName" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Organisation</Box>
-						<TextField id="organisation" onChange={handleOnChange}/>
+						<Box sx={classes.title}>Organization</Box>
+						<TextField id="organization" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="dob" onChange={handleOnChange}/>
+						<TextField id="birthday" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -176,6 +218,14 @@ export default function AddCustomer(props) {
 						<Button variant="outlined" style={classes.createButton} onClick={handleCreate}>Create</Button>
 					</Grid>
 				</Grid>
-			</Grid> 
+			</Grid>
+			<AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+            />
+			</div> 
 	)
 }

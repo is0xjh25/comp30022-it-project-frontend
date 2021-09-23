@@ -53,7 +53,7 @@ export default function SignUp(props) {
 	const [phone, setPhone] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [organisation, setOrganisation] = useState("");
+	const [organization, setorganization] = useState("");
 	const [error, setError] = useState("");
 
 	let history = useHistory();
@@ -69,8 +69,8 @@ export default function SignUp(props) {
 			setLastName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
-		} else if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		} else if (e.target.id === "organization") {
+			setorganization(e.target.value);
 		}
     };
 
@@ -139,7 +139,7 @@ export default function SignUp(props) {
 		e.preventDefault();
 
 		if (handleValidation()) {
-			handleSignUp (email, password, firstName, lastName, phone, organisation).then(res => {
+			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
 				alert("Welcom to join ConnecTI !");
 				let data = res.headers.get("Authorization");
@@ -228,9 +228,9 @@ export default function SignUp(props) {
 				variant="outlined"
 				margin="normal"
 				fullWidth
-				id="organisation"
-				label="Join Organisation (optional)"
-				name="organisation"
+				id="organization"
+				label="Join organization (optional)"
+				name="organization"
 				onChange={handleOnChange}
 			/>
 			<Button

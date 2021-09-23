@@ -14,7 +14,7 @@ export default function CreateOrg(props) {
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
-  	const [organisation, setOrganisation] = useState("");
+  	const [organization, setorganization] = useState("");
 
   	const handleClickOpen = () => {
     	setFirstTry(true);
@@ -22,21 +22,21 @@ export default function CreateOrg(props) {
   	};
 
   	const handleClickClose = () => {
-		setOrganisation("");
+		setorganization("");
 		setAvailable(false);
 		setOpen(false);
   	};
 	
 	const handleOnChange = (e) => {
-		if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		if (e.target.id === "organization") {
+			setorganization(e.target.value);
 			setFirstTry(true);
 		}
     };
 
 	const handleCreate = () =>{
-		if (organisation !== "") {
-			handleCreateOrg(organisation).then(res => {
+		if (organization !== "") {
+			handleCreateOrg(organization).then(res => {
 			if (res.ok) {
 				update();
 				alert("Successfully created");
@@ -56,7 +56,7 @@ export default function CreateOrg(props) {
 	return (
 		<div>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Create a new organisation
+				Create a new organization
 			</Button>
 			<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Creating</DialogTitle>
@@ -68,12 +68,12 @@ export default function CreateOrg(props) {
 					autoFocus
 					fullWidth
 					margin="dense"
-					id="organisation"
-					type="organisation"
-					label="Organisation"
+					id="organization"
+					type="organization"
+					label="organization"
 					onChange={handleOnChange}
 					error={!available && !firstTry ? true : false}
-					helperText={available || firstTry ? "Let's start" : "The organisation name is invalid"}
+					helperText={available || firstTry ? "Let's start" : "The organization name is invalid"}
 				/>
 				</DialogContent>
 				<DialogActions>

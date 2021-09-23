@@ -28,19 +28,20 @@ function getAllCustomer (orgId, departId) {
 
 // Create a customer
 function handleCreateCustomer(data, departmentId) {
+    
     const body = new FormData();
-    body.append("departmentId", departmentId);
+    body.append("department_id", departmentId);
     body.append("email", data.email);
     body.append("phone", data.phone);
     body.append("description", data.description);
-    body.append("firstName", data.firstName);
-    body.append("lastName", data.lastName);
-    body.append("middleName", data.middleName);
+    body.append("first_name", data.firstName);
+    body.append("last_name", data.lastName);
+    body.append("middle_name", data.middleName);
     body.append("gender", data.gender);
     body.append("birthday", data.dob);
     body.append("address", data.address);
-    body.append("organization", data.organisation);
-    body.append("customerType", data.customerType);
+    body.append("organization", data.organization);
+    body.append("customer_type", data.customerType);
 
     const info = {
         method: 'POST',
@@ -72,7 +73,7 @@ function handleDisplayCustomer(customerId) {
     fetch(BASE_URL + `/contact/detail?client_id=${customerId}`, info)
     .then(res => {
         if (res.ok) {   
-            resolve(res);
+            res.json().then(bodyRes=>{resolve(bodyRes)});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})
@@ -94,7 +95,7 @@ function handleDeleteCustomer(customerId) {
         if (res.ok) {   
             resolve(res);
         } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
+            alert(res.msg);
         }})
     .catch(error => {reject(error);})
     })
@@ -104,18 +105,18 @@ function handleDeleteCustomer(customerId) {
 function handleUpdateCustomer(data, customerId) {
     
     const body = new FormData();
-    body.append("departmentId", data.departmentId);
+    body.append("department_id", data.departmentId);
     body.append("email", data.email);
     body.append("phone", data.phone);
     body.append("description", data.description);
-    body.append("firstName", data.firstName);
-    body.append("lastName", data.lastName);
-    body.append("middleName", data.middleName);
+    body.append("first_name", data.firstName);
+    body.append("last_name", data.lastName);
+    body.append("middle_name", data.middleName);
     body.append("gender", data.gender);
     body.append("birthday", data.dob);
     body.append("address", data.address);
-    body.append("organization", data.organisation);
-    body.append("customerType", data.customerType);
+    body.append("organization", data.organization);
+    body.append("customer_type", data.customerType);
 
     const info = {
         method: 'PUT',

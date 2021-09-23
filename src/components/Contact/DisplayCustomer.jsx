@@ -71,31 +71,16 @@ export default function DisplayCustomer(props) {
 
 	// Fetch data
 	useEffect(() => {
-
-		// handleDisplayCustomer(customerId).then(res => {
-		// 	if (res.ok) {
-		// 		console.log(data);
-		// 		setData(res.data);
-		// 	} else {
-		// 		res.json().then(bodyRes=>{alert(bodyRes.msg);});
-		// 	}
-		// })
-		const test = [{
-			'firstName':"Naruto",
-			'lastName':"Sasuke",
-			'middleName':"JoJo",
-			'phone':"1234567890",
-			'email':"owo@gmail.com",
-			'address':"123 swanston street",
-			'gender':"male",
-			'dob':"02/02/2000",
-			'description':"The characters in the American animated television series SpongeBob SquarePants were created by artist, animator, and former marine biologist Stephen Hillenburg. The series chronicles the adventures of the title character and his various friends in the fictional underwater city of Bikini Bottom. Most characters are anthropomorphic sea creatures based on real-life species.",
-			'organisation':"Anime",
-			'customerType':"Who never buy"
-		}]
-		setData(test);
+		handleDisplayCustomer(customerId).then(res => {
+			if (res.code===200) {
+				console.log(data);
+				setData(res.data);
+			} else {
+				alert(res.msg);
+			}
+		})
         setLoading(false);
-    }, [])
+    }, [status])
 
 	useEffect(() => {
 		return () => {
@@ -106,23 +91,34 @@ export default function DisplayCustomer(props) {
         return <div>loading...</div>
     }
 
-	const handleDelete = () => {
-		// need Alert Dialog to confirm
-		// handleDeleteCustomer(info, customerId).then(res => {
-		// 	if (res.ok) {
-		// 		alert("Successfully deleted");
-		// 		handleBack();
-		// 	} else {
-		// 		res.json().then(bodyRes=>{alert(bodyRes.msg);});
-		// 	}
-		// })
+	const confirmDelete = () => {
+		handleDeleteCustomer(info, customerId).then(res => {
+			if (res.ok) {
+				alert("Successfully deleted");
+				handleBack();
+			} else {
+				alert(res.msg);
+			}
+		})
 	}
-
+	//Haven't done
 	const handleBack = () => {}
 
 	const handleEdit = () => {
 		setStatus("edit");
 	}
+
+	// Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const handleDelete = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        confirmDelete();
+        setAlertOpen(false);
+    }
 		
 	const showDisplay = 
 	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
@@ -132,53 +128,53 @@ export default function DisplayCustomer(props) {
 			</Grid>
 			<Grid item xs={5} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title} >First Name</Box>
-				<Box sx={classes.body}>{data[0].firstName}</Box>
+				<Box sx={classes.body}>{data.first_name}</Box>
 			</Grid>
 			<Grid item xs={5}  textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Last Name</Box>
-				<Box sx={classes.body}>{data[0].lastName}</Box>
+				<Box sx={classes.body}>{data.last_name}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item rowSpacing={5} columnSpacing={3}>
 			<Grid item xs={4} textAlign='center'sx={classes.box}>
 				<Box sx={classes.title}>Middle Name</Box>
-				<Box sx={classes.body}>{data[0].middleName}</Box>
+				<Box sx={classes.body}>{data.middle_name}</Box>
 			</Grid>
 			<Grid item xs={4} textAlign='center' sx={classes.box}>
-				<Box sx={classes.title}>Organisation</Box>
-				<Box sx={classes.body}>{data[0].organisation}</Box>
+				<Box sx={classes.title}>organization</Box>
+				<Box sx={classes.body}>{data.organization}</Box>
 			</Grid>
 			<Grid item xs={4} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Date of Birth</Box>
-				<Box sx={classes.body}>{data[0].dob}</Box>
+				<Box sx={classes.body}>{data.birthday}</Box>
 			</Grid>
 			<Grid item xs={4} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Phone</Box>
-				<Box sx={classes.body}>{data[0].phone}</Box>
+				<Box sx={classes.body}>{data.phone}</Box>
 			</Grid>
 			<Grid item xs={4} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Address</Box>
-				<Box sx={classes.body}>{data[0].address}</Box>
+				<Box sx={classes.body}>{data.address}</Box>
 			</Grid>
 			<Grid item xs={4} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Customer Type</Box>
-				<Box sx={classes.body}>{data[0].customerType}</Box>
+				<Box sx={classes.body}>{data.customer_type}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item rowSpacing={5} columnSpacing={3}>
 			<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 				<Grid item xs={12} textAlign='center' sx={classes.box}>
 					<Box sx={classes.title}>Email</Box>
-					<Box sx={classes.body}>{data[0].email}</Box>
+					<Box sx={classes.body}>{data.email}</Box>
 				</Grid>
 				<Grid item xs={12} textAlign='center' sx={classes.box}>
 					<Box sx={classes.title}>Gender</Box>
-					<Box sx={classes.body}>{data[0].gender}</Box>
+					<Box sx={classes.body}>{data.gender}</Box>
 				</Grid>
 			</Grid>
 			<Grid item xs={8}  textAlign='center' sx={classes.box}>
 				<Box sx={classes.title}>Description</Box>
-				<Box sx={classes.descriptionBody}>{data[0].description}</Box>
+				<Box sx={classes.descriptionBody}>{data.description}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item>
@@ -202,6 +198,13 @@ export default function DisplayCustomer(props) {
 						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
 					): null 
 				}
+				<AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+                />
 			</div>
 	);
 }
