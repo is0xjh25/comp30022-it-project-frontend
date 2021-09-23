@@ -15,7 +15,7 @@ export default function Customer(props) {
 
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
-            setMyPermissionLevel(res.data.authorityLevel);
+            setMyPermissionLevel(res.data.authority_level);
         })
 
     }, [depId])

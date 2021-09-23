@@ -37,7 +37,7 @@ export default function CreateDep(props) {
 	const handleCreate = () =>{
 		
 		if (department !== "") {
-			handleCreateDep(props.organizationId, department).then(res => {
+			handleCreateDep(props.organization_id, department).then(res => {
 			if (res.ok) {
 				update();
 				alert("Successfully created");

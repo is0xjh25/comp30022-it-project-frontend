@@ -19,8 +19,7 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { Button } from '@mui/material'
-
-import { Contact } from '../../pages/Home/Home';
+import { getOrganization, getDepartment } from '../../api/Manage';
 
 // functions for sorting 
 function descendingComparator(a, b, orderBy) {
@@ -107,7 +106,7 @@ const EnhancedTableToolbar = (props) => {
             }}
         >
             <Typography
-                sx={{ flex: '1 1 100%' }}
+                sx={{ flex: '1 1 60%' }}
                 variant="h6"
                 id="tableTitle"
                 component="div"
@@ -115,19 +114,19 @@ const EnhancedTableToolbar = (props) => {
                 Contacts
             </Typography>
             <Typography
-                sx={{ flex: '1 1 100%' }}
+                sx={{ flex: '1 1 15%' }}
                 color="inherit"
                 variant="subtitle1"
                 component="div"
             >
-                {organization} {department}
+                {organization} / {department}
             </Typography>
-            <Tooltip title="Filter list">
-                <IconButton>
-                    <FilterListIcon onClick={handleChangeOrgDep}/>
-                </IconButton>
-            </Tooltip>
-            <Button onClick={handleCreateContact}
+            {/* <Tooltip title="Filter list"> */}
+            <IconButton>
+                <FilterListIcon onClick={handleChangeOrgDep}/>
+            </IconButton>
+            {/* </Tooltip> */}
+            <Button variant="contained" onClick={handleCreateContact}
             >
                 Add Contact
             </Button>
@@ -170,7 +169,7 @@ function EnhancedTableRow(props) {
     }
 
     return (
-        <TableRow hover role="checkbox" key={row.customerId}>
+        <TableRow hover role="checkbox" key={row.customer_id}>
             <TableCell align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
@@ -262,8 +261,39 @@ export default function CustomerTable(props) {
     }
 
     useEffect(() => {
-
-    })
+        getOrganization().then(res => {
+            if (res.ok) {
+                res.json().then(body => {
+                    const data = body.data;
+                    data.forEach(organization => {
+                        if (organization.id == organizationId) {
+                            setOrgName(organization.name);
+                        } else {
+                            // alert("Organization name not found")
+                        }
+                    });
+                })
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        });
+        getDepartment(organizationId).then(res => {
+            if (res.ok) {
+                res.json().then(body => {
+                    const data = body.data;
+                    data.forEach(department => {
+                        if (department.id == departmentId) {
+                            setDepName(department.name);
+                        } else {
+                            // alert("Organization name not found")
+                        }
+                    });
+                })
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        });
+    }, [departmentId])
 
     useEffect(() => {
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
@@ -271,118 +301,11 @@ export default function CustomerTable(props) {
                 const data = res.data
                 const records = data.records
                 records.forEach(row => {
-                    row.name = row.firstName + ' ' + row.lastName
+                    row.name = row.first_name + ' ' + row.last_name
                 });
                 setRows(records);
             } else {
-                alert("Failed to fetch table data")
-                const data = [
-                    {
-                        "firstName": "Lingxiao",
-                        "lastName": "Li",
-                        "email": "lingxiao1@student.unimelb.edu.au",
-                        "gender": "male",
-                        "age": 22,
-                        "organization": "yyds"
-                    },
-                    {
-                        "firstName": "Yiyang",
-                        "lastName": "Huang",
-                        "email": "yiyahuang@student.unimelb.edu.au",
-                        "gender": "male",
-                        "age": 22,
-                        "organization": "yyds"
-                    },
-                    {
-                        "firstName": "Kaiyuan",
-                        "lastName": "Zheng",
-                        "email": "kzzhe@student.unimelb.edu.au",
-                        "gender": "male",
-                        "age": 3,
-                        "organization": "yyds"
-                    },
-                    {
-                        "firstName": "Yongfeng",
-                        "lastName": "Qin",
-                        "email": "yongfengq@student.unimelb.edu.au",
-                        "gender": "male",
-                        "age": 22,
-                        "organization": "yyds"
-                    },
-                    {
-                        "firstName": "Yun-Chi",
-                        "lastName": "Hsiao",
-                        "email": "yunchi@student.unimelb.edu.au",
-                        "gender": "male",
-                        "age": 22,
-                        "organization": "yyds"
-                    },
-                    {
-                        "firstName": "Jonathan",
-                        "lastName": "Joestar",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 19,
-                        "organization": "JOJO1"
-                    },
-                    {
-                        "firstName": "Joseph",
-                        "lastName": "Joestar",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 19,
-                        "organization": "JOJO2"
-                    },
-                    {
-                        "firstName": "Jotaro",
-                        "lastName": "Cujoh",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 19,
-                        "organization": "JOJO3"
-                    },
-                    {
-                        "firstName": "Jousuke",
-                        "lastName": "Higashikata",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 19,
-                        "organization": "JOJO4"
-                    },
-                    {
-                        "firstName": "Gioruno",
-                        "lastName": "Giobana",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 16,
-                        "organization": "JOJO5"
-                    },
-                    {
-                        "firstName": "Jolyn",
-                        "lastName": "Cujoh",
-                        "email": "123@456.com",
-                        "gender": "female",
-                        "age": 19,
-                        "organization": "JOJO6"
-                    },
-                    {
-                        "firstName": "Jonny",
-                        "lastName": "Joestar",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 22,
-                        "organization": "JOJO7"
-                    },
-                    {
-                        "firstName": "Jousuke",
-                        "lastName": "Higashikata",
-                        "email": "123@456.com",
-                        "gender": "male",
-                        "age": 17,
-                        "organization": "JOJO8"
-                    }
-                ]
-                setRows(data);
+                alert(res.msg);
             }
         })
     }, [departmentId, updateCount])
@@ -405,7 +328,7 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organization department handleDialogOpen={props.handleDialogOpen}/>
+            <EnhancedTableToolbar organization={orgName} department={depName} handleDialogOpen={props.handleDialogOpen}/>
             <TableContainer sx={{ maxHeight: 600 }}>
                 <Table Contact aria-label="contact" stickyHeader height={100}>
                     <TableHead>
@@ -430,7 +353,7 @@ export default function CustomerTable(props) {
                                     onClick={handleClickRow} 
                                     role="checkbox" 
                                     tabIndex={-1} 
-                                    key={row.customerId}
+                                    key={row.customer_id}
                                     row={row}
                                     permissionLevel={permissionLevel}
                                     update={update}
