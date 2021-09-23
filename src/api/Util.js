@@ -25,6 +25,7 @@ function getUserInfo() {
             method: 'GET',
             headers: {
                 Authorization: token,
+                'Origin': process.env.ORIGIN_URL
             }
         }).then(res => {
             res.json().then(resBody => {
