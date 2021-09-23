@@ -5,6 +5,7 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 
 import Member from '../components/Members/Members'
+import DisplayCustomer from '../components/Contact/DisplayCustomer';
 
 function PageNavigator() {
     return (
@@ -20,10 +21,16 @@ function PageNavigator() {
             <Route path ='/member'>
                 <Member/>
             </Route>
+            
+            <Route path='/asd'>
+                <DisplayCustomer />
+            </Route>
 
             <Route path='/'>
                 <Home/>
             </Route>
+
+            
         </Switch>
     );
 }
