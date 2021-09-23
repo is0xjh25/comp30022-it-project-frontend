@@ -14,7 +14,9 @@ import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
+import { Contact } from '../../pages/Home/Home';
 
 // functions for sorting 
 function descendingComparator(a, b, orderBy) {
@@ -46,8 +48,8 @@ stabilizedThis.sort((a, b) => {
 }
 
 const columns = [
-    { id: 'name', label: 'Name', minWidth: 200},
-    { id: 'email', label: 'Email', minWidth: 280},
+    { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
+    { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
     {
         id: 'age',
@@ -56,7 +58,7 @@ const columns = [
         align: 'center',
         format: (value) => value.toLocaleString('en-US'),
     },
-    { id: 'organization', label: 'Oraganization', minWidth: 160,  align: 'center'},
+    { id: 'organization', label: 'Company', minWidth: 160,  align: 'center'},
     { id: 'deleteButton', minWidth: 100}
     ];
 
@@ -76,6 +78,58 @@ const permissionLevelMap = {
     3 : 'Department admin',
     4 : 'Department admin',
     5 : 'Organization Owner'
+}
+
+const EnhancedTableToolbar = (props) => {
+    const { organization, department } = props;
+
+    const handleChangeOrgDep = () => {
+        alert("change org and dep")
+    }
+
+    const handleCreateContact = () => {
+        alert("create contact")
+    }
+
+    return (
+        <Toolbar
+            sx={{
+                pl: { sm: 2 },
+                pr: { xs: 1, sm: 1 }
+                // ...(numSelected > 0 && {
+                //     bgcolor: (theme) =>
+                //     alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+                // }),
+            }}
+        >
+            <Typography
+                sx={{ flex: '1 1 100%' }}
+                variant="h6"
+                id="tableTitle"
+                component="div"
+            >
+                Contacts
+            </Typography>
+            <Typography
+                sx={{ flex: '1 1 100%' }}
+                color="inherit"
+                variant="subtitle1"
+                component="div"
+            >
+                {organization} {department}
+            </Typography>
+            <Tooltip title="Filter list">
+                <IconButton>
+                    <FilterListIcon onClick={handleChangeOrgDep}/>
+                </IconButton>
+            </Tooltip>
+            <Button onClick={handleCreateContact}
+            >
+                Add Contact
+            </Button>
+
+        </Toolbar>
+    )
 }
 
 function EnhancedTableRow(props) {
@@ -110,7 +164,7 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customerId}>
-            <TableCell component="th" scope="row" padding="none">
+            <TableCell align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
             <TableCell align="center">
@@ -180,9 +234,6 @@ export default function CustomerTable(props) {
     const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
     const departmentId = props.departmentId;
-    console.log(permissionLevel)
-    console.log(organizationId)
-    console.log(departmentId)
 
     //=============== Table Settings ==================
     const classes = useStyles();
@@ -201,14 +252,8 @@ export default function CustomerTable(props) {
     }
 
     useEffect(() => {
-        console.log("**************")
-        console.log(permissionLevel)
-        console.log(organizationId)
-        console.log(departmentId)
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
             if (res.code === 200) {
-                console.log("Log res data of getAllCustomer")
-                console.log(res.data)
                 const data = res.data
                 const records = data.records
                 records.forEach(row => {
@@ -338,8 +383,8 @@ export default function CustomerTable(props) {
         setPage(0);
     };
 
-    const handleClick = () => {
-        alert("clicked")
+    const handleClickRow = () => {
+        alert("Row clicked")
     }
 
     // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -367,7 +412,7 @@ export default function CustomerTable(props) {
                             .map((row) => {
                                 return (
                                 <EnhancedTableRow  hover
-                                    onClick={handleClick} 
+                                    onClick={handleClickRow} 
                                     role="checkbox" 
                                     tabIndex={-1} 
                                     key={row.customerId}
