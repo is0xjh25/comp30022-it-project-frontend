@@ -69,7 +69,7 @@ function handleDeleteCustomer (customerId) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?customer_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
     .then(res => {
         if (res.ok) {   
             resolve(res);

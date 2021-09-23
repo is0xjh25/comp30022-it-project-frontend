@@ -8,38 +8,38 @@ import { useParams } from 'react-router-dom';
 
 // const createData()
 
-export default function Customer() {
-    console.log("contact1")
+export default function Customer(props) {
     let {orgId, depId} = useParams();
     const [loading, setLoading] = useState(true);
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
 
     useEffect(() => {
-        console.log("contact4")
-        console.log(orgId)
-        console.log(depId)
         getMyPermissionLevel(depId).then(res => {
             setMyPermissionLevel(res.data.authorityLevel);
-            console.log(myPremissionLevel)
         })
 
-    }, [])
+    }, [depId])
 
     useEffect(() => {
         setLoading(false);
-        console.log("contact2")
     }, [])
 
     if (loading) {
-        console.log("contact3")
         return <div>loading...
         </div>
     }    
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{minHeight:400, maxHeight: 600 }}>
-                <CustomerTable aria-label="contact" stickyHeader permissionLevel={myPremissionLevel} organizationId={orgId} departmentId={depId}/>
+            <TableContainer sx={{ maxHeight: 600 }}>
+                <CustomerTable
+                    aria-label="contact" 
+                    stickyHeader 
+                    permissionLevel={myPremissionLevel} 
+                    organizationId={orgId} 
+                    departmentId={depId}
+                    handleDialogOpen={props.handleDialogOpen}
+                />
             </TableContainer>
         </Paper>
     );

@@ -68,6 +68,10 @@ function Contacts(props) {
     const [currentDepartment, setCurrentDepartment] = useState(0);
     const history = useHistory();
 
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    }
+
     const handleDialogClose = function() {
         setDialogOpen(false);
 
@@ -167,7 +171,7 @@ function Contacts(props) {
             </Dialog>
             <Switch>
                 <Route path={`${path}/:orgId/:depId`} >
-                    <Customer />
+                    <Customer handleDialogOpen={handleDialogOpen}/>
                 </Route>
                 <Route exact path={`${path}`} >
                     Try again

@@ -14,7 +14,11 @@ import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import { Button } from '@mui/material'
 
 import { Contact } from '../../pages/Home/Home';
 
@@ -81,10 +85,10 @@ const permissionLevelMap = {
 }
 
 const EnhancedTableToolbar = (props) => {
-    const { organization, department } = props;
+    const { organization, department, handleDialogOpen } = props;
 
     const handleChangeOrgDep = () => {
-        alert("change org and dep")
+        handleDialogOpen();
     }
 
     const handleCreateContact = () => {
@@ -132,6 +136,9 @@ const EnhancedTableToolbar = (props) => {
     )
 }
 
+// EnhancedTableToolbar.propTypes = {
+// };
+
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
 
@@ -143,7 +150,7 @@ function EnhancedTableRow(props) {
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        handleDeleteCustomer(row.customerId);
+        handleDeleteCustomer(row.id);
         alert(`${row.name} is deleted`);
         setAlertOpen(false);
         update();
@@ -234,6 +241,7 @@ export default function CustomerTable(props) {
     const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
     const departmentId = props.departmentId;
+    // const handleDialogOpen = props.handleDialogOpen;
 
     //=============== Table Settings ==================
     const classes = useStyles();
@@ -246,10 +254,16 @@ export default function CustomerTable(props) {
     const [rows, setRows] = useState([]);
     // const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
+    const [orgName, setOrgName] = useState();
+    const [depName, setDepName] = useState();
 
     const update = function() {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
+
+    useEffect(() => {
+
+    })
 
     useEffect(() => {
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
@@ -371,7 +385,7 @@ export default function CustomerTable(props) {
                 setRows(data);
             }
         })
-    }, [])
+    }, [departmentId, updateCount])
 
 
     const handleChangePage = (event, newPage) => {
@@ -391,6 +405,7 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <EnhancedTableToolbar organization department handleDialogOpen={props.handleDialogOpen}/>
             <TableContainer sx={{ maxHeight: 600 }}>
                 <Table Contact aria-label="contact" stickyHeader height={100}>
                     <TableHead>
