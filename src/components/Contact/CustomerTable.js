@@ -70,7 +70,7 @@ const columns = [
     ];
 
 const EnhancedTableToolbar = (props) => {
-    const { organizationId, departmentId, handleDialogOpen, update } = props;
+    const { organizationId, departmentId, handleDialogOpen, update , permissionLevel} = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
@@ -155,10 +155,11 @@ const EnhancedTableToolbar = (props) => {
                 <FilterListIcon onClick={handleChangeOrgDep}/>
             </IconButton>
             {/* </Tooltip> */}
-            <Button variant="contained" onClick={handleCreateContact}
-            >
+            {permissionLevel > 1 && 
+            <Button variant="contained" onClick={handleCreateContact}>
                 Add Contact
             </Button>
+            }
 
             <Dialog
             open={createContactOpen}
@@ -204,7 +205,7 @@ function EnhancedTableRow(props) {
 
     //=============== Display Delete Button =============
     var display;
-    if (permissionLevel > 3) {
+    if (permissionLevel >= 3) {
         display = (
                 <div>
                     <IconButton onClick={deleteCustomer}>
@@ -324,7 +325,13 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen} update={update}/>
+            <EnhancedTableToolbar 
+            organizationId={organizationId} 
+            departmentId={departmentId} 
+            handleDialogOpen={props.handleDialogOpen} 
+            update={update}
+            permissionLevel={permissionLevel}
+            />
             <TableContainer>
                 <Table aria-label="contact" stickyHeader>
                     <TableHead>
