@@ -20,6 +20,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { Button } from '@mui/material'
 import { getOrganization, getDepartment } from '../../api/Manage';
+import DispalyCustomer from './DisplayCustomer';
+import AddCustomer from './AddCustomer';
 
 // functions for sorting 
 function descendingComparator(a, b, orderBy) {
@@ -84,14 +86,51 @@ const permissionLevelMap = {
 }
 
 const EnhancedTableToolbar = (props) => {
-    const { organization, department, handleDialogOpen } = props;
+    const { organizationId, departmentId, handleDialogOpen } = props;
+    const [orgName, setOrgName] = useState();
+    const [depName, setDepName] = useState();
+
+    useEffect(() => {
+        getOrganization().then(res => {
+            if (res.ok) {
+                res.json().then(body => {
+                    const data = body.data;
+                    data.forEach(organization => {
+                        if (organization.id == organizationId) {
+                            setOrgName(organization.name);
+                        } else {
+                            // alert("Organization name not found")
+                        }
+                    });
+                })
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        });
+        getDepartment(organizationId).then(res => {
+            if (res.ok) {
+                res.json().then(body => {
+                    const data = body.data;
+                    data.forEach(department => {
+                        if (department.id == departmentId) {
+                            setDepName(department.name);
+                        } else {
+                            // alert("Organization name not found")
+                        }
+                    });
+                })
+            } else {
+                res.json().then(body => {alert(body.msg)});
+            }
+        });
+    }, [departmentId])
 
     const handleChangeOrgDep = () => {
         handleDialogOpen();
     }
 
     const handleCreateContact = () => {
-        alert("create contact")
+        <AddCustomer departmentId={departmentId} />
     }
 
     return (
@@ -119,7 +158,7 @@ const EnhancedTableToolbar = (props) => {
                 variant="subtitle1"
                 component="div"
             >
-                {organization} / {department}
+                {orgName} / {depName}
             </Typography>
             {/* <Tooltip title="Filter list"> */}
             <IconButton>
@@ -253,47 +292,10 @@ export default function CustomerTable(props) {
     const [rows, setRows] = useState([]);
     // const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
-    const [orgName, setOrgName] = useState();
-    const [depName, setDepName] = useState();
 
     const update = function() {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
-
-    useEffect(() => {
-        getOrganization().then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    const data = body.data;
-                    data.forEach(organization => {
-                        if (organization.id == organizationId) {
-                            setOrgName(organization.name);
-                        } else {
-                            // alert("Organization name not found")
-                        }
-                    });
-                })
-            } else {
-                res.json().then(body => {alert(body.msg)});
-            }
-        });
-        getDepartment(organizationId).then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    const data = body.data;
-                    data.forEach(department => {
-                        if (department.id == departmentId) {
-                            setDepName(department.name);
-                        } else {
-                            // alert("Organization name not found")
-                        }
-                    });
-                })
-            } else {
-                res.json().then(body => {alert(body.msg)});
-            }
-        });
-    }, [departmentId])
 
     useEffect(() => {
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
@@ -328,8 +330,8 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organization={orgName} department={depName} handleDialogOpen={props.handleDialogOpen}/>
-            <TableContainer sx={{ maxHeight: 600 }}>
+            <EnhancedTableToolbar organization={organizationId} department={departmentId} handleDialogOpen={props.handleDialogOpen}/>
+            <TableContainer sx={{ maxHeight: 800 }}>
                 <Table Contact aria-label="contact" stickyHeader height={100}>
                     <TableHead>
                         <TableRow>
