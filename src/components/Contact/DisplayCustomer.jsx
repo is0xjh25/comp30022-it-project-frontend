@@ -8,11 +8,14 @@ import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
 
 import AlertDialog from '../Dialog/AlertDialog';
+import { useHistory, useParams } from 'react-router';
+import { getMyPermissionLevel } from '../../api/Manage';
 
 export default function DisplayCustomer(props) {
 	//const {authority, customerId} = props;
-	const customerId = 0;
-	const authority = 0;
+    const history = useHistory();
+    const {depId, customerId} = useParams();
+    const [authority, setAuthority] = useState(1);
 	const [status, setStatus] = useState("display");
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
@@ -20,7 +23,7 @@ export default function DisplayCustomer(props) {
     // Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const alertMessage = `Do you want to delete ${data.first_name} ${data.last_name}?`;
     const handleDelete = function() {
         setAlertOpen(true);
     }
@@ -89,11 +92,19 @@ export default function DisplayCustomer(props) {
 			if (res.code===200) {
 				console.log(data);
 				setData(res.data);
+                setLoading(false);
 			} else {
 				alert(res.msg);
 			}
 		})
-        setLoading(false);
+
+        getMyPermissionLevel(depId).then(res => {
+            console.log(res);
+            if(res.code === 200) {
+                setAuthority(res.data.authority_level);
+            }
+        });
+        
     }, [status])
 
 	useEffect(() => {
@@ -116,7 +127,9 @@ export default function DisplayCustomer(props) {
 		})
 	}
 	//Haven't done
-	const handleBack = () => {}
+	const handleBack = () => {
+        history.goBack();
+    }
 
 	const handleEdit = () => {
 		setStatus("edit");
@@ -186,10 +199,10 @@ export default function DisplayCustomer(props) {
 				<Button style={classes.backButton} variant="outlined" onClick={handleBack}>Back</Button>
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority === 0 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
+				{authority >= 3 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority === 0 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
+				{authority >= 2 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
 			</Grid>
 		</Grid>
 	</Grid>)
