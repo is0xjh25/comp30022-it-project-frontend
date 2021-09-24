@@ -127,11 +127,13 @@ const EnhancedTableToolbar = (props) => {
         <Toolbar
             sx={{
                 pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 }
+                pr: { xs: 1, sm: 1 },
                 // ...(numSelected > 0 && {
                 //     bgcolor: (theme) =>
                 //     alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
                 // }),
+            //    borderBottom:  1 ,
+            //    borderColor: 'grey.300'
             }}
         >
             <Typography
@@ -337,7 +339,7 @@ export default function CustomerTable(props) {
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen}/>
             <TableContainer sx={{ maxHeight: 800 }}>
-                <Table Contact aria-label="contact" stickyHeader height={100}>
+                <Table aria-label="contact" stickyHeader >
                     <TableHead>
                         <TableRow>
                         {columns.map((column) => (
