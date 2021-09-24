@@ -216,20 +216,20 @@ function EnhancedTableRow(props) {
     }
 
     return (
-        <TableRow hover onClick={onRowClick} role="checkbox" key={row.customer_id}>
-            <TableCell align="center" component="th" scope="row" padding="none">
+        <TableRow hover role="checkbox" key={row.customer_id}>
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
-            <TableCell align="center">
+            <TableCell onClick={onRowClick} align="center">
                 {row.email}
             </TableCell>
-            <TableCell align="center" component="th" scope="row" padding="none">
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.gender}
             </TableCell>
-            <TableCell align="center">
+            <TableCell onClick={onRowClick} align="center">
                 {row.age}
             </TableCell>
-            <TableCell align="center" component="th" scope="row" padding="none">
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.organization}
             </TableCell>
             <TableCell align="center">
