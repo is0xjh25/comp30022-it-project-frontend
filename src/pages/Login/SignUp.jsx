@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import { handleSignUp } from '../../api/Login';
+import { setCookie } from '../../api/Login';
 
 const useStyles = makeStyles((theme) => ({
 	headLine: {
@@ -141,12 +142,11 @@ export default function SignUp(props) {
 		if (handleValidation()) {
 			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
+				setCookie('token', res.headers.get("Authorization"), 1)
 				alert("Welcom to join ConnecTI !");
-				let data = res.headers.get("Authorization");
-				sessionStorage.setItem('Token', data);
 				history.push('/');
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 				history.push('/Login');
 			}
 			})
