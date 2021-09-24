@@ -10,6 +10,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
@@ -22,6 +23,7 @@ import { Button } from '@mui/material'
 import { getOrganization, getDepartment } from '../../api/Manage';
 import DispalyCustomer from './DisplayCustomer';
 import AddCustomer from './AddCustomer';
+import { useHistory, useRouteMatch } from 'react-router';
 
 // functions for sorting 
 function descendingComparator(a, b, orderBy) {
@@ -67,24 +69,6 @@ const columns = [
     { id: 'deleteButton', minWidth: 100}
     ];
 
-const permissionLevels = [
-    {authorityLevel: 0, name: 'Pending to join'},
-    {authorityLevel: 1, name: 'Member'},
-    {authorityLevel: 2, name: 'Department admin'},
-    {authorityLevel: 3, name: 'Department admin'},
-    {authorityLevel: 4, name: 'Department admin'},
-    {authorityLevel: 5, name: 'Organization Owner'}
-]
-
-const permissionLevelMap = {
-    0 : 'Pending to join',
-    1 : 'Member',
-    2 : 'Department admin',
-    3 : 'Department admin',
-    4 : 'Department admin',
-    5 : 'Organization Owner'
-}
-
 const EnhancedTableToolbar = (props) => {
     const { organizationId, departmentId, handleDialogOpen } = props;
     const [orgName, setOrgName] = useState();
@@ -128,9 +112,15 @@ const EnhancedTableToolbar = (props) => {
     const handleChangeOrgDep = () => {
         handleDialogOpen();
     }
+    // Create new contact
+
+    const [createContactOpen, setCreateContactOpen] = useState(false);
 
     const handleCreateContact = () => {
-        <AddCustomer departmentId={departmentId} />
+        setCreateContactOpen(true);
+    }
+    const handleClose = () => {
+        setCreateContactOpen(false);
     }
 
     return (
@@ -170,6 +160,17 @@ const EnhancedTableToolbar = (props) => {
                 Add Contact
             </Button>
 
+            <Dialog
+            open={createContactOpen}
+            fullWidth
+            maxWidth
+            >
+                <Paper fullWidth>
+                <AddCustomer departmentId={departmentId} handleClose={handleClose}/>
+                </Paper>
+                
+            </Dialog>
+
         </Toolbar>
     )
 }
@@ -179,6 +180,13 @@ const EnhancedTableToolbar = (props) => {
 
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
+    const history = useHistory();
+    const {url} = useRouteMatch();
+    console.log(url);
+    const onRowClick = () => {
+        history.push(`${url}/${row.id}`);
+    }
+
 
     //=============== Delete Customer ==================
     const [alertOpen, setAlertOpen] = useState(false);
@@ -208,7 +216,7 @@ function EnhancedTableRow(props) {
     }
 
     return (
-        <TableRow hover role="checkbox" key={row.customer_id}>
+        <TableRow hover onClick={onRowClick} role="checkbox" key={row.customer_id}>
             <TableCell align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
@@ -322,9 +330,6 @@ export default function CustomerTable(props) {
         setPage(0);
     };
 
-    const handleClickRow = () => {
-        alert("Row clicked")
-    }
 
     // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -351,11 +356,8 @@ export default function CustomerTable(props) {
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
                                 return (
-                                <EnhancedTableRow  hover
-                                    onClick={handleClickRow} 
-                                    role="checkbox" 
-                                    tabIndex={-1} 
-                                    key={row.customer_id}
+                                <EnhancedTableRow
+                                    key={row.id}
                                     row={row}
                                     permissionLevel={permissionLevel}
                                     update={update}

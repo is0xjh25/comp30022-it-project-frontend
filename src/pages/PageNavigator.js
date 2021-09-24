@@ -6,6 +6,7 @@ import Login from './Login/Login';
 
 import Member from '../components/Members/Members'
 import DisplayCustomer from '../components/Contact/DisplayCustomer';
+import AddCustomer from '../components/Contact/AddCustomer';
 
 function PageNavigator() {
     return (
@@ -18,12 +19,8 @@ function PageNavigator() {
                 <Login/>
             </Route>
 
-            <Route path ='/member'>
-                <Member/>
-            </Route>
-            
-            <Route path='/asd'>
-                <DisplayCustomer />
+            <Route path='/add'>
+                <AddCustomer />
             </Route>
 
             <Route path='/'>

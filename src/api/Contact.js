@@ -43,24 +43,24 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
 // Create a customer
 function handleCreateCustomer(data, departmentId) {
     
-    const body = new FormData();
-    body.append("department_id", departmentId);
-    body.append("email", data.email);
-    body.append("phone", data.phone);
-    body.append("description", data.description);
-    body.append("first_name", data.firstName);
-    body.append("last_name", data.lastName);
-    body.append("middle_name", data.middleName);
-    body.append("gender", data.gender);
-    body.append("birthday", data.dob);
-    body.append("address", data.address);
-    body.append("organization", data.organization);
-    body.append("customer_type", data.customerType);
+    // const body = new FormData();
+    // body.append("department_id", departmentId);
+    // body.append("email", data.email);
+    // body.append("phone", data.phone);
+    // body.append("description", data.description);
+    // body.append("first_name", data.firstName);
+    // body.append("last_name", data.lastName);
+    // body.append("middle_name", data.middleName);
+    // body.append("gender", data.gender);
+    // body.append("birthday", data.birthday);
+    // body.append("address", data.address);
+    // body.append("organization", data.organization);
+    // body.append("customer_type", data.customerType);
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getCookie('token')},
-        body: body
+        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
+        body: JSON.stringify(data)
     };
 
     return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ function handleDisplayCustomer(customerId) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact/detail?client_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
     .then(res => {
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes)});
@@ -126,7 +126,7 @@ function handleUpdateCustomer(data, customerId) {
     body.append("last_name", data.lastName);
     body.append("middle_name", data.middleName);
     body.append("gender", data.gender);
-    body.append("birthday", data.dob);
+    body.append("birthday", data.birthday);
     body.append("address", data.address);
     body.append("organization", data.organization);
     body.append("customer_type", data.customerType);
