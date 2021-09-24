@@ -59,7 +59,7 @@ function handleCreateCustomer(data, departmentId) {
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 
@@ -106,11 +106,10 @@ function handleDeleteCustomer(customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
     .then(res => {
-        if (res.ok) {   
-            resolve(res);
-        } else {
-            alert(res.msg);
-        }})
+        res.json().then(resBody => {
+            resolve(resBody);
+        })
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -134,7 +133,7 @@ function handleUpdateCustomer(data, customerId) {
 
     const info = {
         method: 'PUT',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 

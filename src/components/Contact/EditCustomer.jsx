@@ -91,7 +91,7 @@ export default function EditCustomer(props) {
 		}
     };
 
-	const handleDiscard = () => {
+	const confirmDiscard = () => {
 		props.setStatus('display');
 	}
 
@@ -125,7 +125,7 @@ export default function EditCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+	const alertMessage = `Do you want to delete ${firstName} ${lastName}?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}

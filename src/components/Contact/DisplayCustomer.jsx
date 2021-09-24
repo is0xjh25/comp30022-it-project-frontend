@@ -7,6 +7,8 @@ import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
 
+import AlertDialog from '../Dialog/AlertDialog';
+
 export default function DisplayCustomer(props) {
 	//const {authority, customerId} = props;
 	const customerId = 0;
@@ -14,6 +16,18 @@ export default function DisplayCustomer(props) {
 	const [status, setStatus] = useState("display");
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
+
+    // Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const handleDelete = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        confirmDelete();
+        setAlertOpen(false);
+    }
 
 	const classes = {
 		title: {
@@ -92,8 +106,8 @@ export default function DisplayCustomer(props) {
     }
 
 	const confirmDelete = () => {
-		handleDeleteCustomer(info, customerId).then(res => {
-			if (res.ok) {
+		handleDeleteCustomer(customerId).then(res => {
+			if (res.code === 200) {
 				alert("Successfully deleted");
 				handleBack();
 			} else {
@@ -108,17 +122,7 @@ export default function DisplayCustomer(props) {
 		setStatus("edit");
 	}
 
-	// Alart Dialog
-	const [alertOpen, setAlertOpen] = useState(false);
-    const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
-    const handleDelete = function() {
-        setAlertOpen(true);
-    }
-    const handleAlertConfirm = function() {
-        confirmDelete();
-        setAlertOpen(false);
-    }
+
 		
 	const showDisplay = 
 	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>

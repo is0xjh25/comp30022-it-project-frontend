@@ -138,10 +138,16 @@ function EnhancedTableRow(props) {
     setAlertOpen(true);
   }
   const handleAlertConfirm = function() {
-    deleteUser(row.userId, departmentId);
-    alert(`${row.name} is deleted`);
-    setAlertOpen(false);
-    update();
+    deleteUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            alert(`${row.name} is deleted`);
+            setAlertOpen(false);
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+
   }
 
 
@@ -172,8 +178,8 @@ function EnhancedTableRow(props) {
   }
   const handleSelectConfirm = function() {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
-      alert(`${row.userId} is now assigned to ${permissionLevelMap[currentSelected]}`);
-      changePermission(row.userId, currentSelected, departmentId);
+      alert(`${row.user_id} is now assigned to ${permissionLevelMap[currentSelected]}`);
+      changePermission(row.user_id, currentSelected, departmentId);
       setSelectOpen(false);
       setCurrentSelected(-1);
     } else {
@@ -183,17 +189,31 @@ function EnhancedTableRow(props) {
   }
 
   const handleAccept = function() {
-    acceptUser(row.userId, departmentId);
-    update();
+    acceptUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            console.log('successfully accepted the user');
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+    
   }
 
   const handleDecline = function() {
-    declineUser(row.userId, departmentId);
-    update();
+    declineUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            console.log('successfully declined the user');
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+
   }
 
   var manage;
-  if (row.authorityLevel === 0) {
+  if (row.authority_level === 0) {
     manage = (
       <div>
         <Button variant='contained' onClick={handleAccept}>
@@ -203,7 +223,7 @@ function EnhancedTableRow(props) {
           Decline
         </Button>
       </div>)
-  } else if (myPremissionLevel > row.authorityLevel) {
+  } else if (myPremissionLevel > row.authority_level) {
     manage = (
       <div>
         <IconButton onClick={handleChangeRole}>
@@ -233,7 +253,7 @@ function EnhancedTableRow(props) {
       hover
       role="checkbox"
       tabIndex={-1}
-      key={row.userId}
+      key={row.user_id}
     >
       
       <TableCell padding="normal">
@@ -245,7 +265,7 @@ function EnhancedTableRow(props) {
         {row.name}
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>
-      <TableCell align="center">{permissionLevelMap[row.authorityLevel]}</TableCell>
+      <TableCell align="center">{permissionLevelMap[row.authority_level]}</TableCell>
       <TableCell align="center">{row.recentActivity}</TableCell>
       <TableCell align="center">
         {manage}
@@ -326,20 +346,15 @@ export default function EnhancedTable(props) {
       getAllUsers(departmentId, 1).then(res => {
         console.log(res);
         if (res.code === 200) {
-          const data = res.data
-          const records = data.records
-          records.forEach(row => {
-            row.name = row.firstName + ' ' + row.lastName
-          });
-          console.log(records);
-          setRows(records);
-        }else {
-          console.log('Failed to fetch table data, using mock data')
-          const records = [
-            {name: 'Yiyang Huang', userId: 100, email:'abc', authorityLevel: 5},
-            {name: 'regular member', userId: 101, email: 'def', authorityLevel: 1}
-          ]
-          setRows(records)
+            const data = res.data
+            const records = data.records
+            records.forEach(row => {
+                row.name = row.first_name + ' ' + row.last_name
+            });
+            console.log(records);
+            setRows(records);
+            }else {
+            alert(res.msg);
         }
 
       });
@@ -380,7 +395,7 @@ export default function EnhancedTable(props) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <EnhancedTableRow key={row.userId} row={row} myPremissionLevel={myPremissionLevel} departmentId={departmentId} update={update} />
+                    <EnhancedTableRow key={row.user_id} row={row} myPremissionLevel={myPremissionLevel} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (

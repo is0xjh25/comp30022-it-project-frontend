@@ -1,7 +1,3 @@
-const { formatMs } = require('@material-ui/core');
-
-require('dotenv').config();
-
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function getCookie(cname) {
@@ -49,19 +45,21 @@ function changePermission(userId, permissionLevel, departmentId) {
             Authorization: getCookie('token'),
         },
     }
-    fetch(url, requestInit).then(res => {
-        res.json.then(resJson => {
-            console.log(resJson)
-            return resJson;
+    return new Promise(resolve => {
+        fetch(url, requestInit).then(res => {
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+        }).catch(err => {
+    
         })
-    }).catch(err => {
-
     })
+
 }
 
 // Accept user into a department
 function acceptUser(userId, departmentId) {
-    changePermission(userId, 1, departmentId)
+    return changePermission(userId, 1, departmentId)
 }
 
 function deleteUser(userId, departmentId) {
@@ -72,16 +70,21 @@ function deleteUser(userId, departmentId) {
             Authorization: getCookie('token'),
         }
     }
-    fetch(url, requestInit).then(res => {
-        console.log(res);
-        return res.body.data;
-    }).catch(err => {
-
+    return new Promise(resolve => {
+        fetch(url, requestInit).then(res => {
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+            
+        }).catch(err => {
+    
+        })
     })
+
 }
 
 function declineUser(userId, departmentId) {
-    deleteUser(userId, departmentId)
+    return deleteUser(userId, departmentId)
 }
 
 // Search an organisation

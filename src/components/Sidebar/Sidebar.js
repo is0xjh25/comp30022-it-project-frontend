@@ -84,7 +84,7 @@ function Sidebar(props) {
             </div>
             <div className='sidebar-user-main'>
                 <div className='sidebar-user-name'>
-                    {`${currentUser.firstName} ${currentUser.lastName}`}
+                    {`${currentUser.first_name} ${currentUser.last_name}`}
                 </div>
                 <div className='sidebar-user-email'>
                     {`${currentUser.email}`}
