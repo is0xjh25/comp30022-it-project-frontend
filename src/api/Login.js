@@ -53,7 +53,7 @@ function handleResend(email) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/resetPassword?email=${email}`, info)
+    fetch(BASE_URL + "/user/resetPassword", info)
     .then(res => {
         if (res.ok) {
             resolve(res);

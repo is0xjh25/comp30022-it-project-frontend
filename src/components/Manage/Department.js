@@ -228,17 +228,7 @@ export default function Department(props) {
     departments.map((department) => {
         if (department.status==="owner") {
             own.push(
-                <Grid key={department.id} item alignItems={'center'} xs={8}>
-                    <Box className={classes.ownBox} bgcolor="success.main">
-                        <Button alignItems='center'>
-                            {department.name}
-                        </Button>
-                        
-                        <IconButton aria-label="delete" className={classes.deleteButton}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                </Grid>
+                <OwnedDepartment department={department} update={update} showMembers={showMembers}/>
             )
         } else if(department.status==="member") {
             member.push(
@@ -253,13 +243,6 @@ export default function Department(props) {
         } else {
             other.push(
                 <NotJoinedDepartment department={department} update={update}/>
-                // <Grid key={department.id} item xs={8}>
-                //     <Box className={classes.plusBox} bgcolor="text.disabled">
-                //         <Button>
-                //             {department.name}
-                //         </Button>
-                //     </Box>
-                // </Grid>
             )
         }
     });
@@ -285,7 +268,7 @@ export default function Department(props) {
                 <Grid key="createNew" item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            <CreateDep organizationId={orgId} update={update}/>
+                            <CreateDep organization_id={orgId} update={update}/>
                         </Button>
                     </Box>
                 </Grid>
