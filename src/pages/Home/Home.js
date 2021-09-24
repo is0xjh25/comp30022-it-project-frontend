@@ -6,8 +6,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
-import CustomerTable from '../../components/Contact/CustomerTable';
-import DisplayCustomer from '../../components/Contact/DisplayCustomer'
+import Customer from '../../components/Contact/Customer';
 
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
@@ -39,6 +38,7 @@ import {
   useHistory
 } from "react-router-dom";
 
+
 require('dotenv').config();
 
 function Manage(props) {
@@ -64,15 +64,22 @@ function Contacts(props) {
     const [dialogOpen, setDialogOpen] = useState(true);
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
-    const [currentOrganiztion, setCurrentOrganization] = useState(0);
+    const [currentOrganization, setCurrentOrganization] = useState(0);
     const [currentDepartment, setCurrentDepartment] = useState(0);
+    const history = useHistory();
 
-    console.log(path);
-    console.log(url);
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    }
 
     const handleDialogClose = function() {
         setDialogOpen(false);
 
+    }
+
+    const handleDialogConfirm = function() {
+        history.push(`${path}/${currentOrganization}/${currentDepartment}`);
+        setDialogOpen(false);
     }
 
     const handleOrgChange = function(event) {
@@ -81,7 +88,6 @@ function Contacts(props) {
         // fetch departments in this organization
         getDepartment(orgId).then(res => {
             res.json().then(resBody => {
-                console.log(resBody);
                 if(resBody.code === 200) {
                     // TODO now can select departments
                     const data = resBody.data.filter(dep => {
@@ -108,7 +114,6 @@ function Contacts(props) {
         // fetch organization
         getOrganization().then(res => {
             res.json().then(resBody => {
-                console.log(resBody);
                 if(resBody.code === 200) {
                     const data = resBody.data;
                     if(data.length === 0) {
@@ -124,7 +129,7 @@ function Contacts(props) {
     }, [])
 
     return(
-        <Switch>
+        <div>
             <Dialog disableEscapeKeyDown open={dialogOpen} onClose={handleDialogClose}>
                 <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
                 <DialogContent>
@@ -133,7 +138,7 @@ function Contacts(props) {
                             <InputLabel>{"Organization"}</InputLabel>
                             <Select
                             native
-                            value={currentOrganiztion}
+                            value={currentOrganization}
                             onChange={handleOrgChange}
                             input={<OutlinedInput label={'Organization'}/>}
                             >
@@ -161,16 +166,18 @@ function Contacts(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose}>Cancel</Button>
-                    <Button onClick={handleDialogClose}>Ok</Button>
+                    <Button onClick={handleDialogConfirm}>Ok</Button>
                 </DialogActions>
             </Dialog>
-            <Route exact path={`${path}/:orgId/:depId`}>
-                <CustomerTable />
-            </Route>
-            <Route exact path={`${path}`} >
-                Try again
-            </Route>
-        </Switch>
+            <Switch>
+                <Route path={`${path}/:orgId/:depId`} >
+                    <Customer handleDialogOpen={handleDialogOpen}/>
+                </Route>
+                <Route exact path={`${path}`} >
+                    Try again
+                </Route>
+            </Switch>
+        </div>
     )
 }
 
@@ -222,6 +229,9 @@ function Home(props) {
             </Route>
             <Route path={`${url}Manage`}>
                 <Manage/>
+            </Route>
+            <Route path={`${url}TestContact/:orgId/:depId`}>
+                <Customer/>
             </Route>
         </Switch>
       </div>

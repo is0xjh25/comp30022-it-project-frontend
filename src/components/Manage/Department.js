@@ -268,7 +268,7 @@ export default function Department(props) {
                 <Grid key="createNew" item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled">
                         <Button>
-                            <CreateDep organizationId={orgId} update={update}/>
+                            <CreateDep organization_id={orgId} update={update}/>
                         </Button>
                     </Box>
                 </Grid>
