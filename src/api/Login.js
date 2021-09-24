@@ -66,13 +66,13 @@ function handleResend(email) {
 
 
 // Sign up as a new member
-function handleSignUp (email, password, firstName, lastName, phone, organisation) {
+function handleSignUp (email, password, firstName, lastName, phone, organization) {
 
     const info = {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
         body: JSON.stringify({"email": email, "password": password, 
-            "firstName": firstName, "lastName": lastName, "phone": phone, "organisation": organisation})
+            "first_name": firstName, "last_name": lastName, "phone": phone, "organization": organization})
     };
 
     return new Promise((resolve, reject) => {

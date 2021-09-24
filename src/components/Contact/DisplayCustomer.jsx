@@ -1,261 +1,210 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import { handleDeleteCustomer } from '../../api/Contact';
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
+import EditCustomer from './EditCustomer';
+import Box from '@mui/material/Box';
 
-const useStyles = makeStyles((theme) => ({
-	header: {
-		marginTop: theme.spacing(10),
-		marginLeft: theme.spacing(0),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	bot: {
-		fontSize: 50,
-		marginTop: theme.spacing(10),
-		marginLeft: theme.spacing(0),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	left: {
-		marginTop: theme.spacing(10),
-		marginLeft: theme.spacing(0),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	leftText:{
-		margin: theme.spacing(2),
-		fontSize: 20,
-	},
-	right: {
-		marginTop: theme.spacing(10),
-		marginLeft: theme.spacing(0),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	name: {
-		fontSize: 60,
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	email: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	phone: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	description: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	gender: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	birthday: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	address: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	age: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	organization: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	customer_type: {
-		fontSize: 30,
-		margin: theme.spacing(2),
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(10),
-	},
-	button_div: {
-		marginTop: theme.spacing(10),
-		marginLeft: theme.spacing(0),
-		flexDirection: 'row',
-	},
-	edit_button: {
-		fontSize: 20,
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(30),
-		background: 'white'
-	},
-	delete_button: {
-		fontSize: 20,
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(30),
-		background: 'pink'
-	},
-	back_button: {
-		fontSize: 20,
-		marginTop: theme.spacing(0),
-		marginLeft: theme.spacing(30),
-		background: 'white'
-	}	
-}));
-
-export default function DisplayCustomer(customerID) {
-	
-	const [data, setData] = useState([]);
+export default function DisplayCustomer(props) {
+	//const {authority, customerId} = props;
+	const customerId = 0;
+	const authority = 0;
+	const [status, setStatus] = useState("display");
 	const [loading, setLoading] = useState(true);
-	const classes = useStyles();
-	
+	const [data, setData] = useState([]);
+
+	const classes = {
+		title: {
+		  	fontSize:30,
+			fontFamily:'Arial',
+			fontWeight:'bold'
+		},
+		body: {
+			fontSize:25,
+			fontFamily:'Arial',
+			textAlign:'center',
+			bgcolor:'coral',
+			borderRadius:15
+		},
+		descriptionBody: {
+			fontSize:25,
+			fontFamily:'Arial',
+			textAlign:'left',
+			bgcolor:'coral',
+			borderRadius:15,
+			px:5
+		},
+		gird: {
+			display:'flex', 
+			justifyContent:'center', 
+			alignItems:'center',
+			color:'black'
+		},
+		box: {
+			display:'flex', 
+			flexDirection:'column'
+		},
+		backButton: {
+			borderRadius: 20,
+			backgroundColor: 'CornflowerBlue',
+			color: '#FFFFFF',
+			fontSize: '20px',
+			fontWeight: 'bold'	
+		},
+		deleteButton: {
+			borderRadius: 20,
+			backgroundColor: 'Crimson',
+			color: '#FFFFFF',
+			fontSize: '20px',
+			fontWeight: 'bold'	
+		},
+		editButton: {
+			borderRadius: 20,
+			backgroundColor: 'ForestGreen',
+			color: '#FFFFFF',
+			fontSize: '20px',
+			fontWeight: 'bold'	
+		}
+	};
+
+	// Fetch data
 	useEffect(() => {
+		handleDisplayCustomer(customerId).then(res => {
+			if (res.code===200) {
+				console.log(data);
+				setData(res.data);
+			} else {
+				alert(res.msg);
+			}
+		})
         setLoading(false);
-    }, [])
+    }, [status])
 
 	useEffect(() => {
-        
-		const test =  [
-			{
-				"department_id": 1,
-				"email": "qqq@gmail.com",
-				"firstName": "JoJo",
-				"lastName": "JJ",
-				"phone": 1234567890,
-				"description": "Cute boy",
-				"gender": "male",
-				"birthday": "31/02/2000",
-				"age": 21,
-				"address": "Grattan Street, Parkville, Victoria, 3010",
-				"organization": "KFC",
-				"customer_type": "who never buy"
-            }
-		]
-		
 		return () => {
-            setData(test[0]);
         }
     }, [loading])
 
 	if (loading) {
-        return <div>loading...
-        </div>
+        return <div>loading...</div>
     }
 
-	const handleDelete = () => {}
-
+	const confirmDelete = () => {
+		handleDeleteCustomer(info, customerId).then(res => {
+			if (res.ok) {
+				alert("Successfully deleted");
+				handleBack();
+			} else {
+				alert(res.msg);
+			}
+		})
+	}
+	//Haven't done
 	const handleBack = () => {}
 
-	const handleEdit = () => {}
+	const handleEdit = () => {
+		setStatus("edit");
+	}
+
+	// Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const handleDelete = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        confirmDelete();
+        setAlertOpen(false);
+    }
+		
+	const showDisplay = 
+	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
+		<Grid container item columnSpacing={4}>
+			<Grid item xs={2} textAlign='center' sx={classes.gird}>
+				<Avatar sx={{ width: 70, height: 70}}></Avatar>
+			</Grid>
+			<Grid item xs={5} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title} >First Name</Box>
+				<Box sx={classes.body}>{data.first_name}</Box>
+			</Grid>
+			<Grid item xs={5}  textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Last Name</Box>
+				<Box sx={classes.body}>{data.last_name}</Box>
+			</Grid>
+		</Grid>
+		<Grid container item rowSpacing={5} columnSpacing={3}>
+			<Grid item xs={4} textAlign='center'sx={classes.box}>
+				<Box sx={classes.title}>Middle Name</Box>
+				<Box sx={classes.body}>{data.middle_name}</Box>
+			</Grid>
+			<Grid item xs={4} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>organization</Box>
+				<Box sx={classes.body}>{data.organization}</Box>
+			</Grid>
+			<Grid item xs={4} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Date of Birth</Box>
+				<Box sx={classes.body}>{data.birthday}</Box>
+			</Grid>
+			<Grid item xs={4} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Phone</Box>
+				<Box sx={classes.body}>{data.phone}</Box>
+			</Grid>
+			<Grid item xs={4} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Address</Box>
+				<Box sx={classes.body}>{data.address}</Box>
+			</Grid>
+			<Grid item xs={4} textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Customer Type</Box>
+				<Box sx={classes.body}>{data.customer_type}</Box>
+			</Grid>
+		</Grid>
+		<Grid container item rowSpacing={5} columnSpacing={3}>
+			<Grid container item xs={4} textAlign='center' rowSpacing={15}>
+				<Grid item xs={12} textAlign='center' sx={classes.box}>
+					<Box sx={classes.title}>Email</Box>
+					<Box sx={classes.body}>{data.email}</Box>
+				</Grid>
+				<Grid item xs={12} textAlign='center' sx={classes.box}>
+					<Box sx={classes.title}>Gender</Box>
+					<Box sx={classes.body}>{data.gender}</Box>
+				</Grid>
+			</Grid>
+			<Grid item xs={8}  textAlign='center' sx={classes.box}>
+				<Box sx={classes.title}>Description</Box>
+				<Box sx={classes.descriptionBody}>{data.description}</Box>
+			</Grid>
+		</Grid>
+		<Grid container item>
+			<Grid item xs={4} textAlign='center'>
+				<Button style={classes.backButton} variant="outlined" onClick={handleBack}>Back</Button>
+			</Grid>
+			<Grid item xs={4} textAlign='center'>
+				{authority === 0 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
+			</Grid>
+			<Grid item xs={4} textAlign='center'>
+				{authority === 0 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
+			</Grid>
+		</Grid>
+	</Grid>)
 
 	return (
-		
 			<div>
-				<Grid className={classes.header}>
-					<Typography className={classes.name} style={{ fontWeight: 600 }}>
-					{data.firstName} {data.lastName}
-					</Typography>
-				</Grid>			
-				<Grid container>
-					<Grid item xs={6} className={classes.left}> 
-						<Typography className={classes.leftText}>
-						<Typography className={classes.organization} style={{ fontWeight: 600 }}>
-							Orgnization:
-						</Typography>
-						<Typography className={classes.organization}>
-							{data.organization}
-						</Typography>
-						<Typography className={classes.organization} style={{ fontWeight: 600 }}>
-							Email: 
-						</Typography>
-						<Typography className={classes.email}>
-							{data.email}
-						</Typography>
-						<Typography className={classes.phone} style={{ fontWeight: 600 }}>
-							Phone Number:
-						</Typography>
-						<Typography className={classes.phone}>
-							{data.phone}
-						</Typography>
-						<Typography className={classes.address} style={{ fontWeight: 600 }}>
-							Address:
-						</Typography>
-						<Typography className={classes.address}>
-							{data.address}
-						</Typography>
-						</Typography>
-					</Grid>
-					<Grid item xs={6} className={classes.right}>
-						<Typography className={classes.gender} style={{ fontWeight: 600 }}>
-							Gender:
-						</Typography>
-						<Typography className={classes.gender}>
-							{data.gender}
-						</Typography>
-						<Typography className={classes.birthday} style={{ fontWeight: 600 }}>
-							Birthday:
-						</Typography>
-						<Typography className={classes.birthday}>
-							{data.birthday} (age: {data.age})
-						</Typography>
-						<Typography className={classes.description} style={{ fontWeight: 600 }}>
-							Description:
-						</Typography>
-						<Typography className={classes.description}>
-							{data.description}
-						</Typography>
-						<Typography className={classes.customer_type} style={{ fontWeight: 600 }}>
-							Customer Type:
-						</Typography> 
-						<Typography className={classes.customer_type}>
-							{data.customer_type}
-						</Typography> 
-					</Grid>
-				</Grid>
-				<Grid container className={classes.button_div}>
-					<Grid item xs={4}>
-						<Button className={classes.back_button} onclick={handleBack}>
-							Back
-						</Button>
-					</Grid>
-					<Grid item xs={4}>
-						<Button className={classes.delete_button} onclick={handleDelete}>
-							Delete
-						</Button>
-					</Grid>
-					<Grid item xs={4}>
-						<Button className={classes.edit_button} onclick={handleEdit}>
-							Edit
-						</Button>
-					</Grid>
-				</Grid>
+				{status === 'display' ? (
+					showDisplay
+					) : status === 'edit' ? (
+						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
+					): null 
+				}
+				<AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+                />
 			</div>
-	)
+	);
 }
-
-
-						
-				

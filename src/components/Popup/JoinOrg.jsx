@@ -16,7 +16,7 @@ export default function JoinOrg(props) {
 	const [open, setOpen] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
 	const [available, setAvailable] = useState(false);
-  	const [organisation, setOrganisation] = useState("");
+  	const [organization, setorganization] = useState("");
 	const [selected, setSelected] = useState(0);
 	const [results, setResults] = useState([]);
 
@@ -26,15 +26,15 @@ export default function JoinOrg(props) {
 
 	const handleClickClose = () => {
 		setOpen(false);
-	  	setOrganisation("");
+	  	setorganization("");
 		setSelected(0);
 	  	setAvailable(false);
 		setFirstTry(true);
 	};
 	
 	const handleOnChange = (e) => {
-		if (e.target.id === "organisation") {
-			setOrganisation(e.target.value);
+		if (e.target.id === "organization") {
+			setorganization(e.target.value);
 			setAvailable(false);
 			setFirstTry(true);
 		}
@@ -46,8 +46,8 @@ export default function JoinOrg(props) {
 
 	// Search button
   	const handleSearch = () => {
-		if (organisation !== "") {
-			handleSearchOrg(organisation).then(res => {
+		if (organization !== "") {
+			handleSearchOrg(organization).then(res => {
 			if (res.ok) {
 				res.json().then(bodyRes=>{
 					setResults(bodyRes.data);
@@ -85,7 +85,7 @@ export default function JoinOrg(props) {
 	// Join button
 	const handleJoin = () =>{
 		if (selected===0) {
-			alert("please select an organisation!")
+			alert("please select an organization!")
 		} else {
 			handleJoinOrg(selected).then(res => {
 				if (res.ok) {
@@ -112,7 +112,7 @@ export default function JoinOrg(props) {
 	return (
 		<div>
 		<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-			Join a new Organisation
+			Join a new organization
 		</Button>
 		<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
 			<DialogTitle id="form-dialog-title">Searching</DialogTitle>
@@ -123,13 +123,13 @@ export default function JoinOrg(props) {
 			<TextField
 				autoFocus
 				margin="dense"
-				id="organisation"
-				label="Organisation"
-				type="organisation"
+				id="organization"
+				label="organization"
+				type="organization"
 				fullWidth
 				onChange={handleOnChange}
 				error={!available && !firstTry ? true : false}
-				helperText={available || firstTry ? "Ready to join" : "Organisation does not exist"}
+				helperText={available || firstTry ? "Ready to join" : "organization does not exist"}
 			/>
 			{display}
 			</DialogContent>
