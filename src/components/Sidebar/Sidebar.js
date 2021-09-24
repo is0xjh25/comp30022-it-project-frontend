@@ -84,7 +84,7 @@ function Sidebar(props) {
             </div>
             <div className='sidebar-user-main'>
                 <div className='sidebar-user-name'>
-                    {`${currentUser.firstName} ${currentUser.lastName}`}
+                    {`${currentUser.first_name} ${currentUser.last_name}`}
                 </div>
                 <div className='sidebar-user-email'>
                     {`${currentUser.email}`}
@@ -152,7 +152,7 @@ function Sidebar(props) {
 			if (res.ok) {
 				alert("Successfully logout");
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-				history.push("./login");
+				history.push("/Login");
 			} else {
 				console.log("!!!");
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});

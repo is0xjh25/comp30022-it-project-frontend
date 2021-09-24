@@ -42,32 +42,19 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
 
 // Create a customer
 function handleCreateCustomer(data, departmentId) {
-    
-    const body = new FormData();
-    body.append("department_id", departmentId);
-    body.append("email", data.email);
-    body.append("phone", data.phone);
-    body.append("description", data.description);
-    body.append("first_name", data.firstName);
-    body.append("last_name", data.lastName);
-    body.append("middle_name", data.middleName);
-    body.append("gender", data.gender);
-    body.append("birthday", data.dob);
-    body.append("address", data.address);
-    body.append("organization", data.organization);
-    body.append("customer_type", data.customerType);
+    data['department_id'] = departmentId;
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
-        body: body
+        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
+        body: JSON.stringify(data)
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?department_id=${departmentId}`, info)
+    fetch(BASE_URL + `/contact`, info)
     .then(res => {
         if (res.ok) {   
-            resolve(res);
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})
@@ -84,7 +71,7 @@ function handleDisplayCustomer(customerId) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact/detail?client_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
     .then(res => {
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes)});
@@ -106,11 +93,10 @@ function handleDeleteCustomer(customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
     .then(res => {
-        if (res.ok) {   
-            resolve(res);
-        } else {
-            alert(res.msg);
-        }})
+        res.json().then(resBody => {
+            resolve(resBody);
+        })
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -118,31 +104,19 @@ function handleDeleteCustomer(customerId) {
 // Update Customer information
 function handleUpdateCustomer(data, customerId) {
     
-    const body = new FormData();
-    body.append("department_id", data.departmentId);
-    body.append("email", data.email);
-    body.append("phone", data.phone);
-    body.append("description", data.description);
-    body.append("first_name", data.firstName);
-    body.append("last_name", data.lastName);
-    body.append("middle_name", data.middleName);
-    body.append("gender", data.gender);
-    body.append("birthday", data.dob);
-    body.append("address", data.address);
-    body.append("organization", data.organization);
-    body.append("customer_type", data.customerType);
+    data['id'] = customerId;
 
     const info = {
         method: 'PUT',
-        headers: {'Authorization': getToken()},
-        body: body
+        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
+        body: JSON.stringify(data)
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?client_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact`, info)
     .then(res => {
         if (res.ok) {   
-            resolve(res);
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})

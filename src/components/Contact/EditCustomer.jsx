@@ -11,7 +11,6 @@ import { handleUpdateCustomer } from '../../api/Contact';
 export default function EditCustomer(props) {
 
 	const customerId = props.customerId;
-	const departmentId = props.data.department_id;
 	const [firstName, setFirstName] = useState(props.data.first_name);
 	const [lastName, setLastName] = useState(props.data.last_name);
 	const [middleName, setMiddleName] = useState(props.data.middle_name);
@@ -91,17 +90,16 @@ export default function EditCustomer(props) {
 		}
     };
 
-	const handleDiscard = () => {
+	const confirmDiscard = () => {
 		props.setStatus('display');
 	}
 
 	const handleUpdate = () => {
 
 		const data = {
-			"departmentId":departmentId,
-			"firstName":firstName,
-			"lastName":lastName,
-			"middleName":middleName,
+			"first_name":firstName,
+			"last_name":lastName,
+			"middle_name":middleName,
 			"email":email,
 			"phone":phone,
 			"description":description,
@@ -125,7 +123,7 @@ export default function EditCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+	const alertMessage = `Do you want to delete ${firstName} ${lastName}?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}

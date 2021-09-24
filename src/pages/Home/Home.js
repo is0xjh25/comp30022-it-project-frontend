@@ -7,6 +7,7 @@ import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
 import Customer from '../../components/Contact/Customer';
+import DisplayCustomer from '../../components/Contact/DisplayCustomer';
 
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
@@ -61,25 +62,36 @@ function Manage(props) {
 
 function Contacts(props) {
     let {path, url} = useRouteMatch();
-    const [dialogOpen, setDialogOpen] = useState(true);
+    
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
     const [currentOrganization, setCurrentOrganization] = useState(0);
     const [currentDepartment, setCurrentDepartment] = useState(0);
     const history = useHistory();
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const clearSelected = () => {
+        setCurrentDepartment(1);
+        setCurrentOrganization(1);
+    }
 
     const handleDialogOpen = () => {
         setDialogOpen(true);
     }
 
     const handleDialogClose = function() {
+        clearSelected();
         setDialogOpen(false);
-
     }
 
     const handleDialogConfirm = function() {
-        history.push(`${path}/${currentOrganization}/${currentDepartment}`);
-        setDialogOpen(false);
+        if(currentOrganization < 1 || currentDepartment < 1) {
+            alert('Please select an organization and departmnet!');
+        }else {
+            history.push(`${path}/${currentOrganization}/${currentDepartment}`);
+            setDialogOpen(false);
+            clearSelected();
+        }
     }
 
     const handleOrgChange = function(event) {
@@ -94,9 +106,11 @@ function Contacts(props) {
                         return dep.status !== 'notJoin';
                     });
                     if(data.length === 0) {
+                        setDepartments(data);
                         alert('There is no department you can access in this organization!');
                     }else {
                         setDepartments(data);
+                        setCurrentDepartment(0);
                     }
                 }else {
                     alert(resBody.msg);
@@ -170,11 +184,53 @@ function Contacts(props) {
                 </DialogActions>
             </Dialog>
             <Switch>
+                <Route path={`${path}/:orgId/:depId/:customerId`} >
+                    <DisplayCustomer/>
+                </Route>
                 <Route path={`${path}/:orgId/:depId`} >
                     <Customer handleDialogOpen={handleDialogOpen}/>
                 </Route>
                 <Route exact path={`${path}`} >
-                    Try again
+                    <Box sx={{m:50, bgcolor:'white'}}>
+                        <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
+                        <DialogContent>
+                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5 }}>
+                                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                                    <InputLabel>{"Organization"}</InputLabel>
+                                    <Select
+                                    native
+                                    value={currentOrganization}
+                                    onChange={handleOrgChange}
+                                    input={<OutlinedInput label={'Organization'}/>}
+                                    >
+                                    <option aria-label="None" value={-1} />
+                                    {organizations.map(item => {
+                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
+                                    })}
+                                    </Select>
+                                </FormControl>
+                                <FormControl disabled={departments.length <= 0} sx={{ m: 1, minWidth: 200 }}>
+                                    <InputLabel>{"Department"}</InputLabel>
+                                    <Select
+                                    native
+                                    value={currentDepartment}
+                                    onChange={handleDepChange}
+                                    input={<OutlinedInput label={'Department'}/>}
+                                    >
+                                    <option aria-label="None" value={-1} />
+                                    {departments.map(item => {
+                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
+                                    })}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleDialogClose}>Cancel</Button>
+                            <Button onClick={handleDialogConfirm}>Ok</Button>
+                        </DialogActions>
+                    </Box>
+
                 </Route>
             </Switch>
         </div>
