@@ -152,7 +152,7 @@ function Sidebar(props) {
 			if (res.ok) {
 				alert("Successfully logout");
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-				history.push("./login");
+				history.push("/Login");
 			} else {
 				console.log("!!!");
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
