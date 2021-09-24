@@ -70,7 +70,7 @@ const columns = [
     ];
 
 const EnhancedTableToolbar = (props) => {
-    const { organizationId, departmentId, handleDialogOpen } = props;
+    const { organizationId, departmentId, handleDialogOpen, update } = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
@@ -166,7 +166,7 @@ const EnhancedTableToolbar = (props) => {
             maxWidth
             >
                 <Paper fullWidth>
-                <AddCustomer departmentId={departmentId} handleClose={handleClose}/>
+                <AddCustomer departmentId={departmentId} handleClose={handleClose} update={update}/>
                 </Paper>
                 
             </Dialog>
@@ -243,17 +243,6 @@ function EnhancedTableRow(props) {
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => {setAlertOpen(false)}}/>
 
-            
-            {/* <SelectDialog
-                items={selectItems}
-                currentSelected={currentSelected}
-                title={`Change role for ${row.name}`}
-                label="Role"
-                open={selectOpen}
-                handleChange={selectChange}
-                handleClose={selectClose}
-                handleConfirm={handleSelectConfirm}
-            /> */}
         </TableRow>
     )
 }
@@ -335,7 +324,7 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen}/>
+            <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen} update={update}/>
             <TableContainer sx={{ maxHeight: 800 }}>
                 <Table Contact aria-label="contact" stickyHeader height={100}>
                     <TableHead>
