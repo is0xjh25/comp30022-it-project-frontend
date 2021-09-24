@@ -325,8 +325,8 @@ export default function CustomerTable(props) {
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen} update={update}/>
-            <TableContainer sx={{ maxHeight: 800 }}>
-                <Table Contact aria-label="contact" stickyHeader height={100}>
+            <TableContainer>
+                <Table aria-label="contact" stickyHeader>
                     <TableHead>
                         <TableRow>
                         {columns.map((column) => (
