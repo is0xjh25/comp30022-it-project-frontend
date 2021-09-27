@@ -15,6 +15,7 @@ import AlertDialog from '../Dialog/AlertDialog';
 
 import { useHistory,  useRouteMatch } from 'react-router-dom';
 
+// CSS style configuration
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
@@ -32,31 +33,24 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(5),
         marginLeft: theme.spacing(20),
         display: 'flex',
-        // border: 10,
-        // alignItems: 'space-around',
         justifyContent: 'flex-start',
         component: "h1",
         color: "primary.main",
     },
 
-    // 一个box的class，规定box css
-    // 三个不同颜色的css
     orgGrid: {
         alignItems: 'flex-start',
         direction: 'column',
         justifyContent: 'space-around',
         warp: 'nowrap',
-        // color: 'rgb(255, 255, 0)',
         border: 5,
         borderRadius: 5,
         bgcolor: 'background.paper',
         borderColor: 'text.primary',
         m: 1,
-        // boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         padding: '30px',
     },
     ownBox: {
-        // marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -64,9 +58,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // m: 1,
-        // borderColor: 'text.primary',
-        // alignItems: 'center',
         color: theme.palette.success.main,
     },
     memberBox: {
@@ -77,8 +68,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // alignSelf: strentch,
-        // color: theme.palette.info.main,
     },
     plusBox: {
         display: 'flex',
@@ -88,8 +77,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // alignItems: 'center',
-        // color: theme.palette.success.main,
     },
     transferOwnerButton: {
         position: 'absolute',
@@ -101,6 +88,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+// loop through all organizations of this user,
+// and display them according to the user's ownership
 function EachOrganization(props) {
     const {org, update} = props;
     const classes = useStyles();
@@ -112,7 +101,7 @@ function EachOrganization(props) {
     };
 
     //================ Delete Organization ==================
-
+    // if the user owns the organization, delete button is displayed
     const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Delete Confirm';
     const alertMessage = `Do you want to delete ${org.name}?`;
@@ -142,11 +131,11 @@ function EachOrganization(props) {
                     </IconButton>
                 </Box>
                 <AlertDialog alertTitle={alertTitle}
-                alertMessage={alertMessage}
-                open={alertOpen}
-                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
-                handleConfirm={handleAlertConfirm}
-                handleCancel={() => { setAlertOpen(false) }}
+                    alertMessage={alertMessage}
+                    open={alertOpen}
+                    handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                    handleConfirm={handleAlertConfirm}
+                    handleCancel={() => { setAlertOpen(false) }}
                 />
             </Grid>
         :
@@ -162,14 +151,14 @@ function EachOrganization(props) {
 
 }
 
+// the organization component, it displays the user's current joined organizations,
+// and offer buttons for create/join new organizations
 export default function Organization(props) {
-    // read in the user's organisation info from backend api
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
-
     const [updateCount, setUpdateCount] = useState(0);
 
-
+    // request data from backend API everytime updates
     useEffect(() => {
         getOrganization().then(res => {
             if (res.ok) {
@@ -193,7 +182,8 @@ export default function Organization(props) {
     }
 
     const classes = useStyles();
- 
+
+    // display loading page if the request is not finished
     if (loading) {
         return <div>loading...</div>
     }
