@@ -17,6 +17,7 @@ function getCookie(cname) {
     return "";
 }
 
+// Get the current user's information
 function getUserInfo() {
     return new Promise((resolve, reject) => {
         const token = getCookie('token');

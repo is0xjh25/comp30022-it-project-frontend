@@ -62,6 +62,7 @@ function acceptUser(userId, departmentId) {
     return changePermission(userId, 1, departmentId)
 }
 
+// Delete a user from a department
 function deleteUser(userId, departmentId) {
     const url = BASE_URL + '/permission?user_id=' + userId + '&department_id=' + departmentId;
     const requestInit = {
@@ -83,6 +84,7 @@ function deleteUser(userId, departmentId) {
 
 }
 
+// Delince a user's request to join a department
 function declineUser(userId, departmentId) {
     return deleteUser(userId, departmentId)
 }
@@ -289,6 +291,7 @@ function deleteDepartment(departmentId) {
     })
 }
 
+// Get my permission level from this department
 function getMyPermissionLevel(departmentId) {
     const url = `${BASE_URL}/permission/myPermission?department_id=${departmentId}`;
     const info = {

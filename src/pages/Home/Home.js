@@ -42,6 +42,8 @@ import {
 
 require('dotenv').config();
 
+
+// The component to render when Manage is selected
 function Manage(props) {
   let {path} = useRouteMatch();
 
@@ -60,6 +62,7 @@ function Manage(props) {
   )
 }
 
+// The component to render when Contacts is selected
 function Contacts(props) {
     let {path, url} = useRouteMatch();
     

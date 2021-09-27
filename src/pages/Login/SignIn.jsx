@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Favicon from '../../images/favicon.png'
+import Copyright from '../../components/Copyright';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,13 +8,11 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import { handleSignIn } from '../../api/Login';
-import { setCookie } from '../../api/Login';
+import { useHistory , NavLink } from 'react-router-dom';
+import { setCookie, handleSignIn } from '../../api/Login';
 
+// Style sheet
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		marginTop: theme.spacing(15),
@@ -57,7 +56,6 @@ export default function SignIn(props) {
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
 	
 	let history = useHistory();
 
@@ -73,29 +71,31 @@ export default function SignIn(props) {
 	const handleValidation = () => {
 
 		let formIsValid = true;
+		let alertMessage = "";
 		
 		if (!password) {
 			formIsValid = false;
-			setError("Password cannot be empty ಠ_ಠ");
+			alertMessage = "Password cannot be empty ಠ_ಠ";
 		} 
 
 		if (!email) {
 			formIsValid = false;
-			setError("Email cannot be empty (ʘдʘ╬)");
+			alertMessage = "Email cannot be empty (ʘдʘ╬)";
 		} else if (typeof email !== "undefined") {
 			 let lastAtPos = email.lastIndexOf('@');
 			 let lastDotPos = email.lastIndexOf('.');
 			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
 				formIsValid = false;
-				setError("Invalid Email 눈_눈");
+				alertMessage ="Invalid Email 눈_눈";
 			}
 		}
 
 		if (!email && !password) {
 			formIsValid = false;
-			setError("Email and Password cannot be empty (#｀皿´)");
+			alertMessage = "Email and Password cannot be empty (#｀皿´)";
 		}
 
+		alert(alertMessage);
 		return formIsValid;
 	};
 
@@ -113,8 +113,6 @@ export default function SignIn(props) {
                 history.push('/Login');
 			}
 			})
-		} else {
-		   	alert(error);
 		}
 	}
 		

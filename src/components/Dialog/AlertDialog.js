@@ -6,16 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+// A common alert dialog implementation, can customize title, message and so on
 export default function AlertDialog(props) {
     const {alertTitle, alertMessage, handleClose, handleConfirm, handleCancel, open} = props
-
-    // const handleClickOpen = () => {
-    //     setOpen(true);
-    // };
-
-    // const handleClose = () => {
-    //     setOpen(false);
-    // };
 
     return (
         <div>

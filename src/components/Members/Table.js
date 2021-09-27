@@ -62,6 +62,7 @@ const headCells = [
   { id: 'manage', numeric: true, disablePadding: false, label: 'Manage' },
 ];
 
+// The table head of the table
 function EnhancedTableHead(props) {
   const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -108,6 +109,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
+// The permission levels in the department
 const permissionLevels = [
   {authorityLevel: 0, name: 'Pending to join'},
   {authorityLevel: 1, name: 'Member'},
@@ -176,6 +178,7 @@ function EnhancedTableRow(props) {
   const handleChangeRole = function() {
     setSelectOpen(true);
   }
+  // When assign role is confirmed
   const handleSelectConfirm = function() {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
       alert(`${row.name} is now assigned to ${permissionLevelMap[currentSelected]}`);
@@ -340,6 +343,7 @@ export default function EnhancedTable(props) {
     setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
   }
 
+  // Fetch the initial data of the table
   useEffect(function fetchTableData() {
     console.log(updateCount)
     if (departmentId) {
@@ -366,7 +370,6 @@ export default function EnhancedTable(props) {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

@@ -11,9 +11,10 @@ import './Members.css'
 import { getMyPermissionLevel } from '../../api/Manage';
 
 
-
+// A component that displays the members page for user to manage
 function Members() {
     let {depId} = useParams();
+    // This is the permission level that the user has at this department
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
