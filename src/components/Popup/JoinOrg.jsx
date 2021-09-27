@@ -11,8 +11,8 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {handleSearchOrg, handleJoinOrg} from '../../api/Manage';
 
 export default function JoinOrg(props) {
-	const update = props.update;
 	
+	const update = props.update;
 	const [open, setOpen] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
 	const [available, setAvailable] = useState(false);
