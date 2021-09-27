@@ -80,7 +80,7 @@ export default function Resend(props) {
 					alert("Request is submitted. Please check your mailbox !");
 					history.push('/Login');
 				} else {
-					res.json().then(bodyRes=>{alert(bodyRes.msg);});
+					alert(res.msg);
 					history.push('/Login');
 				}}).catch(error => {alert(error);})
 		} else {

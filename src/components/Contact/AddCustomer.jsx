@@ -10,8 +10,8 @@ import { handleCreateCustomer } from '../../api/Contact';
 
 export default function AddCustomer(props) {
 
-	const departmentId = props.departmentId;
-    const handleClose = props.handleClose;
+    const {departmentId, handleClose, update} = props;
+
 
 
 	const [firstName, setFirstName] = useState("");
@@ -116,6 +116,7 @@ export default function AddCustomer(props) {
 			if (res.code===200) {
 				alert("Successfully created");
                 handleClose();
+                update();
 			} else {
 				alert(res.msg);
 			}

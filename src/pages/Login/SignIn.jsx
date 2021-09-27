@@ -109,7 +109,7 @@ export default function SignIn(props) {
 				setCookie('token', res.headers.get("Authorization"), 1)
                 history.push('/');
             } else {
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+                alert(res.msg);
                 history.push('/Login');
 			}
 			})

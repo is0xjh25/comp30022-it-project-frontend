@@ -11,7 +11,6 @@ import { handleUpdateCustomer } from '../../api/Contact';
 export default function EditCustomer(props) {
 
 	const customerId = props.customerId;
-	const departmentId = props.data.department_id;
 	const [firstName, setFirstName] = useState(props.data.first_name);
 	const [lastName, setLastName] = useState(props.data.last_name);
 	const [middleName, setMiddleName] = useState(props.data.middle_name);
@@ -98,10 +97,9 @@ export default function EditCustomer(props) {
 	const handleUpdate = () => {
 
 		const data = {
-			"departmentId":departmentId,
-			"firstName":firstName,
-			"lastName":lastName,
-			"middleName":middleName,
+			"first_name":firstName,
+			"last_name":lastName,
+			"middle_name":middleName,
 			"email":email,
 			"phone":phone,
 			"description":description,

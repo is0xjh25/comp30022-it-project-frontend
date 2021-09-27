@@ -178,7 +178,7 @@ function EnhancedTableRow(props) {
   }
   const handleSelectConfirm = function() {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
-      alert(`${row.user_id} is now assigned to ${permissionLevelMap[currentSelected]}`);
+      alert(`${row.name} is now assigned to ${permissionLevelMap[currentSelected]}`);
       changePermission(row.user_id, currentSelected, departmentId);
       setSelectOpen(false);
       setCurrentSelected(-1);

@@ -42,20 +42,7 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
 
 // Create a customer
 function handleCreateCustomer(data, departmentId) {
-    
-    // const body = new FormData();
-    // body.append("department_id", departmentId);
-    // body.append("email", data.email);
-    // body.append("phone", data.phone);
-    // body.append("description", data.description);
-    // body.append("first_name", data.firstName);
-    // body.append("last_name", data.lastName);
-    // body.append("middle_name", data.middleName);
-    // body.append("gender", data.gender);
-    // body.append("birthday", data.birthday);
-    // body.append("address", data.address);
-    // body.append("organization", data.organization);
-    // body.append("customer_type", data.customerType);
+    data['department_id'] = departmentId;
 
     const info = {
         method: 'POST',
@@ -64,10 +51,10 @@ function handleCreateCustomer(data, departmentId) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?department_id=${departmentId}`, info)
+    fetch(BASE_URL + `/contact`, info)
     .then(res => {
         if (res.ok) {   
-            resolve(res);
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})
@@ -117,31 +104,19 @@ function handleDeleteCustomer(customerId) {
 // Update Customer information
 function handleUpdateCustomer(data, customerId) {
     
-    const body = new FormData();
-    body.append("department_id", data.departmentId);
-    body.append("email", data.email);
-    body.append("phone", data.phone);
-    body.append("description", data.description);
-    body.append("first_name", data.firstName);
-    body.append("last_name", data.lastName);
-    body.append("middle_name", data.middleName);
-    body.append("gender", data.gender);
-    body.append("birthday", data.birthday);
-    body.append("address", data.address);
-    body.append("organization", data.organization);
-    body.append("customer_type", data.customerType);
+    data['id'] = customerId;
 
     const info = {
         method: 'PUT',
-        headers: {'Authorization': getCookie('token')},
-        body: body
+        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
+        body: JSON.stringify(data)
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?client_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact`, info)
     .then(res => {
         if (res.ok) {   
-            resolve(res);
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})

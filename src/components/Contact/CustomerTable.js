@@ -70,7 +70,7 @@ const columns = [
     ];
 
 const EnhancedTableToolbar = (props) => {
-    const { organizationId, departmentId, handleDialogOpen } = props;
+    const { organizationId, departmentId, handleDialogOpen, update , permissionLevel} = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
@@ -157,10 +157,11 @@ const EnhancedTableToolbar = (props) => {
                 <FilterListIcon onClick={handleChangeOrgDep}/>
             </IconButton>
             {/* </Tooltip> */}
-            <Button variant="contained" onClick={handleCreateContact}
-            >
+            {permissionLevel > 1 && 
+            <Button variant="contained" onClick={handleCreateContact}>
                 Add Contact
             </Button>
+            }
 
             <Dialog
             open={createContactOpen}
@@ -168,7 +169,7 @@ const EnhancedTableToolbar = (props) => {
             maxWidth
             >
                 <Paper fullWidth>
-                <AddCustomer departmentId={departmentId} handleClose={handleClose}/>
+                <AddCustomer departmentId={departmentId} handleClose={handleClose} update={update}/>
                 </Paper>
                 
             </Dialog>
@@ -206,7 +207,7 @@ function EnhancedTableRow(props) {
 
     //=============== Display Delete Button =============
     var display;
-    if (permissionLevel > 3) {
+    if (permissionLevel >= 3) {
         display = (
                 <div>
                     <IconButton onClick={deleteCustomer}>
@@ -218,20 +219,20 @@ function EnhancedTableRow(props) {
     }
 
     return (
-        <TableRow hover onClick={onRowClick} role="checkbox" key={row.customer_id}>
-            <TableCell align="center" component="th" scope="row" padding="none">
+        <TableRow hover role="checkbox" key={row.customer_id}>
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
-            <TableCell align="center">
+            <TableCell onClick={onRowClick} align="center">
                 {row.email}
             </TableCell>
-            <TableCell align="center" component="th" scope="row" padding="none">
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.gender}
             </TableCell>
-            <TableCell align="center">
+            <TableCell onClick={onRowClick} align="center">
                 {row.age}
             </TableCell>
-            <TableCell align="center" component="th" scope="row" padding="none">
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.organization}
             </TableCell>
             <TableCell align="center">
@@ -245,17 +246,6 @@ function EnhancedTableRow(props) {
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => {setAlertOpen(false)}}/>
 
-            
-            {/* <SelectDialog
-                items={selectItems}
-                currentSelected={currentSelected}
-                title={`Change role for ${row.name}`}
-                label="Role"
-                open={selectOpen}
-                handleChange={selectChange}
-                handleClose={selectClose}
-                handleConfirm={handleSelectConfirm}
-            /> */}
         </TableRow>
     )
 }
@@ -337,9 +327,15 @@ export default function CustomerTable(props) {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen}/>
-            <TableContainer sx={{ maxHeight: 800 }}>
-                <Table aria-label="contact" stickyHeader >
+            <EnhancedTableToolbar 
+            organizationId={organizationId} 
+            departmentId={departmentId} 
+            handleDialogOpen={props.handleDialogOpen} 
+            update={update}
+            permissionLevel={permissionLevel}
+            />
+            <TableContainer>
+                <Table aria-label="contact" stickyHeader>
                     <TableHead>
                         <TableRow>
                         {columns.map((column) => (
