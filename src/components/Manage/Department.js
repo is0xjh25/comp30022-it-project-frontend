@@ -13,9 +13,7 @@ import AlertDialog from '../Dialog/AlertDialog';
 
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
 
-
-
-
+// CSS style configuration
 const useStyles = makeStyles((theme) => ({
     palette: {
         background: {
@@ -33,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(5),
         marginLeft: theme.spacing(20),
         display: 'flex',
-        // border: 10,
-        // alignItems: 'space-around',
         justifyContent: 'flex-start',
         component: "h1",
         color: "primary.main",
@@ -45,17 +41,14 @@ const useStyles = makeStyles((theme) => ({
         direction: 'column',
         justifyContent: 'space-around',
         warp: 'nowrap',
-        // color: 'rgb(255, 255, 0)',
         border: 5,
         borderRadius: 5,
         bgcolor: 'background.paper',
         borderColor: 'text.primary',
         m: 1,
-        // boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         padding: '30px',
     },
     ownBox: {
-        // marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -63,9 +56,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // m: 1,
-        // borderColor: 'text.primary',
-        // alignItems: 'center',
         color: theme.palette.success.main,
     },
     memberBox: {
@@ -76,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // alignSelf: strentch,
-        // color: theme.palette.info.main,
     },
     plusBox: {
         display: 'flex',
@@ -87,8 +75,6 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // alignItems: 'center',
-        // color: theme.palette.success.main,
     },
     transferOwnerButton: {
         position: 'absolute',
@@ -100,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
+// if the user owns the department, delete button is diaplayed
 function OwnedDepartment(props) {
     const {department, update, showMembers} = props;
     const classes = useStyles();
@@ -119,30 +105,29 @@ function OwnedDepartment(props) {
         update();
     }
 
+    // link the department to member management page
     return(
         <Grid key={department.id} item alignItems={'center'} xs={8}>
             <Box className={classes.ownBox} bgcolor="success.main">
                 <Button onClick={() => showMembers(department.id)} alignItems='center'>
                     {department.name}
                 </Button>
-
-                
                 <IconButton onClick={handleDeleteDep} aria-label="delete" className={classes.deleteButton}>
                     <DeleteIcon />
                 </IconButton>
             </Box>
             <AlertDialog alertTitle={alertTitle}
-            alertMessage={alertMessage}
-            open={alertOpen}
-            handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
-            handleConfirm={handleAlertConfirm}
-            handleCancel={() => { setAlertOpen(false) }}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
             />
         </Grid>
     )
-
 }
 
+// display all not joined department in the organization, and click to send a join request
 function NotJoinedDepartment(props) {
     const {department, update} = props;
     const classes = useStyles();
@@ -170,19 +155,19 @@ function NotJoinedDepartment(props) {
                 </Button>
             </Box>
             <AlertDialog alertTitle={alertTitle}
-            alertMessage={alertMessage}
-            open={alertOpen}
-            handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
-            handleConfirm={handleAlertConfirm}
-            handleCancel={() => { setAlertOpen(false) }}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
             />
         </Grid>
     )
 }
 
+// loop through all department in this organization, and display them according to 
+// the user's authority level
 export default function Department(props) {
-    // read in the user's organisation info from backend api
-
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
     const history = useHistory();
@@ -194,6 +179,7 @@ export default function Department(props) {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
+    // request data from backend API
     useEffect(() => {
         const id = orgId;
         getDepartment(id).then(res => {
@@ -212,15 +198,18 @@ export default function Department(props) {
 
     const classes = useStyles();
 
+    // display loading page if the request is not finished
     if (loading) {
         return <div>loading...
         </div>
     }
 
+    // diaplay members in the department
     const showMembers = (depId) => {
         history.push(`${url}/${depId}`);
     }
 
+    // diplay departments accordingly
     const own = [];
     const member = [];
     const other = [];

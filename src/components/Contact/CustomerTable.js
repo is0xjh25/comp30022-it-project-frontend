@@ -13,7 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,35 +22,7 @@ import { getOrganization, getDepartment } from '../../api/Manage';
 import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
 
-// functions for sorting 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-    }
-
-function getComparator(order, orderBy) {
-return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-const stabilizedThis = array.map((el, index) => [el, index]);
-stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-    return order;
-    }
-    return a[1] - b[1];
-});
-    return stabilizedThis.map((el) => el[0]);
-}
-
+// columns are the labels of the table
 const columns = [
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
@@ -66,11 +38,14 @@ const columns = [
     { id: 'deleteButton', minWidth: 100}
     ];
 
+// create a toolbar component based on toolbar component, it shows the table title,
+// current organization and department, filter button, and create new contact button(if apply)
 const EnhancedTableToolbar = (props) => {
-    const { organizationId, departmentId, handleDialogOpen, update } = props;
+    const { organizationId, departmentId, handleDialogOpen, update , permissionLevel} = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
+    // request data from backend API, record the name of current organization and department
     useEffect(() => {
         getOrganization().then(res => {
             if (res.ok) {
@@ -80,7 +55,7 @@ const EnhancedTableToolbar = (props) => {
                         if (organization.id === organizationId) {
                             setOrgName(organization.name);
                         } else {
-                            // alert("Organization name not found")
+                            alert("Organization name not found")
                         }
                     });
                 })
@@ -96,7 +71,7 @@ const EnhancedTableToolbar = (props) => {
                         if (department.id === departmentId) {
                             setDepName(department.name);
                         } else {
-                            // alert("Organization name not found")
+                            alert("Organization name not found")
                         }
                     });
                 })
@@ -109,8 +84,8 @@ const EnhancedTableToolbar = (props) => {
     const handleChangeOrgDep = () => {
         handleDialogOpen();
     }
-    // Create new contact
 
+    // Create new contact
     const [createContactOpen, setCreateContactOpen] = useState(false);
 
     const handleCreateContact = () => {
@@ -124,11 +99,7 @@ const EnhancedTableToolbar = (props) => {
         <Toolbar
             sx={{
                 pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 }
-                // ...(numSelected > 0 && {
-                //     bgcolor: (theme) =>
-                //     alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                // }),
+                pr: { xs: 1, sm: 1 },
             }}
         >
             <Typography
@@ -147,16 +118,14 @@ const EnhancedTableToolbar = (props) => {
             >
                 {orgName} / {depName}
             </Typography>
-            {/* <Tooltip title="Filter list"> */}
             <IconButton>
                 <FilterListIcon onClick={handleChangeOrgDep}/>
             </IconButton>
-            {/* </Tooltip> */}
-            <Button variant="contained" onClick={handleCreateContact}
-            >
+            {permissionLevel > 1 && 
+            <Button variant="contained" onClick={handleCreateContact}>
                 Add Contact
             </Button>
-
+            }
             <Dialog
             open={createContactOpen}
             fullWidth
@@ -165,25 +134,19 @@ const EnhancedTableToolbar = (props) => {
                 <Paper fullWidth>
                 <AddCustomer departmentId={departmentId} handleClose={handleClose} update={update}/>
                 </Paper>
-                
             </Dialog>
-
         </Toolbar>
     )
 }
 
-// EnhancedTableToolbar.propTypes = {
-// };
-
+// create a new table row component, including link to contact detail and delete contact
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
     const history = useHistory();
     const {url} = useRouteMatch();
-    console.log(url);
     const onRowClick = () => {
         history.push(`${url}/${row.id}`);
     }
-
 
     //=============== Delete Customer ==================
     const [alertOpen, setAlertOpen] = useState(false);
@@ -200,8 +163,9 @@ function EnhancedTableRow(props) {
     }
 
     //=============== Display Delete Button =============
+    // if the user's authority level meets the requirement, display the delete button
     var display;
-    if (permissionLevel > 3) {
+    if (permissionLevel >= 3) {
         display = (
                 <div>
                     <IconButton onClick={deleteCustomer}>
@@ -244,53 +208,51 @@ function EnhancedTableRow(props) {
     )
 }
 
+// style configuration
 const useStyles = makeStyles((theme) => ({
     root: {
-      width: '100%',
+        width: '100%',
     },
     paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2),
+        width: '100%',
+        marginBottom: theme.spacing(2),
     },
     table: {
-      minWidth: 750,
+        minWidth: 750,
     },
     visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1,
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
     },
-  }));
+}));
 
+// the final table for contact
 export default function CustomerTable(props) {
     //=============== Data from Parent ==================
     const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
     const departmentId = props.departmentId;
-    // const handleDialogOpen = props.handleDialogOpen;
 
     //=============== Table Settings ==================
     const classes = useStyles();
-    // const [order, setOrder] = useState('asc');
-    // const [orderBy, setOrderBy] = useState('manage');
-    // const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
-    // const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
 
     const update = function() {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
+    // request contact data from backend API
     useEffect(() => {
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
             if (res.code === 200) {
@@ -306,7 +268,6 @@ export default function CustomerTable(props) {
         })
     }, [departmentId, updateCount])
 
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -316,12 +277,16 @@ export default function CustomerTable(props) {
         setPage(0);
     };
 
-
-    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+    // make use of enhanced table toolbar and enhanced table row, diplay the data accordingly
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar organizationId={organizationId} departmentId={departmentId} handleDialogOpen={props.handleDialogOpen} update={update}/>
+            <EnhancedTableToolbar 
+            organizationId={organizationId} 
+            departmentId={departmentId} 
+            handleDialogOpen={props.handleDialogOpen} 
+            update={update}
+            permissionLevel={permissionLevel}
+            />
             <TableContainer>
                 <Table aria-label="contact" stickyHeader>
                     <TableHead>
