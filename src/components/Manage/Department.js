@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -187,7 +186,7 @@ export default function Department(props) {
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
     const history = useHistory();
-    let {path, url} = useRouteMatch();
+    let {url} = useRouteMatch();
     let {orgId} = useParams();
 
     const [updateCount, setUpdateCount] = useState(0);

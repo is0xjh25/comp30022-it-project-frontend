@@ -12,16 +12,13 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
-import SelectDialog from '../Dialog/SelectDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
 import { Button } from '@mui/material'
 import { getOrganization, getDepartment } from '../../api/Manage';
-import DispalyCustomer from './DisplayCustomer';
 import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
 
@@ -80,7 +77,7 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(organization => {
-                        if (organization.id == organizationId) {
+                        if (organization.id === organizationId) {
                             setOrgName(organization.name);
                         } else {
                             // alert("Organization name not found")
@@ -96,7 +93,7 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(department => {
-                        if (department.id == departmentId) {
+                        if (department.id === departmentId) {
                             setDepName(department.name);
                         } else {
                             // alert("Organization name not found")

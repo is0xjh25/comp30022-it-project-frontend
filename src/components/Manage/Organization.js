@@ -105,7 +105,7 @@ function EachOrganization(props) {
     const {org, update} = props;
     const classes = useStyles();
     const history = useHistory();
-    let {path, url} = useRouteMatch();
+    let {url} = useRouteMatch();
     const showDepartment = (id) => {
         history.push(`${url}/${id}`)
 

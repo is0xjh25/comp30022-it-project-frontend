@@ -90,7 +90,6 @@ export default function DisplayCustomer(props) {
 	useEffect(() => {
 		handleDisplayCustomer(customerId).then(res => {
 			if (res.code===200) {
-				console.log(data);
 				setData(res.data);
                 setLoading(false);
 			} else {
@@ -99,13 +98,12 @@ export default function DisplayCustomer(props) {
 		})
 
         getMyPermissionLevel(depId).then(res => {
-            console.log(res);
             if(res.code === 200) {
                 setAuthority(res.data.authority_level);
             }
         });
         
-    }, [status])
+    }, [status, customerId, depId])
 
 	useEffect(() => {
 		return () => {

@@ -22,12 +22,6 @@ import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } fr
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 
-
-
-
-
-
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

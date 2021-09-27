@@ -8,7 +8,6 @@ import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
 import Customer from '../../components/Contact/Customer';
 import DisplayCustomer from '../../components/Contact/DisplayCustomer';
-
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
 
@@ -64,7 +63,7 @@ function Manage(props) {
 
 // The component to render when Contacts is selected
 function Contacts(props) {
-    let {path, url} = useRouteMatch();
+    let { path } = useRouteMatch();
     
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
