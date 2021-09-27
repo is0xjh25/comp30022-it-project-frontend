@@ -57,7 +57,6 @@ export default function SignIn(props) {
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
 	
 	let history = useHistory();
 
@@ -73,29 +72,31 @@ export default function SignIn(props) {
 	const handleValidation = () => {
 
 		let formIsValid = true;
+		let alertMessage = "";
 		
 		if (!password) {
 			formIsValid = false;
-			setError("Password cannot be empty ಠ_ಠ");
+			alertMessage = "Password cannot be empty ಠ_ಠ";
 		} 
 
 		if (!email) {
 			formIsValid = false;
-			setError("Email cannot be empty (ʘдʘ╬)");
+			alertMessage = "Email cannot be empty (ʘдʘ╬)";
 		} else if (typeof email !== "undefined") {
 			 let lastAtPos = email.lastIndexOf('@');
 			 let lastDotPos = email.lastIndexOf('.');
 			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
 				formIsValid = false;
-				setError("Invalid Email 눈_눈");
+				alertMessage ="Invalid Email 눈_눈";
 			}
 		}
 
 		if (!email && !password) {
 			formIsValid = false;
-			setError("Email and Password cannot be empty (#｀皿´)");
+			alertMessage = "Email and Password cannot be empty (#｀皿´)";
 		}
 
+		alert(alertMessage);
 		return formIsValid;
 	};
 
@@ -113,8 +114,6 @@ export default function SignIn(props) {
                 history.push('/Login');
 			}
 			})
-		} else {
-		   	alert(error);
 		}
 	}
 		

@@ -40,7 +40,6 @@ export default function Resend(props) {
 
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
-	const [error, setError] = useState("");
 
 	let history = useHistory();
 
@@ -54,19 +53,21 @@ export default function Resend(props) {
 	const handleValidation = () => {
 
 		let formIsValid = true;
+		let alertMessage = "";
 
 		if (!email) {
 		   formIsValid = false;
-		   setError("Email cannot be empty (ʘдʘ╬)");
+		   alertMessage = "Email cannot be empty (ʘдʘ╬)";
 		} else if (typeof email !== "undefined") {
 			let lastAtPos = email.lastIndexOf('@');
 			let lastDotPos = email.lastIndexOf('.');
 			if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
 			   formIsValid = false;
-			   setError("Invalid email 눈_눈");
+			   alertMessage = "Invalid email 눈_눈";
 			}
 		}
 
+		alert(alertMessage);
 		return formIsValid;
 	};
 
@@ -83,8 +84,6 @@ export default function Resend(props) {
 					alert(res.msg);
 					history.push('/Login');
 				}}).catch(error => {alert(error);})
-		} else {
-		   	alert(error);
 		}
 	}
 

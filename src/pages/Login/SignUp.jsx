@@ -55,7 +55,6 @@ export default function SignUp(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [organization, setorganization] = useState("");
-	const [error, setError] = useState("");
 
 	let history = useHistory();
 
@@ -79,59 +78,61 @@ export default function SignUp(props) {
 	const handleValidation = () => {
 
 		let formIsValid = true;
-		
+		let alertMessage = "";
+
 		if (!password) {
 			formIsValid = false;
-			setError("Password cannot be empty ಠ_ಠ");
+			alertMessage = "Password cannot be empty ಠ_ಠ";
 		}
 
 		if (!email) {
 			formIsValid = false;
-			setError("Email cannot be empty (ʘдʘ╬)");
+			alertMessage = "Email cannot be empty (ʘдʘ╬)";
 		} else if (typeof email !== "undefined") {
 			 let lastAtPos = email.lastIndexOf('@');
 			 let lastDotPos = email.lastIndexOf('.');
 			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
 				formIsValid = false;
-				setError("Invalid email 눈_눈");
+				alertMessage = "Invalid email 눈_눈";
 			}
 		}
 
 		if (!phone) {
 			formIsValid = false;
-			setError("Phone Number cannot be empty ಠ_ಠ");
+			alertMessage = "Phone Number cannot be empty ಠ_ಠ";
 		} else if (typeof phone !== "undefined") {
 			if (phone.length !== 10) {
 			   formIsValid = false;
-			   setError("Invalid phone number 눈_눈");
+			   alertMessage = "Invalid phone number 눈_눈";
 			}        
 		}
 
 		if (!lastName) {
 			formIsValid = false;
-			setError("Last Name cannot be empty ಠ_ಠ");
+			alertMessage = "Last Name cannot be empty ಠ_ಠ";
 		} else if (typeof lastName !== "undefined") {
 			if (!lastName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
-			   setError("Invalid last name 눈_눈");
+			   alertMessage = "Invalid last name 눈_눈";
 			}        
 		}
 
 		if (!firstName) {
 			formIsValid = false;
-			setError("First Name cannot be empty ಠ_ಠ");
+			alertMessage = "First Name cannot be empty ಠ_ಠ";
 		} else if (typeof firstName !== "undefined") {
 			if (!firstName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
-			   setError("Invalid first name 눈_눈");
+			   alertMessage = "Invalid first name 눈_눈";
 			}        
 		}
 
 		if (!email && !password && !firstName && !lastName && !phone) {
 			formIsValid = false;
-			setError("Hey, just tell me something about you (#｀皿´)");
+			alertMessage = "Hey, just tell me something about you (#｀皿´)";
 		}
 
+		alert(alertMessage);
 		return formIsValid;
 	};
 
@@ -150,8 +151,6 @@ export default function SignUp(props) {
 				history.push('/Login');
 			}
 			})
-		} else {
-		   	alert(error);
 		}
 	};
 
