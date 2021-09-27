@@ -12,6 +12,7 @@ import { NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { handleResend } from '../../api/Login';
 
+// Style sheet
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		fontSize: 19,

@@ -9,8 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {handleCreateDep} from '../../api/Manage';
 
 export default function CreateDep(props) {
+	
 	const update = props.update;
-
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);

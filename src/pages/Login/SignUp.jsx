@@ -9,11 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import { handleSignUp } from '../../api/Login';
-import { setCookie } from '../../api/Login';
+import { useHistory , NavLink } from 'react-router-dom';
+import { setCookie, handleSignUp } from '../../api/Login';
 
+// Style sheet
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		fontFamily: 'Optima-Italic',
@@ -144,7 +143,7 @@ export default function SignUp(props) {
 			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
 				setCookie('token', res.headers.get("Authorization"), 1)
-				alert("Welcom to join ConnecTI !");
+				alert("Welcome to join ConnecTI !");
 				history.push('/');
 			} else {
 				alert(res.msg);

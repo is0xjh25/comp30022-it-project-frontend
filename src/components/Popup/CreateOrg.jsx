@@ -9,8 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {handleCreateOrg} from '../../api/Manage';
 
 export default function CreateOrg(props) {
-	const update = props.update;
 	
+	const update = props.update;
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);

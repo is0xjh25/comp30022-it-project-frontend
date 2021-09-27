@@ -13,6 +13,7 @@ class Login extends React.Component {
 		this.state = this.getInitialState();
 	}
 	
+	// Check the cookie status
 	componentDidMount() {
 		if (localStorage.getItem("Token") !== null) {
 		  sessionStorage.setItem("Token", localStorage.getItem("Token"));
@@ -28,23 +29,21 @@ class Login extends React.Component {
 
 	render() {
 		
+		// Switch components depending on status
 		let status = this.state.status;
 
 		return(
 			<React.Fragment>
-				<div className = {'Login-imageBlock'} >
-					<img src={Image} className = {'Login-image'} alt = ""/>
+				<div className={'Login-imageBlock'} >
+					<img src={Image} className={'Login-image'} alt=""/>
 				</div>
-				<div className = {'Login-sideBlock'}>
+				<div className={'Login-sideBlock'}>
 					{status === 'signIn' ? (
-							<SignIn
-							setStatus={this.setStatus} />
+							<SignIn setStatus={this.setStatus} />
 						) : status === 'signUp' ? (
-							<SignUp
-							setStatus={this.setStatus} />
+							<SignUp setStatus={this.setStatus} />
 						) : status === 'resend' ? (
-							<Resend 
-							setStatus={this.setStatus} />
+							<Resend setStatus={this.setStatus} />
 						) : null 
 					}
 				</div>
