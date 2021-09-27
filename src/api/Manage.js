@@ -211,6 +211,7 @@ function handleCreateDep(organisationId, department) {
     })
 }
 
+// Get all organization of the current user
 function getOrganization() {
     const info = {
         method: 'GET',
@@ -232,6 +233,7 @@ function getOrganization() {
     })
 }
 
+// Get all department of the current user and current organization
 function getDepartment(organizationId) {
     const info = {
         method: 'GET',
@@ -253,6 +255,7 @@ function getDepartment(organizationId) {
     })
 }
 
+// Delete an organization
 function deleteOrganization(origanizationId) {
     const url = `${BASE_URL}/organization?organization_id=${origanizationId}`;
     const info = {
@@ -272,6 +275,7 @@ function deleteOrganization(origanizationId) {
     })
 }
 
+// Delete an organization
 function deleteDepartment(departmentId) {
     const url = `${BASE_URL}/department?department_id=${departmentId}`;
     const info = {
