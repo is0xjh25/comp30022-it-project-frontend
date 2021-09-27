@@ -6,13 +6,15 @@ import CustomerTable from './CustomerTable';
 import { getMyPermissionLevel } from '../../api/Manage';
 import { useParams } from 'react-router-dom';
 
-// const createData()
-
+// This component reads organization id and department id from parameters
+// and return a table of contacts
 export default function Customer(props) {
     let {orgId, depId} = useParams();
     const [loading, setLoading] = useState(true);
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
 
+    // request current user's permission level from backend
+    // to determine whether some features are activated or not
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
             setMyPermissionLevel(res.data.authority_level);
@@ -29,6 +31,7 @@ export default function Customer(props) {
         </div>
     }    
 
+    // refer to customer table for layout
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 600 }}>
