@@ -166,7 +166,6 @@ function EnhancedTableRow(props) {
   }
 
   const selectChange = function(event) {
-    console.log(event.target.value);
     setCurrentSelected(Number(event.target.value) || -1);
   }
   const handleChangeRole = function() {
@@ -339,17 +338,14 @@ export default function EnhancedTable(props) {
 
   // Fetch the initial data of the table
   useEffect(function fetchTableData() {
-    console.log(updateCount)
     if (departmentId) {
       getAllUsers(departmentId, 1).then(res => {
-        console.log(res);
         if (res.code === 200) {
             const data = res.data
             const records = data.records
             records.forEach(row => {
                 row.name = row.first_name + ' ' + row.last_name
             });
-            console.log(records);
             setRows(records);
             }else {
             alert(res.msg);

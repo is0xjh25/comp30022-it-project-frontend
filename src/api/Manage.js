@@ -268,7 +268,6 @@ function deleteOrganization(origanizationId) {
         fetch(url, info)
         .then(res => {
             res.json().then(resBody => {
-                console.log(resBody);
                 resolve(resBody);
             })
         })
@@ -288,7 +287,6 @@ function deleteDepartment(departmentId) {
         fetch(url, info)
         .then(res => {
             res.json().then(resBody => {
-                console.log(resBody);
                 resolve(resBody);
             })
         })
