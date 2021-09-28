@@ -13,7 +13,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
 import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
-import { makeStyles } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -41,7 +40,7 @@ const columns = [
 // create a toolbar component based on toolbar component, it shows the table title,
 // current organization and department, filter button, and create new contact button(if apply)
 const EnhancedTableToolbar = (props) => {
-    const { organizationId, departmentId, handleDialogOpen, update , permissionLevel} = props;
+    const { organizationId, departmentId, handleDialogOpen, update, permissionLevel} = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
@@ -52,10 +51,9 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(organization => {
-                        if (organization.id === organizationId) {
+                        if (organization.id == organizationId) {
                             setOrgName(organization.name);
-                        } else {
-                            alert("Organization name not found")
+
                         }
                     });
                 })
@@ -63,16 +61,15 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {alert(body.msg)});
             }
         });
+        
         getDepartment(organizationId).then(res => {
             if (res.ok) {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(department => {
-                        if (department.id === departmentId) {
+                        if (department.id == departmentId) {
                             setDepName(department.name);
-                        } else {
-                            alert("Organization name not found")
-                        }
+                        } 
                     });
                 })
             } else {
@@ -208,31 +205,6 @@ function EnhancedTableRow(props) {
     )
 }
 
-// style configuration
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-    },
-    paper: {
-        width: '100%',
-        marginBottom: theme.spacing(2),
-    },
-    table: {
-        minWidth: 750,
-    },
-    visuallyHidden: {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 1,
-        margin: -1,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        top: 20,
-        width: 1,
-    },
-}));
-
 // the final table for contact
 export default function CustomerTable(props) {
     //=============== Data from Parent ==================
@@ -241,7 +213,6 @@ export default function CustomerTable(props) {
     const departmentId = props.departmentId;
 
     //=============== Table Settings ==================
-    const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [updateCount, setUpdateCount] = useState(0);

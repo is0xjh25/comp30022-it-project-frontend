@@ -18,7 +18,6 @@ function Members() {
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
-            console.log(res);
             setMyPermissionLevel(res.data.authority_level);
         })
 

@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     },
 
     orgGrid: {
-        alignItems: 'flex-start',
         direction: 'column',
         justifyContent: 'space-around',
         warp: 'nowrap',
@@ -163,7 +162,6 @@ export default function Organization(props) {
         getOrganization().then(res => {
             if (res.ok) {
                 res.json().then(body => {
-                    console.log(body);
                     setOrganizations(body.data)
                 });
             } else {
