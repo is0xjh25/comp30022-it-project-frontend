@@ -68,7 +68,10 @@ export default function Resend(props) {
 			}
 		}
 
-		alert(alertMessage);
+		if (alertMessage !== "") {
+			alert(alertMessage);
+		}
+
 		return formIsValid;
 	};
 
@@ -82,7 +85,7 @@ export default function Resend(props) {
 					alert("Request is submitted. Please check your mailbox !");
 					history.push('/Login');
 				} else {
-					alert(res.msg);
+					res.json().then(bodyRes=>{alert(bodyRes.msg);});
 					history.push('/Login');
 				}}).catch(error => {alert(error);})
 		}

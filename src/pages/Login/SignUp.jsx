@@ -131,7 +131,10 @@ export default function SignUp(props) {
 			alertMessage = "Hey, just tell me something about you (#｀皿´)";
 		}
 
-		alert(alertMessage);
+		if (alertMessage !== "") {
+			alert(alertMessage);
+		}
+
 		return formIsValid;
 	};
 
@@ -146,7 +149,7 @@ export default function SignUp(props) {
 				alert("Welcome to join ConnecTI !");
 				history.push('/');
 			} else {
-				alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 				history.push('/Login');
 			}
 			})

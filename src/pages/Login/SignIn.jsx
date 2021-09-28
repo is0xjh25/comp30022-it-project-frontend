@@ -95,7 +95,10 @@ export default function SignIn(props) {
 			alertMessage = "Email and Password cannot be empty (#｀皿´)";
 		}
 
-		alert(alertMessage);
+		if (alertMessage !== "") {
+			alert(alertMessage);
+		}
+
 		return formIsValid;
 	};
 
@@ -109,7 +112,7 @@ export default function SignIn(props) {
 				setCookie('token', res.headers.get("Authorization"), 1)
                 history.push('/');
             } else {
-                alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
                 history.push('/Login');
 			}
 			})
