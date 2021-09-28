@@ -115,7 +115,7 @@ export default function EditCustomer(props) {
 				alert("Successfully updated");
 				props.setStatus('display');
 			} else {
-				alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 		})
 	}

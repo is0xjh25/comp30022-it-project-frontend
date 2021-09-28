@@ -118,7 +118,7 @@ export default function AddCustomer(props) {
                 handleClose();
                 update();
 			} else {
-				alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 		})
 	}
@@ -167,7 +167,7 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="birthday" onChange={handleOnChange}/>
+						<TextField id="birthday" defaultValue={"1900-01-01"} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -179,7 +179,7 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Customer Type</Box>
-						<TextField id="customerType" onChange={handleOnChange}/>
+						<TextField id="customerType" defaultValue={"company/personal"} onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -190,7 +190,7 @@ export default function AddCustomer(props) {
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
-							<TextField id="gender" onChange={handleOnChange}/>
+							<TextField id="gender" defaultValue={"male/female"} onChange={handleOnChange}/>
 						</Grid>
 					</Grid>
 					<Grid item xs={8}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>

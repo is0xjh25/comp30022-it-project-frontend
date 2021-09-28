@@ -93,7 +93,7 @@ export default function DisplayCustomer(props) {
 				setData(res.data);
                 setLoading(false);
 			} else {
-				alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 		})
 
@@ -120,7 +120,7 @@ export default function DisplayCustomer(props) {
 				alert("Successfully deleted");
 				handleBack();
 			} else {
-				alert(res.msg);
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 		})
 	}
