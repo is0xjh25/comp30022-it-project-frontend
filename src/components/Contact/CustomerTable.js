@@ -54,8 +54,6 @@ const EnhancedTableToolbar = (props) => {
                     data.forEach(organization => {
                         if (organization.id === organizationId) {
                             setOrgName(organization.name);
-                        } else {
-                            alert("Organization name not found")
                         }
                     });
                 })
@@ -70,9 +68,7 @@ const EnhancedTableToolbar = (props) => {
                     data.forEach(department => {
                         if (department.id === departmentId) {
                             setDepName(department.name);
-                        } else {
-                            alert("Organization name not found")
-                        }
+                        } 
                     });
                 })
             } else {
