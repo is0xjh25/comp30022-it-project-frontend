@@ -276,9 +276,6 @@ function Home(props) {
       <div className='sidebar-body'>
         <Switch>
 
-            <Route exact path={`${url}`}>
-                <Redirect to={`${url}Dashboard`}/>
-            </Route>
             <Route path={`${url}Dashboard`}>
                 
             </Route>
