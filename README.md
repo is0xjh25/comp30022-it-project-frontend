@@ -1,6 +1,22 @@
-# Getting Started with Create React App
+# comp30022-it-project-frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description
+
+This is the frontend for team yyds of comp30022 It Project, a personal CRM website to record your customers' details.
+
+## Features
+* Authentication (Login/Logout)
+* Register
+* Create organizations to store departments and related customers
+* Manage organizations created
+* Create departments and manage access to the customers in the department
+* Manage department members' authority level such as access, update and insert, delete to the customers stored in the department
+* Join an department to access customers recorded in the department
+* Display customers stored in a department
+* Create a new customer and store it in a department
+* Update a customer in a department
+* Delete a customer in a department
+
 
 ## Available Scripts
 
@@ -39,32 +55,10 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technologies Used
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* [ReactJs](https://reactjs.org/)
+* [MUI](https://mui.com/)
+* [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+* [Figma](https://www.figma.com/)
