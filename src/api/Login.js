@@ -105,10 +105,28 @@ function handleLogout() {
     })
 }
 
+function handleVerify() {
+    const info = {
+        method: 'POST',
+        headers: {'Authorization': getCookie('token')},
+    };
+
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + "/user/verify", info)
+        .then(res => {
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+        })
+        .catch(error => {reject(error);})
+    })
+}
+
 module.exports = {
     setCookie,
     handleSignIn,
     handleResend,
     handleSignUp,
-    handleLogout
+    handleLogout,
+    handleVerify
 }
