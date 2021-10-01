@@ -20,6 +20,9 @@ function PageNavigator() {
             <Route path ='/verify'>
                 <Verify/>
             </Route>
+            <Route path ='/user'>
+                <DisplayUser/>
+            </Route>
             <Route path='/'>
                 <Home/>
             </Route>
