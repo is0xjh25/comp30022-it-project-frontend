@@ -4,6 +4,7 @@ import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Login from './Login/Login';
 import Verify from './Login/Verify';
+import DisplayUser from '../components/User/DisplayUser';
 
 
 function PageNavigator() {

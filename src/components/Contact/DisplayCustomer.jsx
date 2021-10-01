@@ -6,13 +6,12 @@ import Button from '@mui/material/Button';
 import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
-
 import AlertDialog from '../Dialog/AlertDialog';
 import { useHistory, useParams } from 'react-router';
 import { getMyPermissionLevel } from '../../api/Manage';
 
 export default function DisplayCustomer(props) {
-	//const {authority, customerId} = props;
+	
     const history = useHistory();
     const {depId, customerId} = useParams();
     const [authority, setAuthority] = useState(1);
@@ -53,7 +52,7 @@ export default function DisplayCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		gird: {
+		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
@@ -124,7 +123,7 @@ export default function DisplayCustomer(props) {
 			}
 		})
 	}
-	//Haven't done
+
 	const handleBack = () => {
         history.goBack();
     }
@@ -138,7 +137,7 @@ export default function DisplayCustomer(props) {
 	const showDisplay = 
 	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
 		<Grid container item columnSpacing={4}>
-			<Grid item xs={2} textAlign='center' sx={classes.gird}>
+			<Grid item xs={2} textAlign='center' sx={classes.grid}>
 				<Avatar sx={{ width: 70, height: 70}}></Avatar>
 			</Grid>
 			<Grid item xs={5} textAlign='center' sx={classes.box}>

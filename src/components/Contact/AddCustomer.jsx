@@ -11,9 +11,6 @@ import { handleCreateCustomer } from '../../api/Contact';
 export default function AddCustomer(props) {
 
     const {departmentId, handleClose, update} = props;
-
-
-
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
@@ -25,8 +22,6 @@ export default function AddCustomer(props) {
 	const [description, setDescription] = useState("");
 	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
-
-
 
 	const classes = {
 		title: {
@@ -44,7 +39,7 @@ export default function AddCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		gird: {
+		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
