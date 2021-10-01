@@ -24,7 +24,7 @@ export default function Customer(props) {
 
     useEffect(() => {
         setLoading(false);
-    }, [])
+    }, [myPremissionLevel])
 
     if (loading) {
         return <div>loading...
