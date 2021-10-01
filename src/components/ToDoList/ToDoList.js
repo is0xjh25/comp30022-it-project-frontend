@@ -21,6 +21,7 @@ export default function ToDoList() {
 
     useEffect(() => {
         setLoading(false);
+        console.log("todo loaded")
     }, [])
 
     if (loading) {
@@ -84,10 +85,6 @@ export default function ToDoList() {
                                 <TableCell padding="checkbox">
                                     <Checkbox
                                         color="primary"
-                                        checked={isItemSelected}
-                                        inputProps={{
-                                            'aria-labelledby': labelId,
-                                        }}
                                     />
                                 </TableCell>
                                 <TableCell 
