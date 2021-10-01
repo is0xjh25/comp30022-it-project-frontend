@@ -4,6 +4,7 @@ import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Login from './Login/Login';
 
+import ToDoList from '../components/ToDoList/ToDoList';
 
 function PageNavigator() {
     return (
@@ -18,7 +19,9 @@ function PageNavigator() {
             <Route path='/'>
                 <Home/>
             </Route>
-
+            <Route path='/todo'>
+                <ToDoList/>
+            </Route>
             
         </Switch>
     );
