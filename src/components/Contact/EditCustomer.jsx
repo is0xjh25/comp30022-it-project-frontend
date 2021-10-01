@@ -38,7 +38,7 @@ export default function EditCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		gird: {
+		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
@@ -71,7 +71,7 @@ export default function EditCustomer(props) {
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
 			setLastName(e.target.value);
-		} else if (e.target.id === "middleNmae") {
+		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);

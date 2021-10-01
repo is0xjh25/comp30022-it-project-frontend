@@ -38,6 +38,31 @@ function getUserInfo() {
     })
 }
 
+// Update the current user's information
+function updateUserInfo(body) {
+
+    return new Promise((resolve, reject) => {
+        const token = getCookie('token');
+        const url = BASE_URL + '/user'
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                Authorization: token,
+                'Content-Type': 'application/json',
+                'Origin': process.env.ORIGIN_URL
+            },
+            body: JSON.stringify(body)
+        }).then(res => {
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
+        }).catch(err => {
+            reject(err);
+        })
+    })
+}
+
 module.exports = {
     getUserInfo,
+    updateUserInfo
 }
