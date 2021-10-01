@@ -146,11 +146,14 @@ export default function SignUp(props) {
 			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
 				setCookie('token', res.headers.get("Authorization"), 1)
-				alert("Welcome to join ConnecTI !");
-				history.push('/');
+                res.json().then(resBody => {
+                    console.log(resBody);
+                })
+				alert("Please go to your email and activiate your account");
+				history.push('/login');
 			} else {
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-				history.push('/Login');
+				history.push('/login');
 			}
 			})
 		}
