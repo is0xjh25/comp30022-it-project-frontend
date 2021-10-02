@@ -14,12 +14,12 @@ class Login extends React.Component {
 	}
 	
 	// Check the cookie status
-	componentDidMount() {
-		if (localStorage.getItem("Token") !== null) {
-		  sessionStorage.setItem("Token", localStorage.getItem("Token"));
-		  <Redirect to={'/'} />
-		}
-	}
+	// componentDidMount() {
+	// 	if (localStorage.getItem("Token") !== null) {
+	// 	  sessionStorage.setItem("Token", localStorage.getItem("Token"));
+	// 	  <Redirect to={'/'} />
+	// 	}
+	// }
 
 	getInitialState = () => ({status: "signIn"});
 

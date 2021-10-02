@@ -10,7 +10,8 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
-import { setCookie, handleSignUp } from '../../api/Login';
+import { handleSignUp } from '../../api/Login';
+import { setCookie } from '../../api/Util';
 
 // Style sheet
 const useStyles = makeStyles((theme) => ({

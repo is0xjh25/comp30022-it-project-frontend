@@ -234,7 +234,7 @@ export default function CustomerTable(props) {
                 });
                 setRows(records);
             } else {
-                alert(res.msg);
+                // alert(res.msg);
             }
         })
     }, [departmentId, updateCount])

@@ -262,7 +262,7 @@ function EnhancedTableRow(props) {
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>
       <TableCell align="center">{permissionLevelMap[row.authority_level]}</TableCell>
-      <TableCell align="center">{row.recent_activity === null ? '' : row.recent_activity.replace('T', '  ').slice(5, -3)}</TableCell>
+      <TableCell align="center">{row.recent_activity === null ? '' : row.recent_activity.slice(5)}</TableCell>
       <TableCell align="center">
         {manage}
       </TableCell>
