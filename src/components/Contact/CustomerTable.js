@@ -51,7 +51,7 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(organization => {
-                        if (organization.id == organizationId) {
+                        if (organization.id.toString() === organizationId) {
                             setOrgName(organization.name);
 
                         }
@@ -67,7 +67,7 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(department => {
-                        if (department.id == departmentId) {
+                        if (department.id.toString() === departmentId) {
                             setDepName(department.name);
                         } 
                     });

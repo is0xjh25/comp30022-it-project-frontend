@@ -19,10 +19,12 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
+import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid';
 
 export default function ToDoList() {
     const [loading, setLoading] = useState(true);
-    const [selected, setSelected] = useState(false);
+    const [selected, setSelected] = useState([]);
 
     useEffect(() => {
         setLoading(false);
@@ -37,19 +39,19 @@ export default function ToDoList() {
     const rows = [
         { 
             description: "to do sample 1",
-            status: "to-do"
+            status: "to do"
         },
         { 
             description: "to do sample 2",
-            status: "to-do"
+            status: "to do"
         },
         { 
             description: "to do sample 3",
-            status: "in-progress"
+            status: "in progress"
         },
         { 
             description: "to do sample 4",
-            status: "in-progress"
+            status: "in progress"
         },
         { 
             description: "to do sample 5",
@@ -57,20 +59,12 @@ export default function ToDoList() {
         }
     ]
 
-    // const headCells = [ 
-    //     {
-    //         id: 'description',
-    //         numeric: false,
-    //         label: 'Your To-Do List'
-    //     }
-    // ]
-
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, description) => {
+        const selectedIndex = selected.indexOf(description);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, description);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -85,60 +79,78 @@ export default function ToDoList() {
         setSelected(newSelected);
     };
 
-    // const isSelected = (name) => selected.indexOf(name) !== -1;
+    const isSelected = (name) => selected.indexOf(name) !== -1;
 
+    const getRowLabel = (status) => {
+        if (status === "to do") {
+            return (<Chip label={status} color="primary" size="small"/>)
+        } else if (status === "in progress") {
+            return (<Chip label={status} color="warning" size="small"/>)
+        } else {
+            return (<Chip label={status} color="success" size="small"/>)
+        }
 
+    }
 
     return (
-        <Paper sx={{ width: '100%', mb: 2 }}>
-            <Typography
-                sx={{ flex: '1 1 100%' }}
-                variant="h6"
-                id="ToDoTitle"
-                component="div"
-            >
-                Your To-Do List
-            </Typography>
-            <TableContainer>
-                <Table
-                    aria-labelledby="tableTitle"
+        <Grid sx={{ width: '100%', align: 'center'}}>
+            <Paper sx={{ width: '50%', mb: 2 }}>
+                <Typography
+                    sx={{ flex: '1 1 100%', mb: 2 }}
+                    variant="h6"
+                    id="ToDoTitle"
+                    component="div"
                 >
-                    {rows.map((row, index) => {
-                        // const isItemSelected = isSelected(row.description);
-                        // const labelId = `enhanced-table-checkbox-${index}`;
-                        return (
-                            <TableRow
-                                hover
-                                onClick={(event) => handleClick(event, row.description)}
-                            >
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        color="primary"
-                                        // checked={isItemSelected}
-                                    />
-                                </TableCell>
-                                <TableCell 
-                                    component="th"
-                                    scope="row"
-                                    padding="none"
-                                >
-                                    {row.description}
-                                </TableCell>
-                                <TableCell
-                                    component="th"
-                                    text-align="right"
-                                >
-                                    {row.status}
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })}
+                    Your To-Do List
+                </Typography>
+                <TableContainer>
+                    <Table
+                        aria-labelledby="tableTitle"
+                    >
+                        {rows.map((row, index) => {
+                            const isItemSelected = isSelected(row.description);
+                            const labelId = `enhanced-table-checkbox-${index}`;
+                            const rowLabel = getRowLabel(row.status)
 
-                </Table>
-            </TableContainer>
+                            return (
+                                <TableRow
+                                    hover
+                                    onClick={(event) => handleClick(event, row.description)}
+                                    role="checkbox"
+                                    aria-checked={isItemSelected}
+                                    tabIndex={-1}
+                                    key={row.description}
+                                    selected={isItemSelected}
+                                >
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            color="primary"
+                                            checked={isItemSelected}
+                                            inputProps={{
+                                                'aria-labelledby': labelId,
+                                            }}
+                                        />
+                                    </TableCell>
+                                    <TableCell 
+                                        component="th"
+                                        scope="row"
+                                        padding="none"
+                                    >
+                                        {row.description}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        { rowLabel }
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
 
-            
-        </Paper>
+                    </Table>
+                </TableContainer>
+
+                
+            </Paper>
+        </Grid>
     )
 }
 
