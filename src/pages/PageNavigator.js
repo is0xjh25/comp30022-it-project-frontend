@@ -16,11 +16,11 @@ function PageNavigator() {
             <Route path ='/login'>
                 <Login/>
             </Route>
-            <Route path='/'>
-                <Home/>
-            </Route>
             <Route path='/todo'>
                 <ToDoList/>
+            </Route>
+            <Route path='/'>
+                <Home/>
             </Route>
             
         </Switch>

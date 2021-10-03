@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -15,9 +15,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { visuallyHidden } from '@mui/utils';
 
 export default function ToDoList() {
     const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(false);
 
     useEffect(() => {
         setLoading(false);
@@ -60,7 +65,27 @@ export default function ToDoList() {
     //     }
     // ]
 
+    const handleClick = (event, name) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected = [];
 
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
+    // const isSelected = (name) => selected.indexOf(name) !== -1;
 
 
 
@@ -75,16 +100,21 @@ export default function ToDoList() {
                 Your To-Do List
             </Typography>
             <TableContainer>
-                <Table 
-                    sx={{ minWidth: 750 }}
+                <Table
                     aria-labelledby="tableTitle"
                 >
-                    {rows.map(row => {
+                    {rows.map((row, index) => {
+                        // const isItemSelected = isSelected(row.description);
+                        // const labelId = `enhanced-table-checkbox-${index}`;
                         return (
-                            <TableRow>
+                            <TableRow
+                                hover
+                                onClick={(event) => handleClick(event, row.description)}
+                            >
                                 <TableCell padding="checkbox">
                                     <Checkbox
                                         color="primary"
+                                        // checked={isItemSelected}
                                     />
                                 </TableCell>
                                 <TableCell 
