@@ -13,22 +13,33 @@ const useStyles = makeStyles((theme) => ({
     
 }))
 
-export default function MySearchBar() {
+export default function(props) {
+    const {handleSearch} = props;
     const classes = useStyles();
-    const onSubmit = (event) => {
-        console.log(event)
+    const onChange = (event) => {
+        // console.log(event.target.value);
+        handleSearch(event.target.value);
     }
+    // const keyPress = function keyPress(e){
+    //     if(e.keyCode == 13){
+    //        console.log('value', e.target.value);
+    //        handleSearch(e.target.value);
+    //     }
+    // }
     return (
         <SearchBar className={classes.searchBar} fullWidth 
-        placeholder="Search for a member" type="search" 
-        variant="outlined" InputProps={{
+        placeholder="Search for a member" 
+        type="search" 
+        variant="outlined"
+        InputProps={{
             startAdornment: (
                 <InputAdornment position="start">
                     <SearchIcon />
                 </InputAdornment>
-            )
+            ),
         }}
-        onChange={onSubmit}
+        onChange={onChange}
+        // onKeyDown={keyPress}
         />
     );
 }

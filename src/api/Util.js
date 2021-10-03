@@ -31,7 +31,6 @@ function deleteUserToken() {
 
 // Check if a user is not logged in, and redirects to login page
 function checkUnauthorized(res) {
-    console.log(res);
     if(res.status === 401) {
         document.location.href = '/login';
         console.log("Currently unauthorized, please login!");

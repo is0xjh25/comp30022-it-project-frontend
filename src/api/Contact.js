@@ -30,6 +30,25 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
     })
 }
 
+function searchCustomer(departmentId, searchKey, size, current) {
+    const url = `${BASE_URL}/contact/search?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 // Create a customer
 function handleCreateCustomer(data, departmentId) {
     data['department_id'] = departmentId;
@@ -128,6 +147,7 @@ function handleUpdateCustomer(data, customerId) {
 
 export {
     getAllCustomer,
+    searchCustomer,
     handleCreateCustomer,
     handleDisplayCustomer,
     handleDeleteCustomer,

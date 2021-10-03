@@ -24,6 +24,25 @@ function getAllUsers(departmentId, currentPage) {
     })
 }
 
+function searchMember(departmentId, searchKey, size, current) {
+    const url = `${BASE_URL}/department/searchMember?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 // Change a user's permission
 function changePermission(userId, permissionLevel, departmentId) {
     const url = BASE_URL + `/permission?user_id=${userId}&department_id=${departmentId}&permission_level=${permissionLevel}`;
@@ -339,6 +358,7 @@ function getMyPermissionLevel(departmentId) {
 
 export {
     getAllUsers,
+    searchMember,
     changePermission,
     acceptUser,
     deleteUser,
