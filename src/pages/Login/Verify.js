@@ -2,7 +2,8 @@ import React from 'react';
 import { Paper } from "@material-ui/core";
 import { useHistory, useRouteMatch } from "react-router";
 
-import { setCookie, handleVerify } from '../../api/Login';
+import {handleVerify } from '../../api/Login';
+import { setCookie } from '../../api/Util';
 
 
 export default function Verify() {

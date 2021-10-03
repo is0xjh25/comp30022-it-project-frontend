@@ -262,7 +262,7 @@ function EnhancedTableRow(props) {
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>
       <TableCell align="center">{permissionLevelMap[row.authority_level]}</TableCell>
-      <TableCell align="center">{row.recent_activity === null ? '' : row.recent_activity.replace('T', '  ').slice(5, -3)}</TableCell>
+      <TableCell align="center">{row.recent_activity === null ? '' : row.recent_activity.slice(5)}</TableCell>
       <TableCell align="center">
         {manage}
       </TableCell>
@@ -320,8 +320,8 @@ const useStyles = makeStyles((theme) => ({
 // Table to display members
 export default function EnhancedTable(props) {
   //================ Data from parent ==================
-  const departmentId = props.departmentId
-  const myPremissionLevel = props.myPremissionLevel;
+  const { rows, setRows, departmentId, myPremissionLevel } = props;
+
 
   //================ Table settings ==================
   const classes = useStyles();
@@ -329,7 +329,6 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = useState('manage');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState([]);
   const [updateCount, setUpdateCount] = useState(0);
 
   const update = function() {

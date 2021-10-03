@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
-import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
+import { getAllCustomer, handleDeleteCustomer, searchCustomer } from '../../api/Contact';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,6 +20,7 @@ import { Button } from '@mui/material'
 import { getOrganization, getDepartment } from '../../api/Manage';
 import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
+import SearchBar from '../SearchBar/SearchBar';
 
 // columns are the labels of the table
 const columns = [
@@ -248,57 +249,76 @@ export default function CustomerTable(props) {
         setPage(0);
     };
 
+    const handleSearch = (searchKey) => {
+        console.log(searchKey);
+        searchCustomer(departmentId, searchKey, rowsPerPage, currentPage).then(res => {
+            if (res.code === 200) {
+                const data = res.data
+                const records = data.records
+                records.forEach(row => {
+                    row.name = row.first_name + ' ' + row.last_name
+                });
+                setRows(records);
+            } else {
+                alert(res.msg);
+            }
+        })
+    }
+
     // make use of enhanced table toolbar and enhanced table row, diplay the data accordingly
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <EnhancedTableToolbar 
-            organizationId={organizationId} 
-            departmentId={departmentId} 
-            handleDialogOpen={props.handleDialogOpen} 
-            update={update}
-            permissionLevel={permissionLevel}
-            />
-            <TableContainer>
-                <Table aria-label="contact" stickyHeader>
-                    <TableHead>
-                        <TableRow>
-                        {columns.map((column) => (
-                            <TableCell
-                                key={column.id}
-                                align={column.align}
-                                style={{ minWidth: column.minWidth }}
-                            >
-                                {column.label}
-                            </TableCell>
-                        ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => {
-                                return (
-                                <EnhancedTableRow
-                                    key={row.id}
-                                    row={row}
-                                    permissionLevel={permissionLevel}
-                                    update={update}
+        <div>
+            <SearchBar handleSearch={handleSearch} />
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                <EnhancedTableToolbar 
+                organizationId={organizationId} 
+                departmentId={departmentId} 
+                handleDialogOpen={props.handleDialogOpen} 
+                update={update}
+                permissionLevel={permissionLevel}
+                />
+                <TableContainer>
+                    <Table aria-label="contact" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                            {columns.map((column) => (
+                                <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    style={{ minWidth: column.minWidth }}
                                 >
-                                </EnhancedTableRow>
-                                );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </Paper>
+                                    {column.label}
+                                </TableCell>
+                            ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row) => {
+                                    return (
+                                    <EnhancedTableRow
+                                        key={row.id}
+                                        row={row}
+                                        permissionLevel={permissionLevel}
+                                        update={update}
+                                    >
+                                    </EnhancedTableRow>
+                                    );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
+        </div>
     );
 }
