@@ -94,7 +94,6 @@ const EnhancedTableToolbar = (props) => {
     }
 
     const createButtonDisplay = (permission) => {
-        console.log(permission)
         if (permission > 1) {
             return (
                 <Button variant="contained" onClick={handleCreateContact}>
