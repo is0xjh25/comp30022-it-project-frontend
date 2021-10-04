@@ -128,16 +128,13 @@ function deleteEventContact(attendId) {
 // Search event in a period
 function getMultipleEvents(startTime, finishTime) {
     
-    console.log(JSON.stringify({"start_time": startTime, "finish_time": finishTime}));
-
     const info = {
         method: 'GET',
-        headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"start_time": startTime, "finish_time": finishTime})
+        headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
     };
 
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + "/event/between", info)
+        fetch(`${BASE_URL}/event/between?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
             if (res.ok) {
                 resolve(res);
