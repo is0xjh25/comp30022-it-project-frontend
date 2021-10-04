@@ -113,7 +113,7 @@ export default function AddCustomer(props) {
                 handleClose();
                 update();
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
 	}

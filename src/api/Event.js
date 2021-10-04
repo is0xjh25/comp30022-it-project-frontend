@@ -34,26 +34,30 @@ function createEvent(startTime, finishTime, description) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
 }
 
 // Update an event
-function updateEvent(props) {
+function updateEvent(body) {
 
     const info = {
         method: 'PUT',
         headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"id": props.id, "start_time": props.startTime, "finish_time": props.finishTime,
-								"description": props.description, "status": props.status})
+        body: JSON.stringify({"id": body.id, "start_time": body.startTime, "finish_time": body.finishTime,
+								"description": body.description, "status": body.status})
     };
 
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
@@ -70,14 +74,16 @@ function deleteEvent(eventId) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
 }
 
 // Add a contact into an event
-function addEventContact(contactId, eventId) {
+function addEventContact(eventId, contactId) {
 
     const info = {
         method: 'POST',
@@ -88,7 +94,9 @@ function addEventContact(contactId, eventId) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
@@ -106,7 +114,9 @@ function deleteEventContact(attendId) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event/contact", info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
@@ -123,8 +133,11 @@ function getMultipleEvents(startTime, finishTime) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event/between?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
-            resolve(res)
-        }).catch(error => {reject(error);})
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
+        })
+        .catch(error => {reject(error);})
     })
 }
 
