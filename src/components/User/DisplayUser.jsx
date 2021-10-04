@@ -14,7 +14,7 @@ export default function DisplayUser() {
 	const history = useHistory();
 	const [status, setStatus] = useState("display");
 	const [loading, setLoading] = useState(true);
-	const [data, setData] = useState({});
+	const [data, setData] = useState();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
@@ -184,25 +184,21 @@ export default function DisplayUser() {
 
 	// Fetch data
 	useEffect(() => {
-		
 		getUserInfo().then(res => {
 			if (res.code===200) {
 				setData(res.data);
+				setFirstName(res.data.first_name);
+				setLastName(res.data.last_name);
+				setMiddleName(res.data.middle_name);
+				setPhone(res.data.phone);
+				setPassword(res.data.password);
+				setWebsite(res.data.website);
+				setDescription(res.data.description);  
 				setLoading(false);
 			} else {
 				alert(res.msg);
 			}
 		})
-
-		setData(data);
-		setFirstName(data.first_name);
-		setLastName(data.last_name);
-		setMiddleName(data.middle_name);
-		setPhone(data.phone);
-		setPassword(data.password);
-		setWebsite(data.website);
-		setDescription(data.description);
-		setLoading(false);        
 	}, [status])
 
 	useEffect(() => {
@@ -302,14 +298,16 @@ export default function DisplayUser() {
 						</Grid>
 					</Grid>
 				</Grid>
-				<AlertDialog alertTitle={discardAlertTitle}
+				<AlertDialog 
+				alertTitle={discardAlertTitle}
 				alertMessage={discardAlertMessage}
 				open={discardAlertOpen}
 				handleClose={() => { setDiscardAlertOpen(false) }} // Close the alert dialog
 				handleConfirm={handleDiscardAlertConfirm}
 				handleCancel={() => { setDiscardAlertOpen(false) }}
 				/>
-				<AlertDialog alertTitle={updateAlertTitle}
+				<AlertDialog 
+				alertTitle={updateAlertTitle}
 				alertMessage={updateAlertMessage}
 				open={updateAlertOpen}
 				handleClose={() => { setUpdateAlertOpen(false) }} // Close the alert dialog

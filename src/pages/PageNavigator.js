@@ -5,9 +5,9 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Verify from './Login/Verify';
 import DisplayUser from '../components/User/DisplayUser';
-import DisplayEvent from '../components/Event/DisplayEvent';
+import DisplayEvents from '../components/Event/DisplayEvents';
 import CreateEvent from '../components/Event/CreateEvent';
-import EditEvent from '../components/Event/EditEvent';
+import DisplayOneEvent from '../components/Event/DisplayOneEvent';
 
 import ToDoList from '../components/ToDoList/ToDoList';
 
@@ -30,14 +30,14 @@ function PageNavigator() {
             <Route path ='/user'>
                 <DisplayUser/>
             </Route>
-            <Route path ='/edit_event'>
-                <EditEvent/>
+            <Route path ='/events'>
+                <DisplayEvents/>
+            </Route>
+            <Route path ='/event'>
+                <DisplayOneEvent/>
             </Route>
             <Route path ='/create_event'>
                 <CreateEvent/>
-            </Route>
-            <Route path ='/event'>
-                <DisplayEvent/>
             </Route>
             <Route path='/'>
                 <Home/>

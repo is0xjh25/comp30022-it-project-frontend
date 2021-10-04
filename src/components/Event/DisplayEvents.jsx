@@ -7,7 +7,7 @@ import { getMultipleEvents, deleteEvent } from "../../api/Event";
 import { Badge } from "@material-ui/core";
 import AlertDialog from "../Dialog/AlertDialog";
 
-export default function DisplayEvent() {
+export default function DisplayEvents() {
 
 	const [month, setMonth] = useState("");
 	const [date, changeDate] = useState(new Date());
@@ -50,10 +50,8 @@ export default function DisplayEvent() {
 		const finishTime = transformDate.substring(0,10) + " 23:59";
 
 		getMultipleEvents(startTime, finishTime).then(res => {
-			if (res.ok) {
-				res.json().then(body => {
-					setDayEvent(body.data);
-				});
+			if (res.code===200) {
+				setDayEvent(res.data);
 			} else {
 				alert(res.msg);
 			}
@@ -147,7 +145,7 @@ export default function DisplayEvent() {
 								<Button>
 									Detail
 								</Button>
-								<Button onClick={handleDelete}>
+								<Button onClick={()=>handleDelete(e.id)}>
 									Delete
 								</Button>
 								</Grid>
@@ -161,15 +159,15 @@ export default function DisplayEvent() {
 					Add new event
 				</Button>
 				</Grid>
-				<AlertDialog 
+			</Grid>
+			<AlertDialog 
 				alertTitle={alertTitle}
 				alertMessage={alertMessage}
-				open={setAlertOpen}
+				open={alertOpen}
 				handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
 				handleConfirm={handleAlertConfirm}
 				handleCancel={() => { setAlertOpen(false) }}
-				/>
-			</Grid>
+			/>
 		</Fragment>
 	);
 }

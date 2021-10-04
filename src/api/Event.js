@@ -8,14 +8,15 @@ function getEventInfo(eventId) {
 
     const info = {
         method: 'GET',
-        headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"event_id": eventId})
+        headers: {'Authorization': getCookie('token'), 'Origin': process.env.ORIGIN_URL},
     };
 
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + "/event", info)
+        fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
-            resolve(res)
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
         .catch(error => {reject(error);})
     })
@@ -63,12 +64,11 @@ function deleteEvent(eventId) {
 
     const info = {
         method: 'DELETE',
-        headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"event_id": eventId})
+        headers: {'Authorization': getCookie('token'), 'Origin': process.env.ORIGIN_URL},
     };
 
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + "/event", info)
+        fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
             resolve(res)
         })
@@ -123,13 +123,8 @@ function getMultipleEvents(startTime, finishTime) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event/between?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
-            if (res.ok) {
-                resolve(res);
-            } else {
-                res.json().then(bodyRes => {alert(bodyRes.msg)});
-            }
-        })
-        .catch(error => {reject(error)})
+            resolve(res)
+        }).catch(error => {reject(error);})
     })
 }
 
