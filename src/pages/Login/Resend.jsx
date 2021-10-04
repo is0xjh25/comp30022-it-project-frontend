@@ -126,12 +126,12 @@ export default function Resend(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("signIn")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signIn")}>
 					{"Oops! I just remembered"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("signUp")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

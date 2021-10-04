@@ -169,12 +169,12 @@ export default function SignIn(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={()=>props.setStatus("resend")}>
+				<NavLink to='./Login' variant="body2" onClick={()=>props.setPageStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={()=>props.setStatus("signUp")}>
+				<NavLink to='./Login' variant="body2" onClick={()=>props.setPageStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

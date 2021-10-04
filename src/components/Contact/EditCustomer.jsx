@@ -22,6 +22,7 @@ export default function EditCustomer(props) {
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setorganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
+	
 	const classes = {
 		title: {
 		  	fontSize:30,
@@ -91,7 +92,7 @@ export default function EditCustomer(props) {
     };
 
 	const confirmDiscard = () => {
-		props.setStatus('display');
+		props.setPageStatus('view');
 	}
 
 	const handleUpdate = () => {
@@ -113,7 +114,7 @@ export default function EditCustomer(props) {
 		updateCustomer(data, customerId).then(res => {
 			if (res.code===200) {
 				alert("Successfully updated");
-				props.setStatus('display');
+				props.setPageStatus('view');
 			} else {
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}

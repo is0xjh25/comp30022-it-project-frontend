@@ -15,7 +15,7 @@ export default function DisplayCustomer(props) {
     const history = useHistory();
     const {depId, customerId} = useParams();
     const [authority, setAuthority] = useState(1);
-	const [status, setStatus] = useState("display");
+	const [pageStatus, setPageStatus] = useState("view");
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 
@@ -102,7 +102,7 @@ export default function DisplayCustomer(props) {
             }
         });
         
-    }, [status, customerId, depId])
+    }, [pageStatus, customerId, depId])
 
 	useEffect(() => {
 		return () => {
@@ -129,7 +129,7 @@ export default function DisplayCustomer(props) {
     }
 
 	const handleEdit = () => {
-		setStatus("edit");
+		setPageStatus("edit");
 	}
 
 
@@ -206,10 +206,10 @@ export default function DisplayCustomer(props) {
 
 	return (
 			<div>
-				{status === 'display' ? (
+				{pageStatus === 'view' ? (
 					showDisplay
-					) : status === 'edit' ? (
-						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
+					) : pageStatus === 'edit' ? (
+						<EditCustomer setPageStatus={setPageStatus} data={data} customerId={customerId}/>
 					): null 
 				}
 				<AlertDialog alertTitle={alertTitle}
