@@ -3,10 +3,8 @@ import { getCookie, checkUnauthorized } from "./Util";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
-// get all customer of an organization and department
+// Get all customer of an organization and department
 function getAllCustomer (orgId, departId, pageSize, currentPage) {
-    // const orgId = 3
-    // const departId = 4
     const info = {
         method: 'GET',
         headers: {'Authorization': getCookie('token')},
@@ -69,7 +67,7 @@ function handleCreateCustomer(data, departmentId) {
             res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+    }})
     .catch(error => {reject(error);})
     })
 }
@@ -111,11 +109,15 @@ function handleDeleteCustomer(customerId) {
         if(checkUnauthorized(res)) {
             return;
         }
-        res.json().then(resBody => {
-            resolve(resBody);
-        })
+        if (res.ok) {
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
+        } else {
+            res.json().then(body => {alert(body.msg)})
+        }
     })
-    .catch(error => {reject(error);})
+    .catch(error => {reject(error)})
     })
 }
 

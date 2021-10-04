@@ -6,6 +6,7 @@ import Login from './Login/Login';
 import Verify from './Login/Verify';
 import DisplayUser from '../components/User/DisplayUser';
 
+import ToDoList from '../components/ToDoList/ToDoList';
 
 function PageNavigator() {
     return (
@@ -17,6 +18,9 @@ function PageNavigator() {
             <Route path ='/login'>
                 <Login/>
             </Route>
+            <Route path='/todo'>
+                <ToDoList/>
+            </Route>
             <Route path ='/verify'>
                 <Verify/>
             </Route>
@@ -26,7 +30,6 @@ function PageNavigator() {
             <Route path='/'>
                 <Home/>
             </Route>
-
             
         </Switch>
     );

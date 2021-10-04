@@ -22,7 +22,7 @@ import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
 import SearchBar from '../SearchBar/SearchBar';
 
-// columns are the labels of the table
+// Columns are the labels of the table
 const columns = [
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
@@ -38,21 +38,21 @@ const columns = [
     { id: 'deleteButton', minWidth: 100}
     ];
 
-// create a toolbar component based on toolbar component, it shows the table title,
-// current organization and department, filter button, and create new contact button(if apply)
+// Create a toolbar component based on toolbar component, it shows the table title,
+// Current organization and department, filter button, and create new contact button(if apply)
 const EnhancedTableToolbar = (props) => {
     const { organizationId, departmentId, handleDialogOpen, update, permissionLevel} = props;
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
-    // request data from backend API, record the name of current organization and department
+    // Request data from backend API, record the name of current organization and department
     useEffect(() => {
         getOrganization().then(res => {
             if (res.ok) {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(organization => {
-                        if (organization.id == organizationId) {
+                        if (organization.id.toString() === organizationId) {
                             setOrgName(organization.name);
 
                         }
@@ -68,7 +68,7 @@ const EnhancedTableToolbar = (props) => {
                 res.json().then(body => {
                     const data = body.data;
                     data.forEach(department => {
-                        if (department.id == departmentId) {
+                        if (department.id.toString() === departmentId) {
                             setDepName(department.name);
                         } 
                     });
@@ -91,6 +91,17 @@ const EnhancedTableToolbar = (props) => {
     }
     const handleClose = () => {
         setCreateContactOpen(false);
+    }
+
+    const createButtonDisplay = (permission) => {
+        console.log(permission)
+        if (permission > 1) {
+            return (
+                <Button variant="contained" onClick={handleCreateContact}>
+                    Add Contact
+                </Button>
+            )
+        }
     }
 
     return (
@@ -119,25 +130,21 @@ const EnhancedTableToolbar = (props) => {
             <IconButton>
                 <FilterListIcon onClick={handleChangeOrgDep}/>
             </IconButton>
-            {permissionLevel > 1 && 
-            <Button variant="contained" onClick={handleCreateContact}>
-                Add Contact
-            </Button>
-            }
+            { createButtonDisplay(permissionLevel) }
             <Dialog
-            open={createContactOpen}
-            fullWidth
-            maxWidth
+                open={createContactOpen}
+                fullWidth
+                maxWidth
             >
                 <Paper fullWidth>
-                <AddCustomer departmentId={departmentId} handleClose={handleClose} update={update}/>
+                    <AddCustomer departmentId={departmentId} handleClose={handleClose} update={update}/>
                 </Paper>
             </Dialog>
         </Toolbar>
     )
 }
 
-// create a new table row component, including link to contact detail and delete contact
+// Create a new table row component, including link to contact detail and delete contact
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
     const history = useHistory();
@@ -161,7 +168,7 @@ function EnhancedTableRow(props) {
     }
 
     //=============== Display Delete Button =============
-    // if the user's authority level meets the requirement, display the delete button
+    // If the user's authority level meets the requirement, display the delete button
     var display;
     if (permissionLevel >= 3) {
         display = (
@@ -206,7 +213,7 @@ function EnhancedTableRow(props) {
     )
 }
 
-// the final table for contact
+// The final table for contact
 export default function CustomerTable(props) {
     //=============== Data from Parent ==================
     const permissionLevel = props.permissionLevel;
@@ -224,7 +231,7 @@ export default function CustomerTable(props) {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
-    // request contact data from backend API
+    // Request contact data from backend API
     useEffect(() => {
         getAllCustomer(organizationId, departmentId, rowsPerPage, currentPage).then(res => {
             if (res.code === 200) {
@@ -250,7 +257,6 @@ export default function CustomerTable(props) {
     };
 
     const handleSearch = (searchKey) => {
-        console.log(searchKey);
         searchCustomer(departmentId, searchKey, rowsPerPage, currentPage).then(res => {
             if (res.code === 200) {
                 const data = res.data
@@ -265,7 +271,7 @@ export default function CustomerTable(props) {
         })
     }
 
-    // make use of enhanced table toolbar and enhanced table row, diplay the data accordingly
+    // Make use of enhanced table toolbar and enhanced table row, diplay the data accordingly
     return (
         <div>
             <SearchBar handleSearch={handleSearch} />
