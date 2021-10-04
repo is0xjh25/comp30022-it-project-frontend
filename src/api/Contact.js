@@ -1,20 +1,7 @@
+import { getCookie, checkUnauthorized } from "./Util";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
 
 // Get all customer of an organization and department
 function getAllCustomer (orgId, departId, pageSize, currentPage) {
@@ -26,15 +13,37 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/contact?organization_id=${orgId}&department_id=${departId}&size=${pageSize}&current=${currentPage}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             if (res.ok) {
                 res.json().then(resBody => {
                     resolve(resBody)
                 });
             } else {
-                res.json().then(body=>{alert(body.msg)})
+                // res.json().then(body=>{alert(body.msg)})
             }
         })
         .catch(error => {reject(error)})
+    })
+}
+
+function searchCustomer(departmentId, searchKey, size, current) {
+    const url = `${BASE_URL}/contact/search?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
     })
 }
 
@@ -51,6 +60,9 @@ function handleCreateCustomer(data, departmentId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact`, info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
@@ -71,6 +83,9 @@ function handleDisplayCustomer(customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes)});
         } else {
@@ -91,6 +106,9 @@ function handleDeleteCustomer(customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             res.json().then(resBody => {
                 resolve(resBody)
@@ -117,6 +135,9 @@ function handleUpdateCustomer(data, customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact`, info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes);});
         } else {
@@ -126,8 +147,9 @@ function handleUpdateCustomer(data, customerId) {
     })
 }
 
-module.exports = {
+export {
     getAllCustomer,
+    searchCustomer,
     handleCreateCustomer,
     handleDisplayCustomer,
     handleDeleteCustomer,

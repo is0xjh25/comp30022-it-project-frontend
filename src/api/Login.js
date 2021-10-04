@@ -1,28 +1,7 @@
+import { getCookie, checkUnauthorized } from "./Util";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-// Set cookie when login
-function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
 
 // Login page signin
 function handleSignIn(email, password) {
@@ -36,6 +15,9 @@ function handleSignIn(email, password) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/user/login", info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             resolve(res)
         })
         .catch(error => {reject(error);})
@@ -55,6 +37,9 @@ function handleResend(email) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/user/resetPassword", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -78,6 +63,9 @@ function handleSignUp (email, password, firstName, lastName, phone, organization
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/user", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -99,16 +87,39 @@ function handleLogout() {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/user/logout", info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             resolve(res)
         })
         .catch(error => {reject(error);})
     })
 }
 
-module.exports = {
-    setCookie,
+function handleVerify() {
+    const info = {
+        method: 'POST',
+        headers: {'Authorization': getCookie('token')},
+    };
+
+    return new Promise((resolve, reject) => {
+        fetch(BASE_URL + "/user/verify", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+        })
+        .catch(error => {reject(error);})
+    })
+}
+
+export {
     handleSignIn,
     handleResend,
     handleSignUp,
-    handleLogout
+    handleLogout,
+    handleVerify
 }

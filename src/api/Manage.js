@@ -1,20 +1,6 @@
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import { getCookie, checkUnauthorized } from "./Util";
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Gets all users from a department
 function getAllUsers(departmentId, currentPage) {
@@ -28,9 +14,31 @@ function getAllUsers(departmentId, currentPage) {
     }
     return new Promise((resovle) => {
         fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(value => resovle(value));    
         }).catch(err => {
     
+        })
+    })
+}
+
+function searchMember(departmentId, searchKey, size, current) {
+    const url = `${BASE_URL}/department/searchMember?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
         })
     })
 }
@@ -47,6 +55,9 @@ function changePermission(userId, permissionLevel, departmentId) {
     }
     return new Promise(resolve => {
         fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody);
             })
@@ -73,6 +84,9 @@ function deleteUser(userId, departmentId) {
     }
     return new Promise(resolve => {
         fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody);
             })
@@ -100,6 +114,9 @@ function handleSearchOrg(organisation) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/organization/name?organization_name=${organisation}`, info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -125,6 +142,9 @@ function handleJoinOrg(organisationId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization/join", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -149,6 +169,9 @@ function handleJoinDep(departmentId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/department/join", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -174,6 +197,9 @@ function handleCreateOrg(organisation) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -201,6 +227,9 @@ function handleCreateDep(organisationId, department) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization/department", info)
     .then(res => {
+        if(checkUnauthorized(res)) {
+            return;
+        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -223,6 +252,9 @@ function getOrganization() {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + '/organization/myOrganization', info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             if (res.ok) {
                 resolve(res);
             } else {
@@ -245,6 +277,9 @@ function getDepartment(organizationId) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/organization/departments?organization_id=${organizationId}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             if (res.ok) {
                 resolve(res);
             } else {
@@ -267,6 +302,9 @@ function deleteOrganization(origanizationId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody);
             })
@@ -286,6 +324,9 @@ function deleteDepartment(departmentId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody);
             })
@@ -305,16 +346,19 @@ function getMyPermissionLevel(departmentId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
-                resolve(resBody);
+                // resolve(resBody);
             })
         })
     })
 }
 
-module.exports = {
-    getCookie,
+export {
     getAllUsers,
+    searchMember,
     changePermission,
     acceptUser,
     deleteUser,
