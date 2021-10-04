@@ -349,10 +349,15 @@ function getMyPermissionLevel(departmentId) {
             if(checkUnauthorized(res)) {
                 return;
             }
-            res.json().then(resBody => {
-                // resolve(resBody);
-            })
+            if (res.ok) {
+                res.json().then(resBody => {
+                    resolve(resBody);
+                })
+            } else {
+                alert(res.json().then((resBody) => {alert(resBody.msg)}))
+            }
         })
+        .catch((error) => {reject(error)})
     })
 }
 

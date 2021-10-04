@@ -22,42 +22,57 @@ import { visuallyHidden } from '@mui/utils';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 
+import {
+    getAllToDo,
+    handleCreateToDo,
+    handleDeleteToDo,
+    handleUpdateToDo
+} from '../../api/ToDoList';
+
 export default function ToDoList() {
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState([]);
+    const [rows, setRows] = useState([]);
 
     useEffect(() => {
+        getAllToDo().then(res => {
+            if (res.code === 200) {
+                console.log(res)
+                const data = res.data;
+                setRows(data);
+            } else {
+                alert(res.msg)
+            }
+        })
         setLoading(false);
-        console.log("todo loaded")
     }, [])
 
     if (loading) {
-        return <div>loading...
-        </div>
+        return <div>loading...</div>
     }
 
-    const rows = [
-        { 
-            description: "to do sample 1",
-            status: "to do"
-        },
-        { 
-            description: "to do sample 2",
-            status: "to do"
-        },
-        { 
-            description: "to do sample 3",
-            status: "in progress"
-        },
-        { 
-            description: "to do sample 4",
-            status: "in progress"
-        },
-        { 
-            description: "to do sample 5",
-            status: "done"
-        }
-    ]
+    // const test = [
+    //     { 
+    //         description: "to do sample 1",
+    //         status: "to do"
+    //     },
+    //     { 
+    //         description: "to do sample 2",
+    //         status: "to do"
+    //     },
+    //     { 
+    //         description: "to do sample 3",
+    //         status: "in progress"
+    //     },
+    //     { 
+    //         description: "to do sample 4",
+    //         status: "in progress"
+    //     },
+    //     { 
+    //         description: "to do sample 5",
+    //         status: "done"
+    //     }
+    // ]
 
     const handleClick = (event, description) => {
         const selectedIndex = selected.indexOf(description);

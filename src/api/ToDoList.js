@@ -1,5 +1,7 @@
 import { getCookie, checkUnauthorized } from './Util';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 // Get all to-do list of a user
 function getAllToDo() {
     const info = {
