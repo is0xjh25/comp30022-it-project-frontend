@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
+import { displayCustomer, deleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
 import AlertDialog from '../Dialog/AlertDialog';
@@ -87,7 +87,7 @@ export default function DisplayCustomer(props) {
 
 	// Fetch data
 	useEffect(() => {
-		handleDisplayCustomer(customerId).then(res => {
+		displayCustomer(customerId).then(res => {
 			if (res.code===200) {
 				setData(res.data);
                 setLoading(false);
@@ -114,7 +114,7 @@ export default function DisplayCustomer(props) {
     }
 
 	const confirmDelete = () => {
-		handleDeleteCustomer(customerId).then(res => {
+		deleteCustomer(customerId).then(res => {
 			if (res.code === 200) {
 				alert("Successfully deleted");
 				handleBack();

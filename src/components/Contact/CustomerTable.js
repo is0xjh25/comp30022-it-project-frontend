@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
-import { getAllCustomer, handleDeleteCustomer, searchCustomer } from '../../api/Contact';
+import { getAllCustomer, deleteCustomer, searchCustomer } from '../../api/Contact';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -161,7 +161,7 @@ function EnhancedTableRow(props) {
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        handleDeleteCustomer(row.id);
+        deleteCustomer(row.id);
         alert(`${row.name} is deleted`);
         setAlertOpen(false);
         update();

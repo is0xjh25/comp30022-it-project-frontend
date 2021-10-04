@@ -48,7 +48,7 @@ function searchCustomer(departmentId, searchKey, size, current) {
 }
 
 // Create a customer
-function handleCreateCustomer(data, departmentId) {
+function createCustomer(data, departmentId) {
     data['department_id'] = departmentId;
 
     const info = {
@@ -73,7 +73,7 @@ function handleCreateCustomer(data, departmentId) {
 }
 
 // Get customer's information
-function handleDisplayCustomer(customerId) {
+function displayCustomer(customerId) {
 
     const info = {
         method: 'GET',
@@ -96,7 +96,7 @@ function handleDisplayCustomer(customerId) {
 }
 
 // Delete one customer's information
-function handleDeleteCustomer(customerId) {
+function deleteCustomer(customerId) {
 
     const info = {
         method: 'DELETE',
@@ -122,7 +122,7 @@ function handleDeleteCustomer(customerId) {
 }
 
 // Update Customer information
-function handleUpdateCustomer(data, customerId) {
+function updateCustomer(data, customerId) {
     
     data['id'] = customerId;
 
@@ -150,8 +150,8 @@ function handleUpdateCustomer(data, customerId) {
 export {
     getAllCustomer,
     searchCustomer,
-    handleCreateCustomer,
-    handleDisplayCustomer,
-    handleDeleteCustomer,
-    handleUpdateCustomer
+    createCustomer,
+    displayCustomer,
+    deleteCustomer,
+    updateCustomer
 }

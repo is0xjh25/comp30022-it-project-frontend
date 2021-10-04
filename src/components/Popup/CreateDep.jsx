@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {handleCreateDep} from '../../api/Manage';
+import {createDep} from '../../api/Manage';
 
 export default function CreateDep(props) {
 	
@@ -37,7 +37,7 @@ export default function CreateDep(props) {
 	const handleCreate = () =>{
 		
 		if (department !== "") {
-			handleCreateDep(props.organization_id, department).then(res => {
+			createDep(props.organization_id, department).then(res => {
 			if (res.ok) {
 				update();
 				alert("Successfully created");

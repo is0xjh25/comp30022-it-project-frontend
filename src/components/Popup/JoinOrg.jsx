@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {handleSearchOrg, handleJoinOrg} from '../../api/Manage';
+import {searchOrg, joinOrg} from '../../api/Manage';
 
 export default function JoinOrg(props) {
 	
@@ -47,7 +47,7 @@ export default function JoinOrg(props) {
 	// Search button
   	const handleSearch = () => {
 		if (organization !== "") {
-			handleSearchOrg(organization).then(res => {
+			searchOrg(organization).then(res => {
 			if (res.ok) {
 				res.json().then(bodyRes=>{
 					setResults(bodyRes.data);
@@ -87,7 +87,7 @@ export default function JoinOrg(props) {
 		if (selected===0) {
 			alert("please select an organization!")
 		} else {
-			handleJoinOrg(selected).then(res => {
+			joinOrg(selected).then(res => {
 				if (res.ok) {
 					update();
 					alert("Successfully join");

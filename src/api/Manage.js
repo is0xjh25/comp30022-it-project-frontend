@@ -104,7 +104,7 @@ function declineUser(userId, departmentId) {
 }
 
 // Search an organisation
-function handleSearchOrg(organisation) {
+function searchOrg(organisation) {
 
     const info = {
         method: 'GET',
@@ -128,7 +128,7 @@ function handleSearchOrg(organisation) {
 }
 
 // Join an organisation
-function handleJoinOrg(organisationId) {
+function joinOrg(organisationId) {
 
     const body = new FormData();
     body.append("organization_id", organisationId);
@@ -156,7 +156,7 @@ function handleJoinOrg(organisationId) {
 }
 
 // Join a department
-function handleJoinDep(departmentId) {
+function joinDep(departmentId) {
     const body = new FormData();
     body.append("department_id", departmentId);
 
@@ -183,7 +183,7 @@ function handleJoinDep(departmentId) {
 }
 
 // Create an organisation
-function handleCreateOrg(organisation) {
+function createOrg(organisation) {
     
     const body = new FormData();
     body.append("organization_name", organisation);
@@ -212,7 +212,7 @@ function handleCreateOrg(organisation) {
 
 
 // Create a department
-function handleCreateDep(organisationId, department) {
+function createDep(organisationId, department) {
     
     const body = new FormData();
     body.append("organization_id", organisationId);
@@ -368,11 +368,11 @@ export {
     acceptUser,
     deleteUser,
     declineUser,
-    handleSearchOrg,
-    handleJoinOrg,
-    handleJoinDep,
-    handleCreateOrg,
-    handleCreateDep,
+    searchOrg,
+    joinOrg,
+    joinDep,
+    createOrg,
+    createDep,
     getOrganization,
     getDepartment,
     deleteOrganization,

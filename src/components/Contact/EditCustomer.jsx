@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import AlertDialog from '../Dialog/AlertDialog';
-import { handleUpdateCustomer } from '../../api/Contact';
+import { updateCustomer } from '../../api/Contact';
 
 export default function EditCustomer(props) {
 
@@ -110,7 +110,7 @@ export default function EditCustomer(props) {
 			"customerType":customerType
 		}
 
-		handleUpdateCustomer(data, customerId).then(res => {
+		updateCustomer(data, customerId).then(res => {
 			if (res.code===200) {
 				alert("Successfully updated");
 				props.setStatus('display');

@@ -3,30 +3,39 @@ import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getMultipleEvents } from "../../api/Event";
+import { getMultipleEvents, deleteEvent } from "../../api/Event";
 import { Badge } from "@material-ui/core";
+import AlertDialog from "../Dialog/AlertDialog";
 
 export default function DisplayEvent() {
 
-	const [monthEvent, setMonthEvent] = useState([]);
-	const [selectedDays, setSelectedDays] = useState([1, 2, 15]);
-	const [dayEvent, setDayEvent] = useState([]);
+	const [month, setMonth] = useState("");
 	const [date, changeDate] = useState(new Date());
-	
+	const [dayEvent, setDayEvent] = useState([]);
+	const [selectedDays, setSelectedDays] = useState([1, 2, 15]);
+	const [selectEvent, setSelectEvent] = useState(0);
+
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Delete Confirm';
 	const alertMessage = "Do you want to delete this event";
-	const handleDelete = function() {
+	const handleDelete = function(e) {
 		setAlertOpen(true);
+		setSelectEvent(e);
 	}
 	const handleAlertConfirm = function() {
 		confirmDelete();
 		setAlertOpen(false);
 	}
 
-	const confirmDelete = function(e) {
-
+	const confirmDelete = function() {
+		deleteEvent(selectEvent).then(res => {
+			if (res.ok) {
+				alert("!!!");
+			} else {
+				alert(res.msg);
+			}
+		})
 	}
 
 	const handleOnChange = (e) => {
