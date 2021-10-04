@@ -48,8 +48,7 @@ function updateEvent(body) {
     const info = {
         method: 'PUT',
         headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"id": body.id, "start_time": body.startTime, "finish_time": body.finishTime,
-								"description": body.description, "status": body.status})
+        body: JSON.stringify(body)
     };
 
     return new Promise((resolve, reject) => {
@@ -107,12 +106,12 @@ function deleteEventContact(attendId) {
 
     const info = {
         method: 'DELETE',
-        headers: {'Authorization': getCookie('token'), 'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
+        headers: {'Authorization': getCookie('token'), 'Origin': process.env.ORIGIN_URL},
         body: JSON.stringify({"attend_id": attendId})
     };
 
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + "/event/contact", info)
+        fetch(`${BASE_URL}/event/contact?attend_id=${attendId}`, info)
         .then(res => {
             res.json().then(resBody => {
                 resolve(resBody)

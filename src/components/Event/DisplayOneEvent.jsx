@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getEventInfo, updateEvent } from "../../api/Event";
+import { getEventInfo, updateEvent, deleteEventContact } from "../../api/Event";
 import AlertDialog from "../Dialog/AlertDialog";
 
 export default function DisplayOneEvent(eventId) {
@@ -17,6 +17,7 @@ export default function DisplayOneEvent(eventId) {
 	const [description, setDescription] = useState("");
 	const [contacts, setContacts] = useState([]);
 	const [data, setData] = useState({});
+	const [selectAttend, setSelectAttend] = useState(0);
 
 	const classes = {
 		title: {
@@ -67,7 +68,7 @@ export default function DisplayOneEvent(eventId) {
 	//Alart Dialog Update
 	const [updateAlertOpen, setUpdateAlertOpen] = useState(false);
 	const updateAlertTitle = 'Update Confirm';
-	const updateAlertMessage = "Do you want to Update?";
+	const updateAlertMessage = "Do you want to update?";
 	const handleUpdate = function() {
 		setUpdateAlertOpen(true);
 	}
@@ -76,19 +77,30 @@ export default function DisplayOneEvent(eventId) {
 		setUpdateAlertOpen(false);
 	}
 
-	const transformDate = (t) => {
-		return t.toISOString().substring(0, 16).replace("T", " ");
+	//Alart Dialog Delete Contact
+	const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+	const deleteAlertTitle = 'Delete Confirm';
+	const deleteAlertMessage = "Do you want to remove this contact from this event?";
+	const handleDelete = function(attendId) {
+		setDeleteAlertOpen(true);
+		setSelectAttend(attendId);
 	}
+	const handleDeleteAlertConfirm = function() {
+		confirmDelete();
+		setDeleteAlertOpen(false);
+	}
+
+	// Check whether the detail has been changed
 	const checkChange = () => {
 		
 		let body = {};
 
-		if (startTime !== data.start_time) {
-			body["start_time"] = startTime;
+		if (transformDate(startTime) !== data.start_time) {
+			body["start_time"] = transformDate(startTime);
 		}
 
-		if (finishTime !== data.finish_time) {
-			body["finish_time"] = finishTime;
+		if (transformDate(finishTime) !== data.finish_time) {
+			body["finish_time"] = transformDate(finishTime);
 		}
 
 		if (description !== data.description) {
@@ -106,7 +118,6 @@ export default function DisplayOneEvent(eventId) {
 		return body;
 	}
 
-	
 	// Get event information
 	useEffect(() => {
 		getEventInfo(22).then(res => {
@@ -121,7 +132,7 @@ export default function DisplayOneEvent(eventId) {
 				alert(res.msg);
 			}
 		})
-	}, [status])
+	}, [pageStatus])
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "description") {
@@ -134,12 +145,16 @@ export default function DisplayOneEvent(eventId) {
 	const handleBack = () => {
 		//has to be done
 	}
+
 	const handleEdit = () => {
 		setPageStatus("edit");
 	}
+
 	const confirmDiscard = () => {
 		setPageStatus("view");
 	}
+
+	// Update event
 	const confirmUpdate = () => {
 		const body = checkChange();
 		if (Object.keys(body).length !== 0) { 
@@ -155,6 +170,22 @@ export default function DisplayOneEvent(eventId) {
 		} else {
 			alert("Nothing has been changed");
 		}
+	}
+
+	// Remove a contact from this event
+	const confirmDelete = () =>{
+		deleteEventContact(selectAttend).then(res => {
+			if (res.code===200) {
+				alert("Successfully Deleted");
+			} else {
+				alert(res.msg);
+			}
+		})
+	}
+
+	// Formatting the time
+	const transformDate = (t) => {
+		return (new Date(t).toISOString().substring(0, 16).replace("T", " "));
 	}
 
 	let display; 
@@ -179,13 +210,13 @@ export default function DisplayOneEvent(eventId) {
 			</Grid>
 			<Grid item xs={12} textAlign='center'>Current contact</Grid>
 			<Grid container item xs={12} textAlign='center'>
-				<Grid item xs={2} textAlign='center'>
+				<Grid item xs={3} textAlign='center'>
 					First name
 				</Grid>
-				<Grid item xs={2} textAlign='center'>
+				<Grid item xs={3} textAlign='center'>
 					Last name
 				</Grid>
-				<Grid item xs={3} textAlign='center'>
+				<Grid item xs={2} textAlign='center'>
 					Phone number
 				</Grid>
 				<Grid item xs={4} textAlign='center'>
@@ -196,22 +227,17 @@ export default function DisplayOneEvent(eventId) {
 						contacts.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e}>
-								<Grid item xs={2} textAlign='center'>
+								<Grid item xs={3} textAlign='center'>
 									{e.first_name}
 								</Grid>
-								<Grid item xs={2} textAlign='center'>
+								<Grid item xs={3} textAlign='center'>
 									{e.last_name}
 								</Grid>
-								<Grid item xs={3} textAlign='center'>
+								<Grid item xs={2} textAlign='center'>
 									{e.phone}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
 									{e.email}
-								</Grid>
-								<Grid item xs={1} textAlign='center'>
-									<Button>
-										Delete
-									</Button>
 								</Grid>
 							</Grid>)
 						})		
@@ -273,11 +299,11 @@ export default function DisplayOneEvent(eventId) {
 				<Grid item xs={4} textAlign='center'>
 					Email
 				</Grid>
-				<Grid container item xs={12}>
+				<Grid container item xs={12} rowSpacing={5}>
 					{typeof contacts !== 'undefined' && contacts.length > 0 ?
 						contacts.map((e) => {						
 							return (
-							<Grid container item xs={12} key={e.attend_id} value={e}>
+							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}}>
 								<Grid item xs={2} textAlign='center'>
 									{e.first_name}
 								</Grid>
@@ -291,7 +317,7 @@ export default function DisplayOneEvent(eventId) {
 									{e.email}
 								</Grid>
 								<Grid item xs={1} textAlign='center'>
-									<Button>
+									<Button style={classes.discardButton} onClick={()=>handleDelete(e.attend_id)}>
 										Delete
 									</Button>
 								</Grid>
@@ -311,7 +337,7 @@ export default function DisplayOneEvent(eventId) {
 			alertTitle={discardAlertTitle}
 			alertMessage={discardAlertMessage}
 			open={discardAlertOpen}
-			handleClose={() => { setDiscardAlertOpen(false) }} // Close the alert dialog
+			handleClose={() => { setDiscardAlertOpen(false) }}
 			handleConfirm={handleDiscardAlertConfirm}
 			handleCancel={() => { setDiscardAlertOpen(false) }}
 			/>
@@ -319,9 +345,16 @@ export default function DisplayOneEvent(eventId) {
 			alertTitle={updateAlertTitle}
 			alertMessage={updateAlertMessage}
 			open={updateAlertOpen}
-			handleClose={() => { setUpdateAlertOpen(false) }} // Close the alert dialog
+			handleClose={() => { setUpdateAlertOpen(false) }}
 			handleConfirm={handleUpdateAlertConfirm}
-			handle
+			handleCancel={() => { setUpdateAlertOpen(false) }}
+			/>
+			<AlertDialog 
+			alertTitle={deleteAlertTitle}
+			alertMessage={deleteAlertMessage}
+			open={deleteAlertOpen}
+			handleClose={() => { setDeleteAlertOpen(false) }}
+			handleConfirm={handleDeleteAlertConfirm}
 			/>
 		</Grid> 
 	}
