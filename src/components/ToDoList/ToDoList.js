@@ -23,16 +23,54 @@ import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Button } from '@mui/material'
 
 import {
     getAllToDo,
-    handleCreateToDo,
-    handleDeleteToDo,
-    handleUpdateToDo
+    createNewToDo,
+    deleteToDo,
+    updateToDo
 } from '../../api/ToDoList';
-import Edit from '@material-ui/icons/Edit';
+import AddToDo from './AddToDo';
+
+
+function EnhancedToolbar(props) {
+    // Use state for pop-up
+    const [createOpen, setCreateOpen] = useState(false);
+
+    const handleOpen = () => {
+        setCreateOpen(true);
+    }
+
+    const handleClose = () => {
+        setCreateOpen(false);
+    }
+
+    return (
+        <Toolbar
+        sx={{
+            pl: { sm: 2 },
+            pr: { xs: 1, sm: 1 },
+        }}
+        >
+            <Typography
+                sx={{ flex: '1 1 100%', mb: 2 }}
+                variant="h6"
+                id="ToDoTitle"
+                component="div"
+            >
+                Your To-Do List
+            </Typography>
+            <IconButton>
+                <AddIcon variant="contained" onClick={() => {handleOpen()}}/>
+            </IconButton>
+            <AddToDo open={createOpen} handleClose={handleClose}/>
+        </Toolbar>
+    )
+}
 
 function EnhancedTableRow(props) {
     const { row, index, update } = props;
@@ -44,9 +82,8 @@ function EnhancedTableRow(props) {
     }
 
     const handleDelete = (id) => {
-        handleDeleteToDo(id);
+        deleteToDo(id);
         console.log(id)
-
     }
 
     const handleClickCheckBox = (event, description) => {
@@ -71,6 +108,31 @@ function EnhancedTableRow(props) {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
+    const checkInProgress = (row) =>{
+        if (row.status === "to do") {
+            // Get the scheduled time of the to-do list
+            const scheduledTime = new Date(row.date_time.toString());
+
+            // Get the current time
+            const today = new Date();
+            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes();
+            const dateTime = date+' '+time;
+
+            const currentTime = new Date(dateTime.toString());
+
+            // Compare the two time
+            if (scheduledTime.getTime() <= currentTime.getTime()) {
+                return "in progress";
+            } else {
+                return "to do";
+            }
+        } else {
+            return row.status;
+        }
+
+    }
+
     const getRowLabel = (status) => {
         if (status === "to do") {
             return (<Chip label={status} color="primary" size="small"/>)
@@ -84,11 +146,12 @@ function EnhancedTableRow(props) {
     
     const isItemSelected = isSelected(row.description);
     const labelId = `enhanced-table-checkbox-${index}`;
-    const rowLabel = getRowLabel(row.status)
+    const rowLabel = getRowLabel(checkInProgress(row));
 
     return (
         <React.Fragment>
             <TableRow
+                id={row.id}
                 hover
                 role="checkbox"
                 aria-checked={isItemSelected}
@@ -188,14 +251,7 @@ export default function ToDoList() {
     return (
         <Grid sx={{ width: '100%', align: 'center'}}>
             <Paper sx={{ width: '50%', mb: 2 }}>
-                <Typography
-                    sx={{ flex: '1 1 100%', mb: 2 }}
-                    variant="h6"
-                    id="ToDoTitle"
-                    component="div"
-                >
-                    Your To-Do List
-                </Typography>
+                <EnhancedToolbar />
                 <TableContainer>
                     <Table
                         aria-labelledby="tableTitle"

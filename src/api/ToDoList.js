@@ -30,7 +30,7 @@ function getAllToDo() {
 }
 
 // Create a new to-do list for a user
-function handleCreateToDo(data) {
+function createNewToDo(data) {
     const info = {
         method: 'POST',
         headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
@@ -57,7 +57,7 @@ function handleCreateToDo(data) {
 }
 
 // Delete a to-do list for a user
-function handleDeleteToDo(toDoListId) {
+function deleteToDo(toDoListId) {
     const info = {
         method: 'DELETE',
         headers: {'Authorization': getCookie('token')}
@@ -83,7 +83,7 @@ function handleDeleteToDo(toDoListId) {
 }
 
 // Update a to-do list for a user
-function handleUpdateToDo(data) {
+function updateToDo(data) {
     const info = {
         method: 'PUT',
         headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
@@ -108,7 +108,7 @@ function handleUpdateToDo(data) {
 
 export {
     getAllToDo,
-    handleCreateToDo,
-    handleDeleteToDo,
-    handleUpdateToDo
+    createNewToDo,
+    deleteToDo,
+    updateToDo
 }
