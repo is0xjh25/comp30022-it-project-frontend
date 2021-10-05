@@ -21,6 +21,10 @@ import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import {
     getAllToDo,
@@ -28,53 +32,24 @@ import {
     handleDeleteToDo,
     handleUpdateToDo
 } from '../../api/ToDoList';
+import Edit from '@material-ui/icons/Edit';
 
-export default function ToDoList() {
-    const [loading, setLoading] = useState(true);
+function EnhancedTableRow(props) {
+    const { row, index, update } = props;
+    const [expand, setExpand] = useState(false);
     const [selected, setSelected] = useState([]);
-    const [rows, setRows] = useState([]);
 
-    useEffect(() => {
-        getAllToDo().then(res => {
-            if (res.code === 200) {
-                console.log(res)
-                const data = res.data;
-                setRows(data);
-            } else {
-                alert(res.msg)
-            }
-        })
-        setLoading(false);
-    }, [])
-
-    if (loading) {
-        return <div>loading...</div>
+    const handleEdit = () => {
+        console.log("edit to-do")
     }
 
-    // const test = [
-    //     { 
-    //         description: "to do sample 1",
-    //         status: "to do"
-    //     },
-    //     { 
-    //         description: "to do sample 2",
-    //         status: "to do"
-    //     },
-    //     { 
-    //         description: "to do sample 3",
-    //         status: "in progress"
-    //     },
-    //     { 
-    //         description: "to do sample 4",
-    //         status: "in progress"
-    //     },
-    //     { 
-    //         description: "to do sample 5",
-    //         status: "done"
-    //     }
-    // ]
+    const handleDelete = (id) => {
+        handleDeleteToDo(id);
+        console.log(id)
 
-    const handleClick = (event, description) => {
+    }
+
+    const handleClickCheckBox = (event, description) => {
         const selectedIndex = selected.indexOf(description);
         let newSelected = [];
 
@@ -106,6 +81,109 @@ export default function ToDoList() {
         }
 
     }
+    
+    const isItemSelected = isSelected(row.description);
+    const labelId = `enhanced-table-checkbox-${index}`;
+    const rowLabel = getRowLabel(row.status)
+
+    return (
+        <React.Fragment>
+            <TableRow
+                hover
+                role="checkbox"
+                aria-checked={isItemSelected}
+                tabIndex={-1}
+                key={row.description}
+                selected={isItemSelected}
+            >
+                <TableCell padding="checkbox" style={{borderBottom:"none"}}>
+                    <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        onClick={(event) => handleClickCheckBox(event, row.description)}
+                        inputProps={{
+                            'aria-labelledby': labelId,
+                        }}
+                    />
+                </TableCell>
+                <TableCell 
+                    component="th"
+                    scope="row"
+                    padding="none"
+                    style={{borderBottom:"none"}}
+                    onClick={() => setExpand(!expand)}
+                >
+                    {row.description}
+                </TableCell>
+                <TableCell 
+                    align="right" 
+                    style={{borderBottom:"none"}}
+                    onClick={() => setExpand(!expand)}
+                >
+                    { rowLabel }
+                </TableCell>
+            </TableRow>
+            <TableRow >
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+                    <Collapse in={expand} timeout="auto" unmountOnExit>
+                        <Box >
+                            <TableRow >
+                                <TableCell 
+                                    style={{borderBottom:"none"}}
+                                    sx={{ width: '90%' }}
+                                >
+                                    Date and Time: {row.date_time}
+                                </TableCell>
+                                <TableCell 
+                                    style={{borderBottom:"none"}}
+                                    sx={{ width: '5%' }}
+                                >
+                                    <IconButton size="small" onClick={() => {handleEdit()}}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </TableCell>
+                                <TableCell 
+                                    style={{borderBottom:"none"}}
+                                    sx={{ width: '5%' }}
+                                >
+                                    <IconButton size="small" onClick={() => {handleDelete(row.id)}}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
+
+}
+
+export default function ToDoList() {
+    const [loading, setLoading] = useState(true);
+    const [rows, setRows] = useState([]);
+
+    useEffect(() => {
+        getAllToDo().then(res => {
+            if (res.code === 200) {
+                console.log(res)
+                const data = res.data;
+                setRows(data);
+            } else {
+                alert(res.msg)
+            }
+        })
+    }, [])
+
+    useEffect(() => {
+        setLoading(false);
+    }, [rows])
+
+    if (loading) {
+        return <div>loading...</div>
+    }
+
 
     return (
         <Grid sx={{ width: '100%', align: 'center'}}>
@@ -123,40 +201,8 @@ export default function ToDoList() {
                         aria-labelledby="tableTitle"
                     >
                         {rows.map((row, index) => {
-                            const isItemSelected = isSelected(row.description);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-                            const rowLabel = getRowLabel(row.status)
-
                             return (
-                                <TableRow
-                                    hover
-                                    onClick={(event) => handleClick(event, row.description)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row.description}
-                                    selected={isItemSelected}
-                                >
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                            color="primary"
-                                            checked={isItemSelected}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                        />
-                                    </TableCell>
-                                    <TableCell 
-                                        component="th"
-                                        scope="row"
-                                        padding="none"
-                                    >
-                                        {row.description}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        { rowLabel }
-                                    </TableCell>
-                                </TableRow>
+                                <EnhancedTableRow row={row} index={index}/>
                             )
                         })}
 
