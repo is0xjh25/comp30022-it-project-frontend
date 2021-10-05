@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
+import { displayCustomer, deleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
 import AlertDialog from '../Dialog/AlertDialog';
@@ -15,7 +15,7 @@ export default function DisplayCustomer(props) {
     const history = useHistory();
     const {depId, customerId} = useParams();
     const [authority, setAuthority] = useState(1);
-	const [status, setStatus] = useState("display");
+	const [pageStatus, setPageStatus] = useState("view");
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 
@@ -87,7 +87,7 @@ export default function DisplayCustomer(props) {
 
 	// Fetch data
 	useEffect(() => {
-		handleDisplayCustomer(customerId).then(res => {
+		displayCustomer(customerId).then(res => {
 			if (res.code===200) {
 				setData(res.data);
                 setLoading(false);
@@ -102,7 +102,7 @@ export default function DisplayCustomer(props) {
             }
         });
         
-    }, [status, customerId, depId])
+    }, [pageStatus, customerId, depId])
 
 	useEffect(() => {
 		return () => {
@@ -114,7 +114,7 @@ export default function DisplayCustomer(props) {
     }
 
 	const confirmDelete = () => {
-		handleDeleteCustomer(customerId).then(res => {
+		deleteCustomer(customerId).then(res => {
 			if (res.code === 200) {
 				alert("Successfully deleted");
 				handleBack();
@@ -129,7 +129,7 @@ export default function DisplayCustomer(props) {
     }
 
 	const handleEdit = () => {
-		setStatus("edit");
+		setPageStatus("edit");
 	}
 
 
@@ -206,10 +206,10 @@ export default function DisplayCustomer(props) {
 
 	return (
 			<div>
-				{status === 'display' ? (
+				{pageStatus === 'view' ? (
 					showDisplay
-					) : status === 'edit' ? (
-						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
+					) : pageStatus === 'edit' ? (
+						<EditCustomer setPageStatus={setPageStatus} data={data} customerId={customerId}/>
 					): null 
 				}
 				<AlertDialog alertTitle={alertTitle}

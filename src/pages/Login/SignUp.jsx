@@ -10,7 +10,7 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
-import { handleSignUp } from '../../api/Login';
+import { signUp } from '../../api/Login';
 import { setCookie } from '../../api/Util';
 
 // Style sheet
@@ -144,7 +144,7 @@ export default function SignUp(props) {
 		e.preventDefault();
 
 		if (handleValidation()) {
-			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
+			signUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
 				setCookie('token', res.headers.get("Authorization"), 1)
                 res.json().then(resBody => {
@@ -250,12 +250,12 @@ export default function SignUp(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("resend")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("signIn")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("signIn")}>
 					{"Already have an account"}
 				</NavLink>
 				</Grid>

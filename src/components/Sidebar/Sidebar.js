@@ -21,7 +21,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { handleLogout } from '../../api/Login';
+import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
 
 
@@ -148,7 +148,7 @@ function Sidebar(props) {
 	
 	// Logout
   	const handleConfirm = () => {
-		handleLogout().then(res => {
+		logout().then(res => {
 			if (res.ok) {
 				alert("Successfully logout");
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

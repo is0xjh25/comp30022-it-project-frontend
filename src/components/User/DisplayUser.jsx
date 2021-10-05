@@ -12,9 +12,9 @@ import AlertDialog from '../Dialog/AlertDialog';
 export default function DisplayUser() {
     
 	const history = useHistory();
-	const [status, setStatus] = useState("display");
+	const [status, setPageStatus] = useState("view");
 	const [loading, setLoading] = useState(true);
-	const [data, setData] = useState({});
+	const [data, setData] = useState();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
@@ -111,16 +111,16 @@ export default function DisplayUser() {
     };
 
 	const handleBack = () => {
-		setStatus("display");
+		setPageStatus("view");
         history.goBack();
     }
 
 	const handleEdit = () => {
-		setStatus("edit");
+		setPageStatus("edit");
 	}
 
 	const confirmDiscard = () => {
-		setStatus("display");
+		setPageStatus("view");
 		// Reset all attributes
 		setFirstName(data.first_name);
 		setLastName(data.last_name);
@@ -172,7 +172,7 @@ export default function DisplayUser() {
 			updateUserInfo(body).then(res => {
 				if (res.code===200) {
 					alert("Successfully updated");
-					setStatus('display');
+					setPageStatus('view');
 				} else {
 					alert(res.msg);
 				}
@@ -184,25 +184,21 @@ export default function DisplayUser() {
 
 	// Fetch data
 	useEffect(() => {
-		
 		getUserInfo().then(res => {
 			if (res.code===200) {
 				setData(res.data);
+				setFirstName(res.data.first_name);
+				setLastName(res.data.last_name);
+				setMiddleName(res.data.middle_name);
+				setPhone(res.data.phone);
+				setPassword(res.data.password);
+				setWebsite(res.data.website);
+				setDescription(res.data.description);  
 				setLoading(false);
 			} else {
 				alert(res.msg);
 			}
 		})
-
-		setData(data);
-		setFirstName(data.first_name);
-		setLastName(data.last_name);
-		setMiddleName(data.middle_name);
-		setPhone(data.phone);
-		setPassword(data.password);
-		setWebsite(data.website);
-		setDescription(data.description);
-		setLoading(false);        
 	}, [status])
 
 	useEffect(() => {
@@ -216,7 +212,7 @@ export default function DisplayUser() {
 
 	let leftButton; 
 	let rightButton;
-	if (status === "display") {
+	if (status === "view") {
 		leftButton = <Button xs={6} textAlign='center' style={classes.backButton} variant="outlined" onClick={handleBack}>BACK</Button>;
 		rightButton = <Button xs={6} textAlign='center' style={classes.editButton} variant="outlined" onClick={handleEdit}>EDIT</Button>;
 	} else if (status === "edit") {
@@ -235,7 +231,7 @@ export default function DisplayUser() {
 					<Grid container item rowSpacing={5} columnSpacing={3}>
 						<Grid item xs={6} textAlign='center'sx={classes.box}>
 							<Box sx={classes.title}>First Name</Box> 
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.first_name}</Box> : 
 							<TextField id="firstName" defaultValue={data.first_name} onChange={handleOnChange}/>
 							}
@@ -248,14 +244,14 @@ export default function DisplayUser() {
 					<Grid container item rowSpacing={5} columnSpacing={3}>
 						<Grid item xs={6} textAlign='center'sx={classes.box}>
 							<Box sx={classes.title}>Last Name</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.last_name}</Box> :
 							<TextField id="lastName" defaultValue={data.last_name} onChange={handleOnChange}/>
 							}
 						</Grid>
 						<Grid item xs={6} textAlign='center' sx={classes.box}>
 							<Box sx={classes.title}>Phone</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.phone}</Box> :
 							<TextField id="phone" defaultValue={data.phone} onChange={handleOnChange}/>
 							}
@@ -264,14 +260,14 @@ export default function DisplayUser() {
 					<Grid container item rowSpacing={5} columnSpacing={3}>
 						<Grid item xs={6} textAlign='center'sx={classes.box}>
 							<Box sx={classes.title}>Middle Name</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.middle_name}</Box> :
 							<TextField id="middleName" defaultValue={data.middle_name} onChange={handleOnChange}/>
 							}
 						</Grid>
 						<Grid item xs={6} textAlign='center' sx={classes.box}>
 							<Box sx={classes.title}>Password</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>********</Box> :
 							<TextField id="password" defaultValue="********" onChange={handleOnChange}/>
 							}
@@ -280,14 +276,14 @@ export default function DisplayUser() {
 					<Grid container item rowSpacing={5} columnSpacing={3}>
 						<Grid item xs={6} textAlign='center'sx={classes.box}>
 							<Box sx={classes.title}>Website</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.website}</Box> :
 							<TextField id="website" defaultValue={data.website} onChange={handleOnChange}/>
 							}
 						</Grid>
 						<Grid item xs={6} textAlign='center' sx={classes.box}>
 							<Box sx={classes.title}>Description</Box>
-							{status === "display" ?
+							{status === "view" ?
 							<Box sx={classes.body}>{data.description}</Box> :
 							<TextField id="description" defaultValue={data.description} onChange={handleOnChange}/>
 							}
@@ -302,14 +298,16 @@ export default function DisplayUser() {
 						</Grid>
 					</Grid>
 				</Grid>
-				<AlertDialog alertTitle={discardAlertTitle}
+				<AlertDialog 
+				alertTitle={discardAlertTitle}
 				alertMessage={discardAlertMessage}
 				open={discardAlertOpen}
 				handleClose={() => { setDiscardAlertOpen(false) }} // Close the alert dialog
 				handleConfirm={handleDiscardAlertConfirm}
 				handleCancel={() => { setDiscardAlertOpen(false) }}
 				/>
-				<AlertDialog alertTitle={updateAlertTitle}
+				<AlertDialog 
+				alertTitle={updateAlertTitle}
 				alertMessage={updateAlertMessage}
 				open={updateAlertOpen}
 				handleClose={() => { setUpdateAlertOpen(false) }} // Close the alert dialog

@@ -10,7 +10,7 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { handleResend } from '../../api/Login';
+import { resend } from '../../api/Login';
 
 // Style sheet
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +80,7 @@ export default function Resend(props) {
 		e.preventDefault();
 
 		if (handleValidation()) {
-			handleResend(email).then(res => {
+			resend(email).then(res => {
 				if (res.ok) {
 					alert("Request is submitted. Please check your mailbox !");
 					history.push('/Login');
@@ -126,12 +126,12 @@ export default function Resend(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("signIn")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signIn")}>
 					{"Oops! I just remembered"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setStatus("signUp")}>
+				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

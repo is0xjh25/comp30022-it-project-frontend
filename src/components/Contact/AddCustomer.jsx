@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import AlertDialog from '../Dialog/AlertDialog';
-import { handleCreateCustomer } from '../../api/Contact';
+import { createCustomer } from '../../api/Contact';
 
 export default function AddCustomer(props) {
 
@@ -107,13 +107,13 @@ export default function AddCustomer(props) {
 			"customer_type":customerType
 		}
 
-		handleCreateCustomer(data, departmentId).then(res => {
+		createCustomer(data, departmentId).then(res => {
 			if (res.code===200) {
 				alert("Successfully created");
                 handleClose();
                 update();
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
 	}

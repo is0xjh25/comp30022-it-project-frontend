@@ -4,7 +4,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 // Login page signin
-function handleSignIn(email, password) {
+function signIn(email, password) {
 
     const info = {
         method: 'POST',
@@ -26,7 +26,7 @@ function handleSignIn(email, password) {
 
 
 // Request email for reset passward
-function handleResend(email) {
+function resend(email) {
 
     const info = {
         method: 'POST',
@@ -51,7 +51,7 @@ function handleResend(email) {
 
 
 // Sign up as a new member
-function handleSignUp (email, password, firstName, lastName, phone, organization) {
+function signUp (email, password, firstName, lastName, phone, organization) {
 
     const info = {
         method: 'POST',
@@ -77,7 +77,7 @@ function handleSignUp (email, password, firstName, lastName, phone, organization
 }
 
 // Logout
-function handleLogout() {
+function logout() {
 
     const info = {
         method: 'POST',
@@ -117,9 +117,9 @@ function handleVerify() {
 }
 
 export {
-    handleSignIn,
-    handleResend,
-    handleSignUp,
-    handleLogout,
+    signIn,
+    resend,
+    signUp,
+    logout,
     handleVerify
 }

@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import CreateDep from '../../components/Popup/CreateDep';
-import {getDepartment, deleteDepartment, handleJoinDep} from '../../api/Manage';
+import {getDepartment, deleteDepartment, joinDep} from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
 
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
@@ -141,7 +141,7 @@ function NotJoinedDepartment(props) {
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        handleJoinDep(department.id);
+        joinDep(department.id);
         setAlertOpen(false);
         alert('Your request has been sent');
         update();

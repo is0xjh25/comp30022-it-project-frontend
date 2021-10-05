@@ -13,24 +13,16 @@ class Login extends React.Component {
 		this.state = this.getInitialState();
 	}
 	
-	// Check the cookie status
-	// componentDidMount() {
-	// 	if (localStorage.getItem("Token") !== null) {
-	// 	  sessionStorage.setItem("Token", localStorage.getItem("Token"));
-	// 	  <Redirect to={'/'} />
-	// 	}
-	// }
-
-	getInitialState = () => ({status: "signIn"});
+	getInitialState = () => ({pageStatus: "signIn"});
 
     reset = () => this.setState(this.getInitialState());
 
-	setStatus = (a) => this.setState({status: a});
+	setPageStatus = (a) => this.setState({pageStatus: a});
 
 	render() {
 		
-		// Switch components depending on status
-		let status = this.state.status;
+		// Switch components depending on pageStatus
+		let pageStatus = this.state.pageStatus;
 
 		return(
 			<React.Fragment>
@@ -38,12 +30,12 @@ class Login extends React.Component {
 					<img src={Image} className={'Login-image'} alt=""/>
 				</div>
 				<div className={'Login-sideBlock'}>
-					{status === 'signIn' ? (
-							<SignIn setStatus={this.setStatus} />
-						) : status === 'signUp' ? (
-							<SignUp setStatus={this.setStatus} />
-						) : status === 'resend' ? (
-							<Resend setStatus={this.setStatus} />
+					{pageStatus === 'signIn' ? (
+							<SignIn setPageStatus={this.setPageStatus} />
+						) : pageStatus === 'signUp' ? (
+							<SignUp setPageStatus={this.setPageStatus} />
+						) : pageStatus === 'resend' ? (
+							<Resend setPageStatus={this.setPageStatus} />
 						) : null 
 					}
 				</div>
