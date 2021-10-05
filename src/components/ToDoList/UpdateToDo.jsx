@@ -10,14 +10,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { Dialog, DialogTitle } from '@mui/material';
 
-import { createNewToDo } from '../../api/ToDoList';
+import { updateToDo } from '../../api/ToDoList';
 
-export default function AddToDo(props) {
-    const { open, handleClose } = props;
+export default function UpdateToDo(props) {
+    const { original, open, handleClose } = props;
 
-    // Attributes for creating to-do
-    const [time, setTime] = useState(new Date());
-    const [description, setDescription] = useState("");
+    // Attributes for updating to-do
+    const [time, setTime] = useState(original.date_time);
+    const [dateTime, setDateTime] = useState(new Date());
+    const [description, setDescription] = useState(original.description);
+
+    const handleChangeTime = (e) => {
+        setTime(e.toISOString().replace("T", " ").substring(0, 16));
+        console.log(e)
+        console.log(time)
+    }
 
     const handleOnChange = (e) => {
         if (e.target.id === "description") {
@@ -25,20 +32,28 @@ export default function AddToDo(props) {
         }
     }
 
-    const handleCreate = () => {
-        console.log(time)
-        const dateTime = time.toISOString().replace("T", " ").substring(0, 16);
-        console.log(dateTime)
+    const handleUpdate = () => {
+        console.log(original)
+
+        // if (time !== original.date_time) {
+        //     setTime(time.toISOString().replace("T", " ").substring(0, 16));
+        // }
+
+        if (description === "") {
+            setDescription(original.description);
+        }
         
         const data = {
-            "date_time": dateTime,
+            "id": original.id,
+            "date_time": time,
             "description": description,
             "status": "to do"
         }
+        console.log(data)
 
-        createNewToDo(data).then(res => {
+        updateToDo(data).then(res => {
             if (res.code === 200) {
-                alert("Create new to-do successfully");
+                alert("To-do updated successfully");
                 handleClose();
             }
         })
@@ -46,7 +61,7 @@ export default function AddToDo(props) {
 
     return (
         <Dialog fullWidth maxWidth='xs' open={open}>
-            <DialogTitle>Create new to-do event</DialogTitle>
+            <DialogTitle>Update your to-do event</DialogTitle>
             <DialogContent>
                 <Stack 
                     justifyContent="center" 
@@ -56,9 +71,8 @@ export default function AddToDo(props) {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DateTimePicker
                             label="Select time"
-                            inputFormat="yyyy-MM-dd"
                             value={time}
-                            onChange={setTime}
+                            onChange={handleChangeTime}
                         />
                     </MuiPickersUtilsProvider>
                     <TextField
@@ -70,7 +84,7 @@ export default function AddToDo(props) {
             </DialogContent>
             <DialogActions>
                 <Button variant="text" onClick={() => {handleClose()}}>Discard</Button>
-                <Button variant="text" onClick={() => {handleCreate()}}>Create</Button>
+                <Button variant="text" onClick={() => {handleUpdate()}}>Update</Button>
             </DialogActions>
         </Dialog>
     )

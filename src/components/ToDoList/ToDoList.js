@@ -30,11 +30,11 @@ import { Button } from '@mui/material'
 
 import {
     getAllToDo,
-    createNewToDo,
-    deleteToDo,
-    updateToDo
+    deleteToDo
 } from '../../api/ToDoList';
+
 import AddToDo from './AddToDo';
+import UpdateToDo from './UpdateToDo';
 
 
 function EnhancedToolbar(props) {
@@ -77,13 +77,12 @@ function EnhancedTableRow(props) {
     const [expand, setExpand] = useState(false);
     const [selected, setSelected] = useState([]);
 
-    const handleEdit = () => {
-        console.log("edit to-do")
-    }
-
     const handleDelete = (id) => {
-        deleteToDo(id);
-        console.log(id)
+        deleteToDo(id).then(() => {
+            alert("To-do event deleted");
+        })
+        console.log(id);
+        console.log("deleted")
     }
 
     const handleClickCheckBox = (event, description) => {
@@ -148,6 +147,18 @@ function EnhancedTableRow(props) {
     const labelId = `enhanced-table-checkbox-${index}`;
     const rowLabel = getRowLabel(checkInProgress(row));
 
+    // For edit to-do
+    const [editOpen, setEditOpen] = useState(false);
+
+    const handleEditOpen = () => {
+        setEditOpen(true);
+        console.log(`edit to-do "${row.description}"`);
+    }
+
+    const handleEditClose = () => {
+        setEditOpen(false);
+    }
+
     return (
         <React.Fragment>
             <TableRow
@@ -201,9 +212,10 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '5%' }}
                                 >
-                                    <IconButton size="small" onClick={() => {handleEdit()}}>
+                                    <IconButton size="small" onClick={() => {handleEditOpen()}}>
                                         <EditIcon />
                                     </IconButton>
+                                    <UpdateToDo original={row} open={editOpen} handleClose={handleEditClose} />
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}
