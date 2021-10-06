@@ -173,7 +173,7 @@ export default function DisplayOneEvent(props) {
 	}
 
 	// Remove a contact from this event
-	const confirmDelete = () =>{
+	const confirmDelete = () => {
 		deleteEventContact(selectAttend).then(res => {
 			if (res.code===200) {
 				alert("Successfully Deleted");
@@ -181,6 +181,10 @@ export default function DisplayOneEvent(props) {
 				alert(res.msg);
 			}
 		})
+	}
+
+	const handleAddContact = () => {
+
 	}
 
 	// Formatting the time
@@ -282,7 +286,6 @@ export default function DisplayOneEvent(props) {
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Box >Description</Box>
-				<Grid item xs={12} textAlign='center'>{data.description}</Grid>
 				<TextField id="description" defaultValue= {data.description} multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={12} textAlign='center'>Current contact</Grid>
@@ -327,10 +330,13 @@ export default function DisplayOneEvent(props) {
 					}
 				</Grid>
 			</Grid>
-			<Grid item xs={6} textAlign='center'>
+			<Grid item xs={4} textAlign='center'>
 				<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
 			</Grid>
-			<Grid item xs={6} textAlign='center'>
+			<Grid item xs={4} textAlign='center'>
+				<Button variant="outlined" onClick={handleAddContact}>Add contact</Button>
+			</Grid>
+			<Grid item xs={4} textAlign='center'>
 				<Button variant="outlined" style={classes.createButton} onClick={handleUpdate}>Update</Button>
 			</Grid>
 			<AlertDialog 
