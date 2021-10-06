@@ -79,38 +79,7 @@ function EnhancedTableRow(props) {
     const { row, index, update } = props;
     const [expand, setExpand] = useState(false);
 
-    const handleDelete = (id) => {
-        deleteToDo(id).then(() => {
-            alert("To-do event deleted");
-            update();
-        })
-    }
-
-    const handleClickCheckBox = (event, status) => {
-
-        // Set the to-do status as done
-        let statusChange = "done";
-        if (status === "done") {
-            statusChange = "to do";
-        }
-        
-        const data = {
-            "id": row.id,
-            "date_time": row.date_time,
-            "description": row.description,
-            "status": statusChange
-        }
-        // console.log(data)
-
-        updateToDo(data).then(res => {
-            if (res.code === 200) {
-                // console.log("Set to done")
-                update();
-            }
-        })
-    };
-
-
+    // For displaying to-do
     const checkInProgress = (row) =>{
         if (row.status === "to do") {
             // Get the scheduled time of the to-do list
@@ -149,7 +118,15 @@ function EnhancedTableRow(props) {
     const labelId = `enhanced-table-checkbox-${index}`;
     const rowLabel = getRowLabel(checkInProgress(row));
     
-    // Checkbox selected
+    // For deleting to-do
+    const handleDelete = (id) => {
+        deleteToDo(id).then(() => {
+            alert("To-do event deleted");
+            update();
+        })
+    }
+    
+    // For selecting checkbox
     const isSelected = (status) => {
         // console.log(status)
         if (status === "done") {
@@ -160,6 +137,29 @@ function EnhancedTableRow(props) {
     
     const [selected, setSelected] = useState(isSelected(row.status))
 
+    const handleClickCheckBox = (event, status) => {
+
+        // Set the to-do status as done
+        let statusChange = "done";
+        if (status === "done") {
+            statusChange = "to do";
+        }
+        
+        const data = {
+            "id": row.id,
+            "date_time": row.date_time,
+            "description": row.description,
+            "status": statusChange
+        }
+        // console.log(data)
+
+        updateToDo(data).then(res => {
+            if (res.code === 200) {
+                // console.log("Set to done")
+                update();
+            }
+        })
+    };
 
     // For edit to-do
     const [editOpen, setEditOpen] = useState(false);
@@ -300,102 +300,3 @@ export default function ToDoList() {
         </Grid>
     )
 }
-
-
-// function EnhancedTabl() {
-//     const [selected, setSelected] = React.useState([]);
-
-//     const handleClick = (event, name) => {
-//         const selectedIndex = selected.indexOf(name);
-//         let newSelected = [];
-
-//         if (selectedIndex === -1) {
-//             newSelected = newSelected.concat(selected, name);
-//         } else if (selectedIndex === 0) {
-//             newSelected = newSelected.concat(selected.slice(1));
-//         } else if (selectedIndex === selected.length - 1) {
-//             newSelected = newSelected.concat(selected.slice(0, -1));
-//         } else if (selectedIndex > 0) {
-//             newSelected = newSelected.concat(
-//                 selected.slice(0, selectedIndex),
-//                 selected.slice(selectedIndex + 1),
-//             );
-//         }
-
-//         setSelected(newSelected);
-//     };
-
-//     const isSelected = (name) => selected.indexOf(name) !== -1;
-
-//     // Avoid a layout jump when reaching the last page with empty rows.
-//     // const emptyRows =
-//     //     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-//     return (
-//         <Box sx={{ width: '100%' }}>
-//             <Paper sx={{ width: '100%', mb: 2 }}>
-//                 <TableContainer>
-//                     <Table
-//                         sx={{ minWidth: 750 }}
-//                         aria-labelledby="tableTitle"
-//                         size={dense ? 'small' : 'medium'}
-//                     >
-//                         <TableBody>
-                            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                                rows.slice().sort(getComparator(order, orderBy)) */}
-//                             {rows
-//                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-//                                 .map((row, index) => {
-//                                     const isItemSelected = isSelected(row.name);
-//                                     const labelId = `enhanced-table-checkbox-${index}`;
-
-//                                 return (
-//                                     <TableRow
-//                                         hover
-//                                         onClick={(event) => handleClick(event, row.name)}
-//                                         role="checkbox"
-//                                         aria-checked={isItemSelected}
-//                                         tabIndex={-1}
-//                                         key={row.name}
-//                                         selected={isItemSelected}
-//                                     >
-//                                         <TableCell padding="checkbox">
-//                                             <Checkbox
-//                                                 color="primary"
-//                                                 checked={isItemSelected}
-//                                                 inputProps={{
-//                                                     'aria-labelledby': labelId,
-//                                                 }}
-//                                             />
-//                                         </TableCell>
-//                                         <TableCell
-//                                             component="th"
-//                                             id={labelId}
-//                                             scope="row"
-//                                             padding="none"
-//                                         >
-//                                             {row.name}
-//                                         </TableCell>
-//                                         <TableCell align="right">{row.calories}</TableCell>
-//                                         <TableCell align="right">{row.fat}</TableCell>
-//                                         <TableCell align="right">{row.carbs}</TableCell>
-//                                         <TableCell align="right">{row.protein}</TableCell>
-//                                     </TableRow>
-//                                 );
-//                                 })}
-//                             {emptyRows > 0 && (
-//                                 <TableRow
-//                                     style={{
-//                                         height: (dense ? 33 : 53) * emptyRows,
-//                                     }}
-//                                     >
-//                                     <TableCell colSpan={6} />
-//                                 </TableRow>
-//                             )}
-//                         </TableBody>
-//                     </Table>
-//                 </TableContainer>
-//             </Paper>
-//         </Box>
-//     );
-// }

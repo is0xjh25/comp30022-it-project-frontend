@@ -26,9 +26,9 @@ export default function AddToDo(props) {
     }
 
     const handleCreate = () => {
-        // console.log(time)
+        console.log(time)
         const dateTime = time.toISOString().replace("T", " ").substring(0, 16);
-        // console.log(dateTime)
+        console.log(dateTime)
         
         const data = {
             "date_time": dateTime,
