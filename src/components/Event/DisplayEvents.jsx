@@ -6,6 +6,10 @@ import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getMultipleEvents, deleteEvent } from "../../api/Event";
 import { Badge } from "@material-ui/core";
 import AlertDialog from "../Dialog/AlertDialog";
+import CreateEvent from "./CreateEvent";
+import DisplayOneEvent from "./DisplayOneEvent";
+import Paper from '@mui/material/Paper';
+import { Dialog } from '@mui/material';
 
 export default function DisplayEvents() {
 
@@ -28,10 +32,31 @@ export default function DisplayEvents() {
 		setAlertOpen(false);
 	}
 
+	// Create new event
+	const [createEventOpen, setCreateEventOpen] = useState(false);
+
+	const handleCreateEvent = () => {
+		setCreateEventOpen(true);
+	}
+	const handleCreateClose = () => {
+		setCreateEventOpen(false);
+	}
+
+	// Display a single event in detail
+	const [displayEventOpen, setDisplayEventOpen] = useState(false);
+
+	const handleDisplayEvent = (e) => {
+		setDisplayEventOpen(true);
+		setSelectEvent(e);
+	}
+	const handleDisplayClose = () => {
+		setDisplayEventOpen(false);
+	}
+
 	const confirmDelete = function() {
 		deleteEvent(selectEvent).then(res => {
-			if (res.ok) {
-				alert("!!!");
+			if (res.code===200) {
+				alert("Successfully deleted");
 			} else {
 				alert(res.msg);
 			}
@@ -56,10 +81,6 @@ export default function DisplayEvents() {
 				alert(res.msg);
 			}
 		})
-	}
-
-	const handleAddEvent = () => {
-		
 	}
 
 	const classes = {
@@ -142,7 +163,7 @@ export default function DisplayEvents() {
 									{e.description}
 								</Grid>
 								<Grid item xs={2} textAlign='center'>
-								<Button>
+								<Button onClick={()=>handleDisplayEvent(e.id)}>
 									Detail
 								</Button>
 								<Button onClick={()=>handleDelete(e.id)}>
@@ -155,9 +176,19 @@ export default function DisplayEvents() {
 					}
 				</Grid>
 				<Grid item textAlign='center' xs={12}>
-				<Button xs={6} textAlign='center' style={classes.addButton} variant="outlined" onClick={handleAddEvent}>
+				<Button style={classes.addButton}  variant="contained" onClick={handleCreateEvent}>
 					Add new event
 				</Button>
+				<Dialog open={createEventOpen} fullWidth maxWidth>
+					<Paper fullWidth>
+						<CreateEvent handleClose={handleCreateClose} />
+					</Paper>
+				</Dialog>
+				<Dialog open={displayEventOpen} fullWidth maxWidth>
+					<Paper fullWidth>
+						<DisplayOneEvent eventId={selectEvent} handleClose={handleDisplayClose} />
+					</Paper>
+				</Dialog>
 				</Grid>
 			</Grid>
 			<AlertDialog 
@@ -167,7 +198,7 @@ export default function DisplayEvents() {
 				handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
 				handleConfirm={handleAlertConfirm}
 				handleCancel={() => { setAlertOpen(false) }}
-			/>
+			/>	
 		</Fragment>
 	);
 }
