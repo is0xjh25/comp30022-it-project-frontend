@@ -30,6 +30,7 @@ import { Button } from '@mui/material'
 
 import {
     getAllToDo,
+    updateToDo,
     deleteToDo
 } from '../../api/ToDoList';
 
@@ -38,6 +39,8 @@ import UpdateToDo from './UpdateToDo';
 
 
 function EnhancedToolbar(props) {
+    const { update } = props;
+
     // Use state for pop-up
     const [createOpen, setCreateOpen] = useState(false);
 
@@ -67,7 +70,7 @@ function EnhancedToolbar(props) {
             <IconButton>
                 <AddIcon variant="contained" onClick={() => {handleOpen()}}/>
             </IconButton>
-            <AddToDo open={createOpen} handleClose={handleClose}/>
+            <AddToDo open={createOpen} handleClose={handleClose} update={update}/>
         </Toolbar>
     )
 }
@@ -75,37 +78,38 @@ function EnhancedToolbar(props) {
 function EnhancedTableRow(props) {
     const { row, index, update } = props;
     const [expand, setExpand] = useState(false);
-    const [selected, setSelected] = useState([]);
 
     const handleDelete = (id) => {
         deleteToDo(id).then(() => {
             alert("To-do event deleted");
+            update();
         })
-        console.log(id);
-        console.log("deleted")
     }
 
-    const handleClickCheckBox = (event, description) => {
-        const selectedIndex = selected.indexOf(description);
-        let newSelected = [];
+    const handleClickCheckBox = (event, status) => {
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, description);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
+        // Set the to-do status as done
+        let statusChange = "done";
+        if (status === "done") {
+            statusChange = "to do";
         }
+        
+        const data = {
+            "id": row.id,
+            "date_time": row.date_time,
+            "description": row.description,
+            "status": statusChange
+        }
+        // console.log(data)
 
-        setSelected(newSelected);
+        updateToDo(data).then(res => {
+            if (res.code === 200) {
+                // console.log("Set to done")
+                update();
+            }
+        })
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
 
     const checkInProgress = (row) =>{
         if (row.status === "to do") {
@@ -142,10 +146,20 @@ function EnhancedTableRow(props) {
         }
 
     }
-    
-    const isItemSelected = isSelected(row.description);
     const labelId = `enhanced-table-checkbox-${index}`;
     const rowLabel = getRowLabel(checkInProgress(row));
+    
+    // Checkbox selected
+    const isSelected = (status) => {
+        // console.log(status)
+        if (status === "done") {
+            return true;
+        }
+        return false;
+    }
+    
+    const [selected, setSelected] = useState(isSelected(row.status))
+
 
     // For edit to-do
     const [editOpen, setEditOpen] = useState(false);
@@ -165,16 +179,15 @@ function EnhancedTableRow(props) {
                 id={row.id}
                 hover
                 role="checkbox"
-                aria-checked={isItemSelected}
+                aria-checked={selected}
                 tabIndex={-1}
                 key={row.description}
-                selected={isItemSelected}
             >
                 <TableCell padding="checkbox" style={{borderBottom:"none"}}>
                     <Checkbox
                         color="primary"
-                        checked={isItemSelected}
-                        onClick={(event) => handleClickCheckBox(event, row.description)}
+                        checked={selected}
+                        onClick={(event) => handleClickCheckBox(event, row.status)}
                         inputProps={{
                             'aria-labelledby': labelId,
                         }}
@@ -215,7 +228,7 @@ function EnhancedTableRow(props) {
                                     <IconButton size="small" onClick={() => {handleEditOpen()}}>
                                         <EditIcon />
                                     </IconButton>
-                                    <UpdateToDo original={row} open={editOpen} handleClose={handleEditClose} />
+                                    <UpdateToDo original={row} open={editOpen} handleClose={handleEditClose} update={update}/>
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}
@@ -237,7 +250,12 @@ function EnhancedTableRow(props) {
 
 export default function ToDoList() {
     const [loading, setLoading] = useState(true);
+    const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
+
+    const update = () => {
+        setTimeout(() => {setUpdateCount(updateCount + 1)}, 1000);
+    }
 
     useEffect(() => {
         getAllToDo().then(res => {
@@ -249,7 +267,7 @@ export default function ToDoList() {
                 alert(res.msg)
             }
         })
-    }, [])
+    }, [updateCount])
 
     useEffect(() => {
         setLoading(false);
@@ -263,14 +281,14 @@ export default function ToDoList() {
     return (
         <Grid sx={{ width: '100%', align: 'center'}}>
             <Paper sx={{ width: '50%', mb: 2 }}>
-                <EnhancedToolbar />
+                <EnhancedToolbar update={update}/>
                 <TableContainer>
                     <Table
                         aria-labelledby="tableTitle"
                     >
                         {rows.map((row, index) => {
                             return (
-                                <EnhancedTableRow row={row} index={index}/>
+                                <EnhancedTableRow row={row} index={index} update={update}/>
                             )
                         })}
 

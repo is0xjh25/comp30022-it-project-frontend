@@ -13,7 +13,7 @@ import { Dialog, DialogTitle } from '@mui/material';
 import { updateToDo } from '../../api/ToDoList';
 
 export default function UpdateToDo(props) {
-    const { original, open, handleClose } = props;
+    const { original, open, handleClose, update } = props;
 
     // Attributes for updating to-do
     const [time, setTime] = useState(original.date_time);
@@ -22,8 +22,8 @@ export default function UpdateToDo(props) {
 
     const handleChangeTime = (e) => {
         setTime(e.toISOString().replace("T", " ").substring(0, 16));
-        console.log(e)
-        console.log(time)
+        // console.log(e)
+        // console.log(time)
     }
 
     const handleOnChange = (e) => {
@@ -33,7 +33,7 @@ export default function UpdateToDo(props) {
     }
 
     const handleUpdate = () => {
-        console.log(original)
+        // console.log(original)
 
         // if (time !== original.date_time) {
         //     setTime(time.toISOString().replace("T", " ").substring(0, 16));
@@ -49,11 +49,11 @@ export default function UpdateToDo(props) {
             "description": description,
             "status": "to do"
         }
-        console.log(data)
 
         updateToDo(data).then(res => {
             if (res.code === 200) {
                 alert("To-do updated successfully");
+                update();
                 handleClose();
             }
         })

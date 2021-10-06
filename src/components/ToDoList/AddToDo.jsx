@@ -13,7 +13,7 @@ import { Dialog, DialogTitle } from '@mui/material';
 import { createNewToDo } from '../../api/ToDoList';
 
 export default function AddToDo(props) {
-    const { open, handleClose } = props;
+    const { open, handleClose, update } = props;
 
     // Attributes for creating to-do
     const [time, setTime] = useState(new Date());
@@ -26,9 +26,9 @@ export default function AddToDo(props) {
     }
 
     const handleCreate = () => {
-        console.log(time)
+        // console.log(time)
         const dateTime = time.toISOString().replace("T", " ").substring(0, 16);
-        console.log(dateTime)
+        // console.log(dateTime)
         
         const data = {
             "date_time": dateTime,
@@ -39,6 +39,7 @@ export default function AddToDo(props) {
         createNewToDo(data).then(res => {
             if (res.code === 200) {
                 alert("Create new to-do successfully");
+                update();
                 handleClose();
             }
         })
