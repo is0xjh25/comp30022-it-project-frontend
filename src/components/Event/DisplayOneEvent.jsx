@@ -8,8 +8,8 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact } from "../../api/Event";
 import AlertDialog from "../Dialog/AlertDialog";
 
-export default function DisplayOneEvent(eventId) {
-	eventId = 22;
+export default function DisplayOneEvent(props) {
+	const { eventId, handleClose } = props;
 	const [pageStatus, setPageStatus] = useState("view");	
 	const [status, setStatus] = useState("");
 	const [startTime, setStartTime] = useState(new Date());
@@ -120,7 +120,7 @@ export default function DisplayOneEvent(eventId) {
 
 	// Get event information
 	useEffect(() => {
-		getEventInfo(22).then(res => {
+		getEventInfo(eventId).then(res => {
 			if (res.code===200) {
 				setData(res.data);
 				setStartTime(res.data.start_time);
@@ -143,7 +143,7 @@ export default function DisplayOneEvent(eventId) {
     };
 
 	const handleBack = () => {
-		//has to be done
+		handleClose();
 	}
 
 	const handleEdit = () => {

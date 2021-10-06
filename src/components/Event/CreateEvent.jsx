@@ -7,8 +7,8 @@ import TextField from '@mui/material/TextField';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createEvent } from "../../api/Event";
 
-export default function CreateEvent() {
-
+export default function CreateEvent(props) {
+	const { handleClose } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
@@ -59,16 +59,17 @@ export default function CreateEvent() {
 		const transformFinishTime = finishTime.toISOString().replace("T", " ").substring(0,16);
 
 		createEvent(transformStartTime, transformFinishTime, description).then(res => {
-			if (res.ok) {
-				alert("Create event successfully");	
+			if (res.code===200) {
+				alert("Create event successfully");
+				handleClose();	
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		});
 	}
 
-	const handleDiscard = () => {
-
+	const confirmDiscard = () => {
+		handleClose();
 	}
 
 	return (
@@ -103,7 +104,7 @@ export default function CreateEvent() {
 				<TextField id="description" multiline rows={10} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
-				<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
+				<Button variant="outlined" style={classes.discardButton} onClick={confirmDiscard}>Discard</Button>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
 				<Button variant="outlined" style={classes.createButton} onClick={handleCreate}>Create</Button>
