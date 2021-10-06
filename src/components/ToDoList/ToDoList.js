@@ -30,14 +30,17 @@ import { Button } from '@mui/material'
 
 import {
     getAllToDo,
-    createNewToDo,
-    deleteToDo,
-    updateToDo
+    updateToDo,
+    deleteToDo
 } from '../../api/ToDoList';
+
 import AddToDo from './AddToDo';
+import UpdateToDo from './UpdateToDo';
 
 
 function EnhancedToolbar(props) {
+    const { update } = props;
+
     // Use state for pop-up
     const [createOpen, setCreateOpen] = useState(false);
 
@@ -67,7 +70,7 @@ function EnhancedToolbar(props) {
             <IconButton>
                 <AddIcon variant="contained" onClick={() => {handleOpen()}}/>
             </IconButton>
-            <AddToDo open={createOpen} handleClose={handleClose}/>
+            <AddToDo open={createOpen} handleClose={handleClose} update={update}/>
         </Toolbar>
     )
 }
@@ -75,39 +78,8 @@ function EnhancedToolbar(props) {
 function EnhancedTableRow(props) {
     const { row, index, update } = props;
     const [expand, setExpand] = useState(false);
-    const [selected, setSelected] = useState([]);
 
-    const handleEdit = () => {
-        console.log("edit to-do")
-    }
-
-    const handleDelete = (id) => {
-        deleteToDo(id);
-        console.log(id)
-    }
-
-    const handleClickCheckBox = (event, description) => {
-        const selectedIndex = selected.indexOf(description);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, description);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
+    // For displaying to-do
     const checkInProgress = (row) =>{
         if (row.status === "to do") {
             // Get the scheduled time of the to-do list
@@ -143,10 +115,63 @@ function EnhancedTableRow(props) {
         }
 
     }
-    
-    const isItemSelected = isSelected(row.description);
     const labelId = `enhanced-table-checkbox-${index}`;
     const rowLabel = getRowLabel(checkInProgress(row));
+    
+    // For deleting to-do
+    const handleDelete = (id) => {
+        deleteToDo(id).then(() => {
+            alert("To-do event deleted");
+            update();
+        })
+    }
+    
+    // For selecting checkbox
+    const isSelected = (status) => {
+        // console.log(status)
+        if (status === "done") {
+            return true;
+        }
+        return false;
+    }
+    
+    const [selected, setSelected] = useState(isSelected(row.status))
+
+    const handleClickCheckBox = (event, status) => {
+
+        // Set the to-do status as done
+        let statusChange = "done";
+        if (status === "done") {
+            statusChange = "to do";
+        }
+        
+        const data = {
+            "id": row.id,
+            "date_time": row.date_time,
+            "description": row.description,
+            "status": statusChange
+        }
+        // console.log(data)
+
+        updateToDo(data).then(res => {
+            if (res.code === 200) {
+                // console.log("Set to done")
+                update();
+            }
+        })
+    };
+
+    // For edit to-do
+    const [editOpen, setEditOpen] = useState(false);
+
+    const handleEditOpen = () => {
+        setEditOpen(true);
+        console.log(`edit to-do "${row.description}"`);
+    }
+
+    const handleEditClose = () => {
+        setEditOpen(false);
+    }
 
     return (
         <React.Fragment>
@@ -154,16 +179,15 @@ function EnhancedTableRow(props) {
                 id={row.id}
                 hover
                 role="checkbox"
-                aria-checked={isItemSelected}
+                aria-checked={selected}
                 tabIndex={-1}
                 key={row.description}
-                selected={isItemSelected}
             >
                 <TableCell padding="checkbox" style={{borderBottom:"none"}}>
                     <Checkbox
                         color="primary"
-                        checked={isItemSelected}
-                        onClick={(event) => handleClickCheckBox(event, row.description)}
+                        checked={selected}
+                        onClick={(event) => handleClickCheckBox(event, row.status)}
                         inputProps={{
                             'aria-labelledby': labelId,
                         }}
@@ -201,9 +225,10 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '5%' }}
                                 >
-                                    <IconButton size="small" onClick={() => {handleEdit()}}>
+                                    <IconButton size="small" onClick={() => {handleEditOpen()}}>
                                         <EditIcon />
                                     </IconButton>
+                                    <UpdateToDo original={row} open={editOpen} handleClose={handleEditClose} update={update}/>
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}
@@ -225,7 +250,12 @@ function EnhancedTableRow(props) {
 
 export default function ToDoList() {
     const [loading, setLoading] = useState(true);
+    const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
+
+    const update = () => {
+        setTimeout(() => {setUpdateCount(updateCount + 1)}, 1000);
+    }
 
     useEffect(() => {
         getAllToDo().then(res => {
@@ -237,7 +267,7 @@ export default function ToDoList() {
                 alert(res.msg)
             }
         })
-    }, [])
+    }, [updateCount])
 
     useEffect(() => {
         setLoading(false);
@@ -251,14 +281,14 @@ export default function ToDoList() {
     return (
         <Grid sx={{ width: '100%', align: 'center'}}>
             <Paper sx={{ width: '50%', mb: 2 }}>
-                <EnhancedToolbar />
+                <EnhancedToolbar update={update}/>
                 <TableContainer>
                     <Table
                         aria-labelledby="tableTitle"
                     >
                         {rows.map((row, index) => {
                             return (
-                                <EnhancedTableRow row={row} index={index}/>
+                                <EnhancedTableRow row={row} index={index} update={update}/>
                             )
                         })}
 
@@ -270,102 +300,3 @@ export default function ToDoList() {
         </Grid>
     )
 }
-
-
-// function EnhancedTabl() {
-//     const [selected, setSelected] = React.useState([]);
-
-//     const handleClick = (event, name) => {
-//         const selectedIndex = selected.indexOf(name);
-//         let newSelected = [];
-
-//         if (selectedIndex === -1) {
-//             newSelected = newSelected.concat(selected, name);
-//         } else if (selectedIndex === 0) {
-//             newSelected = newSelected.concat(selected.slice(1));
-//         } else if (selectedIndex === selected.length - 1) {
-//             newSelected = newSelected.concat(selected.slice(0, -1));
-//         } else if (selectedIndex > 0) {
-//             newSelected = newSelected.concat(
-//                 selected.slice(0, selectedIndex),
-//                 selected.slice(selectedIndex + 1),
-//             );
-//         }
-
-//         setSelected(newSelected);
-//     };
-
-//     const isSelected = (name) => selected.indexOf(name) !== -1;
-
-//     // Avoid a layout jump when reaching the last page with empty rows.
-//     // const emptyRows =
-//     //     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-//     return (
-//         <Box sx={{ width: '100%' }}>
-//             <Paper sx={{ width: '100%', mb: 2 }}>
-//                 <TableContainer>
-//                     <Table
-//                         sx={{ minWidth: 750 }}
-//                         aria-labelledby="tableTitle"
-//                         size={dense ? 'small' : 'medium'}
-//                     >
-//                         <TableBody>
-                            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                                rows.slice().sort(getComparator(order, orderBy)) */}
-//                             {rows
-//                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-//                                 .map((row, index) => {
-//                                     const isItemSelected = isSelected(row.name);
-//                                     const labelId = `enhanced-table-checkbox-${index}`;
-
-//                                 return (
-//                                     <TableRow
-//                                         hover
-//                                         onClick={(event) => handleClick(event, row.name)}
-//                                         role="checkbox"
-//                                         aria-checked={isItemSelected}
-//                                         tabIndex={-1}
-//                                         key={row.name}
-//                                         selected={isItemSelected}
-//                                     >
-//                                         <TableCell padding="checkbox">
-//                                             <Checkbox
-//                                                 color="primary"
-//                                                 checked={isItemSelected}
-//                                                 inputProps={{
-//                                                     'aria-labelledby': labelId,
-//                                                 }}
-//                                             />
-//                                         </TableCell>
-//                                         <TableCell
-//                                             component="th"
-//                                             id={labelId}
-//                                             scope="row"
-//                                             padding="none"
-//                                         >
-//                                             {row.name}
-//                                         </TableCell>
-//                                         <TableCell align="right">{row.calories}</TableCell>
-//                                         <TableCell align="right">{row.fat}</TableCell>
-//                                         <TableCell align="right">{row.carbs}</TableCell>
-//                                         <TableCell align="right">{row.protein}</TableCell>
-//                                     </TableRow>
-//                                 );
-//                                 })}
-//                             {emptyRows > 0 && (
-//                                 <TableRow
-//                                     style={{
-//                                         height: (dense ? 33 : 53) * emptyRows,
-//                                     }}
-//                                     >
-//                                     <TableCell colSpan={6} />
-//                                 </TableRow>
-//                             )}
-//                         </TableBody>
-//                     </Table>
-//                 </TableContainer>
-//             </Paper>
-//         </Box>
-//     );
-// }
