@@ -107,7 +107,7 @@ function OwnedDepartment(props) {
 
     // link the department to member management page
     return(
-        <Grid key={department.id} item alignItems={'center'} xs={8}>
+        <Grid key={department.id} item xs={8}>
             <Box className={classes.ownBox} bgcolor="success.main">
                 <Button onClick={() => showMembers(department.id)} alignItems='center'>
                     {department.name}
@@ -220,7 +220,7 @@ export default function Department(props) {
             )
         } else if(department.status==="member") {
             member.push(
-                <Grid key={department.id} item alignItems="center" xs={8}>
+                <Grid key={department.id} item xs={8}>
                     <Box className={classes.memberBox} bgcolor="info.main">
                         <Button onClick={() => showMembers(department.id)}>
                             {department.name}

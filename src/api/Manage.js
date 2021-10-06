@@ -361,9 +361,30 @@ function getMyPermissionLevel(departmentId) {
     })
 }
 
+function searchMemberInOrg(orgId, searchKey) {
+    const size = 999;
+    const url = `${BASE_URL}/organization/searchMember?organization_id=${orgId}&search_key=${searchKey}&size=${size}&current=${1}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 export {
     getAllUsers,
     searchMember,
+    searchMemberInOrg,
     changePermission,
     acceptUser,
     deleteUser,
