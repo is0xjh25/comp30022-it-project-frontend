@@ -11,6 +11,11 @@ import DisplayOneEvent from "./DisplayOneEvent";
 import Paper from '@mui/material/Paper';
 import { Dialog } from '@mui/material';
 
+import {
+    Box,
+
+} from '@mui/material'
+
 export default function DisplayEvents() {
 
 	const [month, setMonth] = useState("");
@@ -111,31 +116,35 @@ export default function DisplayEvents() {
 			color: '#FFFFFF',
 			fontSize: '20px',
 			fontWeight: 'bold'	
-		}
+		},
+        calendar: {
+            width: '80%'
+        }
 	};
 
 	
 	return(
 		<Fragment>
-			<Grid container rowSpacing={10} sx={{pt:10, px:85}}>
-				<Grid item xs={12}>
-					<MuiPickersUtilsProvider utils={DateFnsUtils}>
-						<DatePicker
-						autoOk
-						orientation="landscape"
-						variant="static"
-						openTo="date"
-						renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-							const isSelected = isInCurrentMonth && selectedDays.includes(date.getDate());
-							// You can also use our internal <Day /> component
-							return <Badge color="secondary" badgeContent={isSelected ? "4" : undefined}>{dayComponent}</Badge>;
-						}}
-						value={date}
-						onChange={handleOnChange}
-						/>
-					</MuiPickersUtilsProvider>
-				</Grid>
-			</Grid>
+
+            <Box xs={12} sx={{width: '54%', mx: '23%'}}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <DatePicker
+                    
+                    autoOk
+                    orientation="landscape"
+                    variant="static"
+                    openTo="date"
+                    renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
+                        const isSelected = isInCurrentMonth && selectedDays.includes(date.getDate());
+                        // You can also use our internal <Day /> component
+                        return <Badge color="secondary" badgeContent={isSelected ? "4" : undefined}>{dayComponent}</Badge>;
+                    }}
+                    value={date}
+                    onChange={handleOnChange}
+                    />
+                </MuiPickersUtilsProvider>
+            </Box>
+
 			<Grid container rowSpacing={10} xs={12} sx={{pt:10}}>
 				<Grid container item xs={12} rowSpacing={5}>
 					<Grid container item xs={12}>

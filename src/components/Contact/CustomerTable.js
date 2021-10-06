@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog } from '@mui/material';
 import AlertDialog from '../Dialog/AlertDialog';
-import { getAllCustomer, deleteCustomer, searchCustomer } from '../../api/Contact';
+import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -160,22 +160,29 @@ function EnhancedTableRow(props) {
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        deleteCustomer(row.id);
-        alert(`${row.name} is deleted`);
-        setAlertOpen(false);
-        update();
+        deleteCustomerBackend(row.id).then(res => {
+			if (res.code === 200) {
+                alert(`${row.name} is deleted!`);
+                setAlertOpen(false);
+                update();
+			} else {
+				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+			}
+
+		});
+
     }
 
     //=============== Display Delete Button =============
     // If the user's authority level meets the requirement, display the delete button
-    var display;
+    let display;
     if (permissionLevel >= 3) {
         display = (
-                <div>
-                    <IconButton onClick={deleteCustomer}>
-                        <DeleteIcon />
-                    </IconButton>
-                </div>)
+            <div>
+                <IconButton onClick={deleteCustomer}>
+                    <DeleteIcon />
+                </IconButton>
+            </div>)
     } else {
         display = (<div></div>)
     }
