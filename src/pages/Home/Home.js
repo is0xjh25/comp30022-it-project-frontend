@@ -11,6 +11,9 @@ import DisplayCustomer from '../../components/Contact/DisplayCustomer';
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
 
+import DisplayEvents from '../../components/Event/DisplayEvents';
+import ToDoList from '../../components/ToDoList/ToDoList';
+
 import {
     Button,
     Dialog,
@@ -21,6 +24,8 @@ import {
     FormControl,
     Select,
     OutlinedInput,
+    Stack,
+    Grid,
     
 } from '@mui/material'
 
@@ -37,9 +42,24 @@ import {
   Redirect,
   useHistory
 } from "react-router-dom";
+// import { Grid } from '@material-ui/core';
+
 
 
 require('dotenv').config();
+
+function Events(props) {
+    return (
+        <Grid container sx={{mt: 10}}>
+            <Grid item xs={8}>
+                <DisplayEvents/>
+            </Grid>
+            <Grid item xs={4}>
+                <ToDoList/>
+            </Grid>
+        </Grid>
+    )
+}
 
 
 // The component to render when Manage is selected
@@ -284,6 +304,9 @@ function Home(props) {
             </Route>
             <Route path={`${url}Contacts`}>
                 <Contacts/>
+            </Route>
+            <Route path={`${url}Events`}>
+                <Events/>
             </Route>
             <Route path={`${url}Manage`}>
                 <Manage/>

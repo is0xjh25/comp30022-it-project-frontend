@@ -18,18 +18,18 @@ function PageNavigator() {
             <Route path ='/login'>
                 <Login/>
             </Route>
-            <Route path='/todo'>
+            {/* <Route path='/todo'>
                 <ToDoList/>
-            </Route>
+            </Route> */}
             <Route path ='/verify'>
                 <Verify/>
             </Route>
             <Route path ='/user'>
                 <DisplayUser/>
             </Route>
-            <Route path ='/events'>
+            {/* <Route path ='/events'>
                 <DisplayEvents/>
-            </Route>
+            </Route> */}
             <Route path='/'>
                 <Home/>
             </Route>

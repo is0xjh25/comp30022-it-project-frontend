@@ -279,8 +279,8 @@ export default function ToDoList() {
 
 
     return (
-        <Grid sx={{ width: '100%', align: 'center'}}>
-            <Paper sx={{ width: '50%', mb: 2 }}>
+        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedToolbar update={update}/>
                 <TableContainer>
                     <Table
