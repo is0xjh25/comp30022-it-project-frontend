@@ -20,10 +20,13 @@ export default function UpdateToDo(props) {
     const [dateTime, setDateTime] = useState(new Date());
     const [description, setDescription] = useState(original.description);
 
+    useEffect(() => {
+        setTime(new Date());
+        setDescription("");
+    }, [open])
+
     const handleChangeTime = (e) => {
         setTime(e.toISOString().replace("T", " ").substring(0, 16));
-        // console.log(e)
-        // console.log(time)
     }
 
     const handleOnChange = (e) => {
