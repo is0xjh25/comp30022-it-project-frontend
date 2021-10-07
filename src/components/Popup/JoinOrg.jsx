@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 // import DialogTitle from '@material-ui/core/DialogTitle';
 // import ToggleButton from '@material-ui/lab/ToggleButton';
 // import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {handleSearchOrg, handleJoinOrg} from '../../api/Manage';
+import {searchOrg, joinOrg} from '../../api/Manage';
 import {
     Dialog,
     DialogActions,
@@ -17,7 +17,8 @@ import {
     DialogTitle,
     ToggleButton,
     ToggleButtonGroup,
-} from '@mui/material'
+} from '@mui/material';
+
 
 export default function JoinOrg(props) {
 	

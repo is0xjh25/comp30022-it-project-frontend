@@ -2,22 +2,32 @@ import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getEventInfo, updateEvent, deleteEventContact } from "../../api/Event";
+import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import AlertDialog from "../Dialog/AlertDialog";
+import { searchAllCustomers } from "../../api/Contact";
+import {
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    TextField,
+    DialogActions,
+    ToggleButtonGroup,
+    ToggleButton
+} from '@mui/material'
 
 export default function DisplayOneEvent(props) {
+	
 	const { eventId, handleClose } = props;
 	const [pageStatus, setPageStatus] = useState("view");	
 	const [status, setStatus] = useState("");
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState("");
-	const [contacts, setContacts] = useState([]);
 	const [data, setData] = useState({});
-	const [selectAttend, setSelectAttend] = useState(0);
+	const [selectedAttend, setSelectedAttend] = useState(0);
 
 	const classes = {
 		title: {
@@ -83,11 +93,41 @@ export default function DisplayOneEvent(props) {
 	const deleteAlertMessage = "Do you want to remove this contact from this event?";
 	const handleDelete = function(attendId) {
 		setDeleteAlertOpen(true);
-		setSelectAttend(attendId);
+		setSelectedAttend(attendId);
 	}
 	const handleDeleteAlertConfirm = function() {
 		confirmDelete();
 		setDeleteAlertOpen(false);
+	}
+
+	//================ Add Contact ==================
+	const [addContactOpen, setAddContactOpen] = useState(false);
+	const [contacts, setContacts] = useState([]);
+	const [selectedContact, setSelectedContact] = useState(undefined);
+
+	const handleAddContact = function() {
+		setAddContactOpen(true);
+	}
+	
+	const handleAddContactCancel = function() {
+		setAddContactOpen(false);
+		setSelectedContact(undefined);
+		setContacts([]);
+	}
+
+	const handleSelectContact = (event, e) => {
+		setSelectedContact(e);
+	}
+
+	const confirmAddContact = () => {
+		addEventContact(eventId, selectedContact).then(res => {
+			if (res.code===200) {
+				alert("Successfully added");
+				handleClose();
+			} else {
+				alert(res.msg);
+			}
+		})
 	}
 
 	// Check whether the detail has been changed
@@ -139,6 +179,18 @@ export default function DisplayOneEvent(props) {
 			setDescription(e.target.value);
 		} else if (e.target.id === "status") {
 			setStatus(e.target.value);
+		} else if (e.target.id === "contact") {
+			searchAllCustomers(e.target.value).then(res => {
+				if (res.code === 200) {
+					const data = res.data
+					data.forEach(row => {
+						row.name = row.first_name + ' ' + row.last_name
+					});
+					setContacts(data);
+					} else {
+					alert(res.msg);
+				}
+			})
 		}
     };
 
@@ -174,17 +226,13 @@ export default function DisplayOneEvent(props) {
 
 	// Remove a contact from this event
 	const confirmDelete = () => {
-		deleteEventContact(selectAttend).then(res => {
+		deleteEventContact(selectedAttend).then(res => {
 			if (res.code===200) {
 				alert("Successfully Deleted");
 			} else {
 				alert(res.msg);
 			}
 		})
-	}
-
-	const handleAddContact = () => {
-
 	}
 
 	// Formatting the time
@@ -362,6 +410,38 @@ export default function DisplayOneEvent(props) {
 			handleClose={() => { setDeleteAlertOpen(false) }}
 			handleConfirm={handleDeleteAlertConfirm}
 			/>
+			<Dialog open={addContactOpen} onClose={handleAddContactCancel} aria-labelledby="form-dialog-title">
+				<DialogTitle id="form-dialog-title">Add a Contact</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						Start typing the name of the contact.
+					</DialogContentText>
+					<TextField
+						autoFocus
+						margin="dense"
+						id="contact"
+						label="search"
+						type="contact"
+						fullWidth
+						onChange={handleOnChange}
+					/>
+					<ToggleButtonGroup orientation="vertical" value={selectedContact} exclusive onChange={handleSelectContact} sx={{display:"flex", justifyContent: 'center'}}>
+						{contacts.map( (contact) => {
+							return (<ToggleButton key={contact.id} value={contact.id} aria-label={contact.name}>
+								{contact.name}
+							</ToggleButton>)
+						})}
+					</ToggleButtonGroup>
+				</DialogContent>
+				<DialogActions>
+				<Button onClick={handleAddContactCancel} color="primary">
+					Cancel
+				</Button>
+				<Button disabled={selectedContact===undefined} onClick={confirmAddContact}>
+					Add
+				</Button>
+				</DialogActions>
+            </Dialog>
 		</Grid> 
 	}
 

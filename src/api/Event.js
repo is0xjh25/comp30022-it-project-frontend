@@ -91,7 +91,7 @@ function addEventContact(eventId, contactId) {
     };
 
     return new Promise((resolve, reject) => {
-        fetch(BASE_URL + "/event", info)
+        fetch(BASE_URL + "/event/contact", info)
         .then(res => {
             res.json().then(resBody => {
                 resolve(resBody)
@@ -140,6 +140,25 @@ function getMultipleEvents(startTime, finishTime) {
     })
 }
 
+// Search amount of events per day in one month
+function getMonthlyEvents(year, month) {
+    
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
+    };
+
+    return new Promise((resolve, reject) => {
+        fetch(`${BASE_URL}/event/amount?year=${year}&month=${month}`, info)
+        .then(res => {
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
+        })
+        .catch(error => {reject(error);})
+    })
+}
+
 export {
 	getEventInfo,
 	createEvent,
@@ -147,5 +166,6 @@ export {
 	deleteEvent,
 	addEventContact,
 	deleteEventContact,
-	getMultipleEvents
+	getMultipleEvents,
+    getMonthlyEvents
 }
