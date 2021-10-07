@@ -28,6 +28,12 @@ export default function DisplayOneEvent(props) {
 	const [description, setDescription] = useState("");
 	const [data, setData] = useState({});
 	const [selectedAttend, setSelectedAttend] = useState(0);
+	const [attendents, setAttendents] = useState([]);
+	const [updateCount, setUpdateCount] = useState(0);
+
+	const update = () => {
+        setTimeout(() => {setUpdateCount(updateCount + 1)}, 1000);
+    }
 
 	const classes = {
 		title: {
@@ -123,7 +129,8 @@ export default function DisplayOneEvent(props) {
 		addEventContact(eventId, selectedContact).then(res => {
 			if (res.code===200) {
 				alert("Successfully added");
-				handleClose();
+				setAddContactOpen(false);
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -165,14 +172,14 @@ export default function DisplayOneEvent(props) {
 				setData(res.data);
 				setStartTime(res.data.start_time);
 				setFinishTime(res.data.finish_time);
-				setContacts(res.data.contact_list);
+				setAttendents(res.data.contact_list);
 				setDescription(res.data.description);
 				setStatus(res.data.status);
 			} else {
 				alert(res.msg);
 			}
 		})
-	}, [pageStatus])
+	}, [pageStatus, updateCount])
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "description") {
@@ -214,6 +221,7 @@ export default function DisplayOneEvent(props) {
 			updateEvent(body).then(res => {
 				if (res.code===200) {
 					alert("Successfully updated");
+					update();
 					setPageStatus("view");
 				} else {
 					alert(res.msg);
@@ -229,6 +237,7 @@ export default function DisplayOneEvent(props) {
 		deleteEventContact(selectedAttend).then(res => {
 			if (res.code===200) {
 				alert("Successfully Deleted");
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -275,8 +284,8 @@ export default function DisplayOneEvent(props) {
 					Email
 				</Grid>
 				<Grid container item xs={12}>
-					{typeof contacts !== 'undefined' && contacts.length > 0 ?
-						contacts.map((e) => {						
+					{typeof attendents !== 'undefined' && attendents.length > 0 ?
+						attendents.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e}>
 								<Grid item xs={3} textAlign='center'>
@@ -351,8 +360,8 @@ export default function DisplayOneEvent(props) {
 					Email
 				</Grid>
 				<Grid container item xs={12} rowSpacing={5}>
-					{typeof contacts !== 'undefined' && contacts.length > 0 ?
-						contacts.map((e) => {						
+					{typeof data.contact_list !== 'undefined' && data.contact_list.length > 0 ?
+						data.contact_list.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}}>
 								<Grid item xs={2} textAlign='center'>
