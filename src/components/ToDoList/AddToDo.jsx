@@ -19,6 +19,11 @@ export default function AddToDo(props) {
     const [time, setTime] = useState(new Date());
     const [description, setDescription] = useState("");
 
+    useEffect(() => {
+        setTime(new Date());
+        setDescription("");
+    }, [open])
+
     const handleOnChange = (e) => {
         if (e.target.id === "description") {
             setDescription(e.target.value);

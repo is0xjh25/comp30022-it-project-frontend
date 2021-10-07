@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import { visuallyHidden } from '@mui/utils';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
@@ -26,7 +17,6 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Button } from '@mui/material'
 
 import {
     getAllToDo,
@@ -37,7 +27,7 @@ import {
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
-
+// Implement a new toolbar to hold table title and add new to-do button
 function EnhancedToolbar(props) {
     const { update } = props;
 
@@ -75,8 +65,9 @@ function EnhancedToolbar(props) {
     )
 }
 
+// Implement a new table row
 function EnhancedTableRow(props) {
-    const { row, index, update } = props;
+    const { row, update } = props;
     const [expand, setExpand] = useState(false);
 
     // For displaying to-do
@@ -115,7 +106,7 @@ function EnhancedTableRow(props) {
         }
 
     }
-    const labelId = `enhanced-table-checkbox-${index}`;
+
     const rowLabel = getRowLabel(checkInProgress(row));
     
     // For deleting to-do
@@ -128,17 +119,16 @@ function EnhancedTableRow(props) {
     
     // For selecting checkbox
     const isSelected = (status) => {
-        // console.log(status)
         if (status === "done") {
             return true;
         }
         return false;
     }
     
+    // For displaying if a checkbox is checked
     const [selected, setSelected] = useState(isSelected(row.status))
 
     const handleClickCheckBox = (event, status) => {
-
         // Set the to-do status as done
         let statusChange = "done";
         if (status === "done") {
@@ -151,27 +141,30 @@ function EnhancedTableRow(props) {
             "description": row.description,
             "status": statusChange
         }
-        // console.log(data)
 
         updateToDo(data).then(res => {
             if (res.code === 200) {
-                // console.log("Set to done")
                 update();
             }
         })
     };
 
-    // For edit to-do
+    // For editing to-do
     const [editOpen, setEditOpen] = useState(false);
 
     const handleEditOpen = () => {
         setEditOpen(true);
-        console.log(`edit to-do "${row.description}"`);
     }
 
     const handleEditClose = () => {
         setEditOpen(false);
     }
+
+    // Update expand and selected everytime the row is updated
+    useEffect(() => {
+        setExpand(false)
+        setSelected(isSelected(row.status))
+    }, [row])
 
     return (
         <React.Fragment>
@@ -179,7 +172,6 @@ function EnhancedTableRow(props) {
                 id={row.id}
                 hover
                 role="checkbox"
-                aria-checked={selected}
                 tabIndex={-1}
                 key={row.description}
             >
@@ -188,9 +180,9 @@ function EnhancedTableRow(props) {
                         color="primary"
                         checked={selected}
                         onClick={(event) => handleClickCheckBox(event, row.status)}
-                        inputProps={{
-                            'aria-labelledby': labelId,
-                        }}
+                        // inputProps={{
+                        //     'aria-labelledby': labelId,
+                        // }}
                     />
                 </TableCell>
                 <TableCell 
@@ -260,7 +252,6 @@ export default function ToDoList() {
     useEffect(() => {
         getAllToDo().then(res => {
             if (res.code === 200) {
-                console.log(res)
                 const data = res.data;
                 setRows(data);
             } else {
@@ -286,9 +277,9 @@ export default function ToDoList() {
                     <Table
                         aria-labelledby="tableTitle"
                     >
-                        {rows.map((row, index) => {
+                        {rows.map((row) => {
                             return (
-                                <EnhancedTableRow row={row} index={index} update={update}/>
+                                <EnhancedTableRow row={row} update={update}/>
                             )
                         })}
 
