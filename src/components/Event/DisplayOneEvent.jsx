@@ -1,14 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import AlertDialog from "../Dialog/AlertDialog";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
-import AlertDialog from "../Dialog/AlertDialog";
 import { searchAllCustomers } from "../../api/Contact";
 import {
+	Box, 
     Button,
     Dialog,
+	Grid,
     DialogTitle,
     DialogContent,
     DialogContentText,
@@ -30,9 +30,8 @@ export default function DisplayOneEvent(props) {
 	const [selectedAttend, setSelectedAttend] = useState(0);
 	const [attendents, setAttendents] = useState([]);
 	const [updateCount, setUpdateCount] = useState(0);
-
 	const update = () => {
-        setTimeout(() => {setUpdateCount(updateCount + 1)}, 1000);
+        setTimeout(() => { setUpdateCount(updateCount + 1) }, 1000);
     }
 
 	const classes = {
@@ -81,7 +80,7 @@ export default function DisplayOneEvent(props) {
 		setDiscardAlertOpen(false);
 	}
 
-	//Alart Dialog Update
+	//================ Update Alart Popup ==================
 	const [updateAlertOpen, setUpdateAlertOpen] = useState(false);
 	const updateAlertTitle = 'Update Confirm';
 	const updateAlertMessage = "Do you want to update?";
@@ -93,7 +92,7 @@ export default function DisplayOneEvent(props) {
 		setUpdateAlertOpen(false);
 	}
 
-	//Alart Dialog Delete Contact
+	//================ Delete Alart Popup ==================
 	const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 	const deleteAlertTitle = 'Delete Confirm';
 	const deleteAlertMessage = "Do you want to remove this contact from this event?";
@@ -106,25 +105,21 @@ export default function DisplayOneEvent(props) {
 		setDeleteAlertOpen(false);
 	}
 
-	//================ Add Contact ==================
+	//================ Add Contact Popup ==================
 	const [addContactOpen, setAddContactOpen] = useState(false);
 	const [contacts, setContacts] = useState([]);
 	const [selectedContact, setSelectedContact] = useState(undefined);
-
 	const handleAddContact = function() {
 		setAddContactOpen(true);
 	}
-	
 	const handleAddContactCancel = function() {
 		setAddContactOpen(false);
 		setSelectedContact(undefined);
 		setContacts([]);
 	}
-
 	const handleSelectContact = (event, e) => {
 		setSelectedContact(e);
 	}
-
 	const confirmAddContact = () => {
 		addEventContact(eventId, selectedContact).then(res => {
 			if (res.code===200) {
@@ -158,28 +153,8 @@ export default function DisplayOneEvent(props) {
 			body["status"] = status;
 		}
 
-		if (contacts !== data.contact_list) {
-			body["contact_list"] = contacts;
-		}
-
 		return body;
 	}
-
-	// Get event information
-	useEffect(() => {
-		getEventInfo(eventId).then(res => {
-			if (res.code===200) {
-				setData(res.data);
-				setStartTime(res.data.start_time);
-				setFinishTime(res.data.finish_time);
-				setAttendents(res.data.contact_list);
-				setDescription(res.data.description);
-				setStatus(res.data.status);
-			} else {
-				alert(res.msg);
-			}
-		})
-	}, [pageStatus, updateCount])
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "description") {
@@ -248,6 +223,22 @@ export default function DisplayOneEvent(props) {
 	const transformDate = (t) => {
 		return (new Date(t).toISOString().substring(0, 16).replace("T", " "));
 	}
+
+	//================ Display Event ==================
+	useEffect(() => {
+		getEventInfo(eventId).then(res => {
+			if (res.code===200) {
+				setData(res.data);
+				setStartTime(res.data.start_time);
+				setFinishTime(res.data.finish_time);
+				setAttendents(res.data.contact_list);
+				setDescription(res.data.description);
+				setStatus(res.data.status);
+			} else {
+				alert(res.msg);
+			}
+		})
+	}, [pageStatus, updateCount])
 
 	let display; 
 	if (pageStatus === "view") {

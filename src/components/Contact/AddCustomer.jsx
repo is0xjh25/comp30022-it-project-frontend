@@ -125,8 +125,8 @@ export default function AddCustomer(props) {
 
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
-	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${firstName} ${lastName}?`;
+	const alertTitle = 'Discard Confirm';
+	const alertMessage = `Do you want to leave without saving?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}

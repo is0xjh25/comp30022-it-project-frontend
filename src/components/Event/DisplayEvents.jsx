@@ -1,18 +1,17 @@
 import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
-import { Badge } from "@material-ui/core";
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
-import Paper from '@mui/material/Paper';
-import { Dialog } from '@mui/material';
-
 import {
     Box,
+	Badge,
+	Dialog,
+	Paper,
+	Grid,
+	Button
 } from '@mui/material'
 
 export default function DisplayEvents() {
@@ -21,8 +20,41 @@ export default function DisplayEvents() {
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
+	const classes = {
+		title: {
+		  	fontSize:30,
+			fontFamily:'Arial',
+			fontWeight:'bold'
+		},
+		body: {
+			fontSize:25,
+			fontFamily:'Arial',
+			textAlign:'center',
+			borderRadius:15
+		},
+		grid: {
+			display:'flex', 
+			justifyContent:'center', 
+			alignItems:'center',
+			color:'black'
+		},
+		box: {
+			display:'flex', 
+			flexDirection:'column'
+		},
+		addButton: {
+			borderRadius: 20,
+			backgroundColor: 'ForestGreen',
+			color: '#FFFFFF',
+			fontSize: '20px',
+			fontWeight: 'bold'	
+		},
+        calendar: {
+            width: '80%'
+        }
+	};
 
-	// Alart Dialog
+	//================ Delete Alart Popup ==================
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Delete Confirm';
 	const alertMessage = "Do you want to delete this event";
@@ -35,9 +67,8 @@ export default function DisplayEvents() {
 		setAlertOpen(false);
 	}
 
-	// Create new event
+	//================ Create Event Popup ==================
 	const [createEventOpen, setCreateEventOpen] = useState(false);
-
 	const handleCreateEvent = () => {
 		setCreateEventOpen(true);
 	}
@@ -45,9 +76,8 @@ export default function DisplayEvents() {
 		setCreateEventOpen(false);
 	}
 
-	// Display a single event in detail
+	//================ Display a single event in detail ==================
 	const [displayEventOpen, setDisplayEventOpen] = useState(false);
-
 	const handleDisplayEvent = (e) => {
 		setDisplayEventOpen(true);
 		setSelectedEvent(e);
@@ -88,11 +118,7 @@ export default function DisplayEvents() {
 		})
 	}
 
-	// Initial calendar
-	useEffect(() => {
-		handleYearMonthChange(new Date());
-	}, []);
-
+	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
 		
 		const startTime = e.toISOString().substring(0,10) + " 00:00";
@@ -107,40 +133,10 @@ export default function DisplayEvents() {
 		})
 	}
 
-	const classes = {
-		title: {
-		  	fontSize:30,
-			fontFamily:'Arial',
-			fontWeight:'bold'
-		},
-		body: {
-			fontSize:25,
-			fontFamily:'Arial',
-			textAlign:'center',
-			borderRadius:15
-		},
-		grid: {
-			display:'flex', 
-			justifyContent:'center', 
-			alignItems:'center',
-			color:'black'
-		},
-		box: {
-			display:'flex', 
-			flexDirection:'column'
-		},
-		addButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-        calendar: {
-            width: '80%'
-        }
-	};
-
+	// Initial calendar
+	useEffect(() => {
+		handleYearMonthChange(new Date());
+	}, []);
 	
 	return(
 		<Fragment>

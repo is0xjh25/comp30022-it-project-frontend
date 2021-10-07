@@ -1,18 +1,19 @@
 import React, { Fragment, useState } from "react";
 import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createEvent } from "../../api/Event";
+import {
+    Box,
+	Grid,
+	Button,
+	TextField
+} from '@mui/material'
 
 export default function CreateEvent(props) {
 	const { handleClose } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
-
 	const classes = {
 		title: {
 		  	fontSize:30,
