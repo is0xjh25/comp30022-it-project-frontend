@@ -24,6 +24,8 @@ import {
     deleteToDo
 } from '../../api/ToDoList';
 
+import { toLocalTime } from '../../api/Util';
+
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
@@ -211,7 +213,7 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '90%' }}
                                 >
-                                    Date and Time: {row.date_time}
+                                    Date and Time: {toLocalTime(row.date_time)}
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}
@@ -267,7 +269,6 @@ export default function ToDoList() {
     if (loading) {
         return <div>loading...</div>
     }
-
 
     return (
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
