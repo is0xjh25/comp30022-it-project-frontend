@@ -107,8 +107,8 @@ export default function DisplayEvents() {
 	const handleYearMonthChange = (d) => {
 
 		// Extract month and year
-		let month = d.toLocaleDateString().substring(3,5);
-		let year = d.toLocaleDateString().substring(6,10);
+		let month = new Date(d).getMonth()+1;
+		let year = new Date(d).getFullYear();
 		setYearMonth(year+month);
 
 		getMonthlyEvents(year, month).then(res => {
@@ -147,7 +147,6 @@ export default function DisplayEvents() {
                     <DatePicker
 					id="Calendar"
                     autoOk
-					dateFormat="YYYY-MM-DD"
                     orientation="landscape"
                     variant="static"
                     openTo="date"
