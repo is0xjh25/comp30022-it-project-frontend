@@ -90,11 +90,19 @@ function updateUserInfo(body) {
     })
 }
 
+
+// Convert time to local time zone
+function toLocalTime(time) {
+    const localTime = new Date(time)
+    return localTime.toLocaleString("en-AU");
+}
+
 export {
     getCookie,
     setCookie,
     deleteUserToken,
     checkUnauthorized,
     getUserInfo,
-    updateUserInfo
+    updateUserInfo,
+    toLocalTime
 }

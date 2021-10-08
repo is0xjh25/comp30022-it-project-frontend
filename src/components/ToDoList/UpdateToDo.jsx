@@ -16,8 +16,8 @@ export default function UpdateToDo(props) {
     const { original, open, handleClose, update } = props;
 
     // Attributes for updating to-do
-    const [time, setTime] = useState(original.date_time);
-    const [dateTime, setDateTime] = useState(new Date());
+    const [time, setTime] = useState(new Date());
+    // const [dateTime, setDateTime] = useState(new Date());
     const [description, setDescription] = useState(original.description);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function UpdateToDo(props) {
     }, [open])
 
     const handleChangeTime = (e) => {
-        setTime(e.toISOString().replace("T", " ").substring(0, 16));
+        setTime(e);
     }
 
     const handleOnChange = (e) => {
@@ -35,21 +35,22 @@ export default function UpdateToDo(props) {
         }
     }
 
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
     const handleUpdate = () => {
-        // console.log(original)
+        const dateTime = time.toISOString();
 
-        // if (time !== original.date_time) {
-        //     setTime(time.toISOString().replace("T", " ").substring(0, 16));
-        // }
-
-        if (description === "") {
-            setDescription(original.description);
+        let dataDescription = description;
+        if (isBlank(description) ) {
+            dataDescription = original.description;
         }
         
         const data = {
             "id": original.id,
-            "date_time": time,
-            "description": description,
+            "date_time": dateTime,
+            "description": dataDescription,
             "status": "to do"
         }
 
