@@ -30,9 +30,7 @@ export default function DisplayOneEvent(props) {
 	const [selectedAttend, setSelectedAttend] = useState(0);
 	const [attendents, setAttendents] = useState([]);
 	const [updateCount, setUpdateCount] = useState(0);
-	const update = () => {
-        setTimeout(() => { setUpdateCount(updateCount + 1) }, 1000);
-    }
+	const update = () => { setTimeout(() => { setUpdateCount(updateCount + 1) }, 1000);}
 
 	const classes = {
 		title: {
@@ -68,7 +66,7 @@ export default function DisplayOneEvent(props) {
 		}
 	};
 
-	//Alart Dialog Discard
+	//================ Discard Alart Popup ==================
 	const [discardAlertOpen, setDiscardAlertOpen] = useState(false);
 	const discardAlertTitle = 'Discard Confirm';
 	const discardAlertMessage = "Do you want to leave without saving?";
@@ -238,7 +236,7 @@ export default function DisplayOneEvent(props) {
 				alert(res.msg);
 			}
 		})
-	}, [pageStatus, updateCount])
+	}, [eventId, pageStatus, updateCount])
 
 	let display; 
 	if (pageStatus === "view") {

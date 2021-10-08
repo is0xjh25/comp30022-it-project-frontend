@@ -17,6 +17,7 @@ import {
 export default function DisplayEvents() {
 
 	const [date, changeDate] = useState(new Date());
+	const [yearMonth, setYearMonth] = useState("");
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
@@ -107,10 +108,10 @@ export default function DisplayEvents() {
 		// Extract month and year
 		let month = d.toLocaleDateString().substring(3,5);
 		let year = d.toLocaleDateString().substring(6,10);
+		setYearMonth(year+month);
 
 		getMonthlyEvents(year, month).then(res => {
 			if (res.code===200) {
-				console.log(res.data);
 				setMonthEvent(res.data);
 			} else {
 				alert(res.msg);
@@ -153,12 +154,11 @@ export default function DisplayEvents() {
 					onYearChange={(date) => {handleYearMonthChange(date)}}
 					onChange={handleOnChange}
                     value={date}
-					// renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-					// 	const date = new Date(day);	
-					// 	const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
-					// 	//return <Badge color="secondary" badgeContent={isSelected ? "!" : undefined}>{dayComponent}</Badge>;
-					// 	return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
-					// }}
+					renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
+						const date = new Date(day);	
+						const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
+						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
+					}}
                     />
                 </MuiPickersUtilsProvider>
             </Box>
@@ -207,7 +207,7 @@ export default function DisplayEvents() {
 				</Button>
 				<Dialog open={createEventOpen} fullWidth maxWidth>
 					<Paper fullWidth>
-						<CreateEvent handleClose={handleCreateClose} />
+						<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 					</Paper>
 				</Dialog>
 				<Dialog open={displayEventOpen} fullWidth maxWidth>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createEvent } from "../../api/Event";
@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 
 export default function CreateEvent(props) {
-	const { handleClose } = props;
+	const { handleClose, handleYearMonthChange, yearMonth } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
@@ -58,10 +58,16 @@ export default function CreateEvent(props) {
 		
 		const transformStartTime = startTime.toISOString().replace("T", " ").substring(0,16);
 		const transformFinishTime = finishTime.toISOString().replace("T", " ").substring(0,16);
+		
+		let month = startTime.toLocaleDateString().substring(3,5);
+		let year = startTime.toLocaleDateString().substring(6,10);
 
 		createEvent(transformStartTime, transformFinishTime, description).then(res => {
 			if (res.code===200) {
 				alert("Create event successfully");
+				if ((year+month) === yearMonth) {
+					handleYearMonthChange(startTime);
+				}
 				handleClose();	
 			} else {
 				alert(res.msg);
