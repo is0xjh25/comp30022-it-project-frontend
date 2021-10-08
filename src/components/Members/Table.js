@@ -22,6 +22,9 @@ import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } fr
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 
+import {formatTime} from '../../api/Util';
+
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -262,7 +265,7 @@ function EnhancedTableRow(props) {
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>
       <TableCell align="center">{permissionLevelMap[row.authority_level]}</TableCell>
-      <TableCell align="center">{row.recent_activity === null ? '' : row.recent_activity.slice(5)}</TableCell>
+      <TableCell align="center">{row.recent_activity === null ? '' : formatTime(row.recent_activity, 'MM-dd HH:mm')}</TableCell>
       <TableCell align="center">
         {manage}
       </TableCell>
