@@ -3,6 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
+import { toLocalTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
 import {
 	Box, 
@@ -19,8 +20,8 @@ import {
 } from '@mui/material'
 
 export default function DisplayOneEvent(props) {
-	
-	const { eventId, handleClose } = props;
+
+	const { eventId, handleClose, handleYearMonthChange, yearMonth } = props;
 	const [pageStatus, setPageStatus] = useState("view");	
 	const [status, setStatus] = useState("");
 	const [startTime, setStartTime] = useState(new Date());
@@ -135,12 +136,12 @@ export default function DisplayOneEvent(props) {
 		
 		let body = {};
 
-		if (transformDate(startTime) !== data.start_time) {
-			body["start_time"] = transformDate(startTime);
+		if (startTime !== data.start_time) {
+			body["start_time"] = startTime;
 		}
 
-		if (transformDate(finishTime) !== data.finish_time) {
-			body["finish_time"] = transformDate(finishTime);
+		if (finishTime !== data.finish_time) {
+			body["finish_time"] = finishTime;
 		}
 
 		if (description !== data.description) {
@@ -194,6 +195,13 @@ export default function DisplayOneEvent(props) {
 			updateEvent(body).then(res => {
 				if (res.code===200) {
 					alert("Successfully updated");
+					if (body["start_time"] !== undefined) {
+						let month = startTime.toLocaleDateString().substring(3,5);
+						let year = startTime.toLocaleDateString().substring(6,10);
+						if ((year+month) === yearMonth) {
+							handleYearMonthChange(startTime);
+						}
+					}
 					update();
 					setPageStatus("view");
 				} else {
@@ -215,11 +223,6 @@ export default function DisplayOneEvent(props) {
 				alert(res.msg);
 			}
 		})
-	}
-
-	// Formatting the time
-	const transformDate = (t) => {
-		return (new Date(t).toISOString().substring(0, 16).replace("T", " "));
 	}
 
 	//================ Display Event ==================
@@ -248,11 +251,11 @@ export default function DisplayOneEvent(props) {
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Start Time</Box>
-				<Box>{data.start_time}</Box>
+				<Box>{toLocalTime(data.start_time)}</Box>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Finish Time</Box>
-				<Box>{data.finish_time}</Box>
+				<Box>{toLocalTime(data.finish_time)}</Box>
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Description</Box>

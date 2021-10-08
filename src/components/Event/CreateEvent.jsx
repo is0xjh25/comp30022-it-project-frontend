@@ -56,8 +56,8 @@ export default function CreateEvent(props) {
 
 	const handleCreate = () => {
 		
-		const transformStartTime = startTime.toISOString().replace("T", " ").substring(0,16);
-		const transformFinishTime = finishTime.toISOString().replace("T", " ").substring(0,16);
+		const transformStartTime = startTime.toISOString();
+		const transformFinishTime = finishTime.toISOString();
 		
 		let month = startTime.toLocaleDateString().substring(3,5);
 		let year = startTime.toLocaleDateString().substring(6,10);

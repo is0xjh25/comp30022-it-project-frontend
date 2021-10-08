@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
+import { toLocalTime } from "../../api/Util";
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
@@ -122,8 +123,8 @@ export default function DisplayEvents() {
 	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
 		
-		const startTime = e.toISOString().substring(0,10) + " 00:00";
-		const finishTime = e.toISOString().substring(0,10) + " 23:59";
+		const startTime = e.toISOString().substring(0,10) + "T00:00:00.000Z";
+		const finishTime = e.toISOString().substring(0,10) + "T23:59:00.000Z";
 
 		getMultipleEvents(startTime, finishTime).then(res => {
 			if (res.code===200) {
@@ -183,7 +184,7 @@ export default function DisplayEvents() {
 									{e.status}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
-									{e.start_time}
+									{toLocalTime(e.start_time)}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
 									{e.description}
@@ -212,7 +213,7 @@ export default function DisplayEvents() {
 				</Dialog>
 				<Dialog open={displayEventOpen} fullWidth maxWidth>
 					<Paper fullWidth>
-						<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} />
+						<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 					</Paper>
 				</Dialog>
 				</Grid>
