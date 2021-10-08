@@ -147,11 +147,30 @@ function updateCustomer(data, customerId) {
     })
 }
 
+// Delete one customer's information
+function searchAllCustomers(searchkey) {
+
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getCookie('token')},
+    };
+    
+    return new Promise((resovle) => {
+        fetch(BASE_URL + `/contact/searchAll?search_key=${searchkey}`, info).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 export {
     getAllCustomer,
     searchCustomer,
     createCustomer,
     displayCustomer,
     deleteCustomer,
-    updateCustomer
+    updateCustomer,
+    searchAllCustomers
 }

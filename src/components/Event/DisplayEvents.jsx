@@ -1,93 +1,26 @@
 import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getMultipleEvents, deleteEvent } from "../../api/Event";
-import { Badge } from "@material-ui/core";
+import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
-import Paper from '@mui/material/Paper';
-import { Dialog } from '@mui/material';
-
 import {
     Box,
-
+	Badge,
+	Dialog,
+	Paper,
+	Grid,
+	Button
 } from '@mui/material'
 
 export default function DisplayEvents() {
 
-	const [month, setMonth] = useState("");
 	const [date, changeDate] = useState(new Date());
+	const [yearMonth, setYearMonth] = useState("");
 	const [dayEvent, setDayEvent] = useState([]);
-	const [selectedDays, setSelectedDays] = useState([1, 2, 15]);
-	const [selectEvent, setSelectEvent] = useState(0);
-
-	// Alart Dialog
-	const [alertOpen, setAlertOpen] = useState(false);
-	const alertTitle = 'Delete Confirm';
-	const alertMessage = "Do you want to delete this event";
-	const handleDelete = function(e) {
-		setAlertOpen(true);
-		setSelectEvent(e);
-	}
-	const handleAlertConfirm = function() {
-		confirmDelete();
-		setAlertOpen(false);
-	}
-
-	// Create new event
-	const [createEventOpen, setCreateEventOpen] = useState(false);
-
-	const handleCreateEvent = () => {
-		setCreateEventOpen(true);
-	}
-	const handleCreateClose = () => {
-		setCreateEventOpen(false);
-	}
-
-	// Display a single event in detail
-	const [displayEventOpen, setDisplayEventOpen] = useState(false);
-
-	const handleDisplayEvent = (e) => {
-		setDisplayEventOpen(true);
-		setSelectEvent(e);
-	}
-	const handleDisplayClose = () => {
-		setDisplayEventOpen(false);
-	}
-
-	const confirmDelete = function() {
-		deleteEvent(selectEvent).then(res => {
-			if (res.code===200) {
-				alert("Successfully deleted");
-			} else {
-				alert(res.msg);
-			}
-		})
-	}
-
-	const handleOnChange = (e) => {
-		changeDate(e);
-		changeDay(e);
-	}
-
-	const changeDay = (e) => {
-		
-		const transformDate = e.toISOString();
-		const startTime = transformDate.substring(0,10) + " 00:00";
-		const finishTime = transformDate.substring(0,10) + " 23:59";
-
-		getMultipleEvents(startTime, finishTime).then(res => {
-			if (res.code===200) {
-				setDayEvent(res.data);
-			} else {
-				alert(res.msg);
-			}
-		})
-	}
-
+	const [monthEvent, setMonthEvent] = useState([]);
+	const [selectedEvent, setSelectedEvent] = useState(0);
 	const classes = {
 		title: {
 		  	fontSize:30,
@@ -122,29 +55,113 @@ export default function DisplayEvents() {
         }
 	};
 
+	//================ Delete Alart Popup ==================
+	const [alertOpen, setAlertOpen] = useState(false);
+	const alertTitle = 'Delete Confirm';
+	const alertMessage = "Do you want to delete this event";
+	const handleDelete = function(e) {
+		setAlertOpen(true);
+		setSelectedEvent(e);
+	}
+	const handleAlertConfirm = function() {
+		confirmDelete();
+		setAlertOpen(false);
+	}
+
+	//================ Create Event Popup ==================
+	const [createEventOpen, setCreateEventOpen] = useState(false);
+	const handleCreateEvent = () => {
+		setCreateEventOpen(true);
+	}
+	const handleCreateClose = () => {
+		setCreateEventOpen(false);
+	}
+
+	//================ Display a single event in detail ==================
+	const [displayEventOpen, setDisplayEventOpen] = useState(false);
+	const handleDisplayEvent = (e) => {
+		setDisplayEventOpen(true);
+		setSelectedEvent(e);
+	}
+	const handleDisplayClose = () => {
+		setDisplayEventOpen(false);
+	}
+
+	const confirmDelete = function() {
+		deleteEvent(selectedEvent).then(res => {
+			if (res.code===200) {
+				alert("Successfully deleted");
+			} else {
+				alert(res.msg);
+			}
+		})
+	}
+
+	const handleOnChange = (e) => {
+		changeDate(e);
+		displayDayEvent(e);
+	}
+
+	// Display event in one month
+	const handleYearMonthChange = (d) => {
+
+		// Extract month and year
+		let month = d.toLocaleDateString().substring(3,5);
+		let year = d.toLocaleDateString().substring(6,10);
+		setYearMonth(year+month);
+
+		getMonthlyEvents(year, month).then(res => {
+			if (res.code===200) {
+				setMonthEvent(res.data);
+			} else {
+				alert(res.msg);
+			}
+		})
+	}
+
+	//================ List events in one day ==================
+	const displayDayEvent = (e) => {
+		
+		const startTime = e.toISOString().substring(0,10) + " 00:00";
+		const finishTime = e.toISOString().substring(0,10) + " 23:59";
+
+		getMultipleEvents(startTime, finishTime).then(res => {
+			if (res.code===200) {
+				setDayEvent(res.data);
+			} else {
+				alert(res.msg);
+			}
+		})
+	}
+
+	// Initial calendar
+	useEffect(() => {
+		handleYearMonthChange(new Date());
+	}, []);
 	
 	return(
 		<Fragment>
-
             <Box xs={12} sx={{width: '54%', mx: '23%'}}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker
-                    
+					id="Calendar"
                     autoOk
+					dateFormat="YYYY-MM-DD"
                     orientation="landscape"
                     variant="static"
                     openTo="date"
-                    renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-                        const isSelected = isInCurrentMonth && selectedDays.includes(date.getDate());
-                        // You can also use our internal <Day /> component
-                        return <Badge color="secondary" badgeContent={isSelected ? "4" : undefined}>{dayComponent}</Badge>;
-                    }}
+					onMonthChange={(date) => {handleYearMonthChange(date)}}
+					onYearChange={(date) => {handleYearMonthChange(date)}}
+					onChange={handleOnChange}
                     value={date}
-                    onChange={handleOnChange}
+					renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
+						const date = new Date(day);	
+						const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
+						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
+					}}
                     />
                 </MuiPickersUtilsProvider>
             </Box>
-
 			<Grid container rowSpacing={10} xs={12} sx={{pt:10}}>
 				<Grid container item xs={12} rowSpacing={5}>
 					<Grid container item xs={12}>
@@ -190,12 +207,12 @@ export default function DisplayEvents() {
 				</Button>
 				<Dialog open={createEventOpen} fullWidth maxWidth>
 					<Paper fullWidth>
-						<CreateEvent handleClose={handleCreateClose} />
+						<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 					</Paper>
 				</Dialog>
 				<Dialog open={displayEventOpen} fullWidth maxWidth>
 					<Paper fullWidth>
-						<DisplayOneEvent eventId={selectEvent} handleClose={handleDisplayClose} />
+						<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} />
 					</Paper>
 				</Dialog>
 				</Grid>

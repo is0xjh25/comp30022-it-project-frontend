@@ -4,7 +4,6 @@ import Image from '../../images/road.jpg';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Resend from './Resend';
-import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
 	

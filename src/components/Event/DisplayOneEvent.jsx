@@ -1,23 +1,36 @@
 import React, { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getEventInfo, updateEvent, deleteEventContact } from "../../api/Event";
 import AlertDialog from "../Dialog/AlertDialog";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
+import { searchAllCustomers } from "../../api/Contact";
+import {
+	Box, 
+    Button,
+    Dialog,
+	Grid,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    TextField,
+    DialogActions,
+    ToggleButtonGroup,
+    ToggleButton
+} from '@mui/material'
 
 export default function DisplayOneEvent(props) {
+	
 	const { eventId, handleClose } = props;
 	const [pageStatus, setPageStatus] = useState("view");	
 	const [status, setStatus] = useState("");
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState("");
-	const [contacts, setContacts] = useState([]);
 	const [data, setData] = useState({});
-	const [selectAttend, setSelectAttend] = useState(0);
+	const [selectedAttend, setSelectedAttend] = useState(0);
+	const [attendents, setAttendents] = useState([]);
+	const [updateCount, setUpdateCount] = useState(0);
+	const update = () => { setTimeout(() => { setUpdateCount(updateCount + 1) }, 1000);}
 
 	const classes = {
 		title: {
@@ -53,7 +66,7 @@ export default function DisplayOneEvent(props) {
 		}
 	};
 
-	//Alart Dialog Discard
+	//================ Discard Alart Popup ==================
 	const [discardAlertOpen, setDiscardAlertOpen] = useState(false);
 	const discardAlertTitle = 'Discard Confirm';
 	const discardAlertMessage = "Do you want to leave without saving?";
@@ -65,7 +78,7 @@ export default function DisplayOneEvent(props) {
 		setDiscardAlertOpen(false);
 	}
 
-	//Alart Dialog Update
+	//================ Update Alart Popup ==================
 	const [updateAlertOpen, setUpdateAlertOpen] = useState(false);
 	const updateAlertTitle = 'Update Confirm';
 	const updateAlertMessage = "Do you want to update?";
@@ -77,17 +90,44 @@ export default function DisplayOneEvent(props) {
 		setUpdateAlertOpen(false);
 	}
 
-	//Alart Dialog Delete Contact
+	//================ Delete Alart Popup ==================
 	const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 	const deleteAlertTitle = 'Delete Confirm';
 	const deleteAlertMessage = "Do you want to remove this contact from this event?";
 	const handleDelete = function(attendId) {
 		setDeleteAlertOpen(true);
-		setSelectAttend(attendId);
+		setSelectedAttend(attendId);
 	}
 	const handleDeleteAlertConfirm = function() {
 		confirmDelete();
 		setDeleteAlertOpen(false);
+	}
+
+	//================ Add Contact Popup ==================
+	const [addContactOpen, setAddContactOpen] = useState(false);
+	const [contacts, setContacts] = useState([]);
+	const [selectedContact, setSelectedContact] = useState(undefined);
+	const handleAddContact = function() {
+		setAddContactOpen(true);
+	}
+	const handleAddContactCancel = function() {
+		setAddContactOpen(false);
+		setSelectedContact(undefined);
+		setContacts([]);
+	}
+	const handleSelectContact = (event, e) => {
+		setSelectedContact(e);
+	}
+	const confirmAddContact = () => {
+		addEventContact(eventId, selectedContact).then(res => {
+			if (res.code===200) {
+				alert("Successfully added");
+				setAddContactOpen(false);
+				update();
+			} else {
+				alert(res.msg);
+			}
+		})
 	}
 
 	// Check whether the detail has been changed
@@ -111,34 +151,26 @@ export default function DisplayOneEvent(props) {
 			body["status"] = status;
 		}
 
-		if (contacts !== data.contact_list) {
-			body["contact_list"] = contacts;
-		}
-
 		return body;
 	}
-
-	// Get event information
-	useEffect(() => {
-		getEventInfo(eventId).then(res => {
-			if (res.code===200) {
-				setData(res.data);
-				setStartTime(res.data.start_time);
-				setFinishTime(res.data.finish_time);
-				setContacts(res.data.contact_list);
-				setDescription(res.data.description);
-				setStatus(res.data.status);
-			} else {
-				alert(res.msg);
-			}
-		})
-	}, [pageStatus])
 	
 	const handleOnChange = (e) => {
 		if (e.target.id === "description") {
 			setDescription(e.target.value);
 		} else if (e.target.id === "status") {
 			setStatus(e.target.value);
+		} else if (e.target.id === "contact") {
+			searchAllCustomers(e.target.value).then(res => {
+				if (res.code === 200) {
+					const data = res.data
+					data.forEach(row => {
+						row.name = row.first_name + ' ' + row.last_name
+					});
+					setContacts(data);
+					} else {
+					alert(res.msg);
+				}
+			})
 		}
     };
 
@@ -162,6 +194,7 @@ export default function DisplayOneEvent(props) {
 			updateEvent(body).then(res => {
 				if (res.code===200) {
 					alert("Successfully updated");
+					update();
 					setPageStatus("view");
 				} else {
 					alert(res.msg);
@@ -173,10 +206,11 @@ export default function DisplayOneEvent(props) {
 	}
 
 	// Remove a contact from this event
-	const confirmDelete = () =>{
-		deleteEventContact(selectAttend).then(res => {
+	const confirmDelete = () => {
+		deleteEventContact(selectedAttend).then(res => {
 			if (res.code===200) {
 				alert("Successfully Deleted");
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -187,6 +221,22 @@ export default function DisplayOneEvent(props) {
 	const transformDate = (t) => {
 		return (new Date(t).toISOString().substring(0, 16).replace("T", " "));
 	}
+
+	//================ Display Event ==================
+	useEffect(() => {
+		getEventInfo(eventId).then(res => {
+			if (res.code===200) {
+				setData(res.data);
+				setStartTime(res.data.start_time);
+				setFinishTime(res.data.finish_time);
+				setAttendents(res.data.contact_list);
+				setDescription(res.data.description);
+				setStatus(res.data.status);
+			} else {
+				alert(res.msg);
+			}
+		})
+	}, [eventId, pageStatus, updateCount])
 
 	let display; 
 	if (pageStatus === "view") {
@@ -223,8 +273,8 @@ export default function DisplayOneEvent(props) {
 					Email
 				</Grid>
 				<Grid container item xs={12}>
-					{typeof contacts !== 'undefined' && contacts.length > 0 ?
-						contacts.map((e) => {						
+					{typeof attendents !== 'undefined' && attendents.length > 0 ?
+						attendents.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e}>
 								<Grid item xs={3} textAlign='center'>
@@ -282,7 +332,6 @@ export default function DisplayOneEvent(props) {
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Box >Description</Box>
-				<Grid item xs={12} textAlign='center'>{data.description}</Grid>
 				<TextField id="description" defaultValue= {data.description} multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={12} textAlign='center'>Current contact</Grid>
@@ -300,8 +349,8 @@ export default function DisplayOneEvent(props) {
 					Email
 				</Grid>
 				<Grid container item xs={12} rowSpacing={5}>
-					{typeof contacts !== 'undefined' && contacts.length > 0 ?
-						contacts.map((e) => {						
+					{typeof data.contact_list !== 'undefined' && data.contact_list.length > 0 ?
+						data.contact_list.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}}>
 								<Grid item xs={2} textAlign='center'>
@@ -327,10 +376,13 @@ export default function DisplayOneEvent(props) {
 					}
 				</Grid>
 			</Grid>
-			<Grid item xs={6} textAlign='center'>
+			<Grid item xs={4} textAlign='center'>
 				<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
 			</Grid>
-			<Grid item xs={6} textAlign='center'>
+			<Grid item xs={4} textAlign='center'>
+				<Button variant="outlined" onClick={handleAddContact}>Add contact</Button>
+			</Grid>
+			<Grid item xs={4} textAlign='center'>
 				<Button variant="outlined" style={classes.createButton} onClick={handleUpdate}>Update</Button>
 			</Grid>
 			<AlertDialog 
@@ -356,6 +408,38 @@ export default function DisplayOneEvent(props) {
 			handleClose={() => { setDeleteAlertOpen(false) }}
 			handleConfirm={handleDeleteAlertConfirm}
 			/>
+			<Dialog open={addContactOpen} onClose={handleAddContactCancel} aria-labelledby="form-dialog-title">
+				<DialogTitle id="form-dialog-title">Add a Contact</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						Start typing the name of the contact.
+					</DialogContentText>
+					<TextField
+						autoFocus
+						margin="dense"
+						id="contact"
+						label="search"
+						type="contact"
+						fullWidth
+						onChange={handleOnChange}
+					/>
+					<ToggleButtonGroup orientation="vertical" value={selectedContact} exclusive onChange={handleSelectContact} sx={{display:"flex", justifyContent: 'center'}}>
+						{contacts.map( (contact) => {
+							return (<ToggleButton key={contact.id} value={contact.id} aria-label={contact.name}>
+								{contact.name}
+							</ToggleButton>)
+						})}
+					</ToggleButtonGroup>
+				</DialogContent>
+				<DialogActions>
+				<Button onClick={handleAddContactCancel} color="primary">
+					Cancel
+				</Button>
+				<Button disabled={selectedContact===undefined} onClick={confirmAddContact}>
+					Add
+				</Button>
+				</DialogActions>
+            </Dialog>
 		</Grid> 
 	}
 

@@ -5,8 +5,6 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Verify from './Login/Verify';
 import DisplayUser from '../components/User/DisplayUser';
-import DisplayEvents from '../components/Event/DisplayEvents';
-import ToDoList from '../components/ToDoList/ToDoList';
 
 function PageNavigator() {
     return (
@@ -18,18 +16,12 @@ function PageNavigator() {
             <Route path ='/login'>
                 <Login/>
             </Route>
-            {/* <Route path='/todo'>
-                <ToDoList/>
-            </Route> */}
             <Route path ='/verify'>
                 <Verify/>
             </Route>
             <Route path ='/user'>
                 <DisplayUser/>
             </Route>
-            {/* <Route path ='/events'>
-                <DisplayEvents/>
-            </Route> */}
             <Route path='/'>
                 <Home/>
             </Route>
