@@ -6,7 +6,16 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import AlertDialog from '../Dialog/AlertDialog';
-import { handleCreateCustomer } from '../../api/Contact';
+import { createCustomer } from '../../api/Contact';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import DateFnsUtils from '@date-io/date-fns';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 export default function AddCustomer(props) {
 
@@ -34,7 +43,7 @@ export default function AddCustomer(props) {
 
 	const classes = {
 		title: {
-		  	fontSize:30,
+		  	fontSize:28,
 			fontFamily:'Arial',
 			fontWeight:'bold',
 			bgcolor:'coral',
@@ -75,6 +84,7 @@ export default function AddCustomer(props) {
 	};
 
 	const handleOnChange = (e) => {
+		console.log(e)
 		if (e.target.id === "email") {
 			setEmail(e.target.value);
 		} else if (e.target.id === "firstName") {
@@ -153,12 +163,12 @@ export default function AddCustomer(props) {
 						<Avatar sx={{ width: 70, height: 70}}></Avatar>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>First Name</Box>
+						<Box sx={classes.title}>First Name*</Box>
 						<TextField id="firstName" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Last Name</Box>
-						<TextField id="LastName" onChange={handleOnChange}/>
+						<Box sx={classes.title}>Last Name*</Box>
+						<TextField id="lastName" onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -171,8 +181,25 @@ export default function AddCustomer(props) {
 						<TextField id="organization" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="birthday" onChange={handleOnChange}/>
+						<Box sx={classes.title}>Date of Birth*</Box>
+						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							{/* <DesktopDatePicker
+								id="birthday"
+								inputFormat="yyyy-MM-dd"
+								value={birthday}
+								onChange={handleOnChange}
+								renderInput={(params) => <TextField {...params} />}
+							/> */}
+							<KeyboardDatePicker
+								variant="inline"
+								inputVariant="outlined"
+								id="birthday"
+								inputFormat="yyyy-MM-dd"
+								value={birthday}
+								onChange={handleOnChange}
+								InputAdornmentProps={{ position: "start" }}
+							/>
+						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -183,19 +210,38 @@ export default function AddCustomer(props) {
 						<TextField id="address" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Customer Type</Box>
-						<TextField id="customerType" onChange={handleOnChange}/>
+						<Box sx={classes.title}>Customer Type*</Box>
+						<FormControl required sx={{ minWidth: 120 }}>
+							<Select
+								id="customerType"
+								onChange={handleOnChange}
+							>
+								<MenuItem value={"company"}>company</MenuItem>
+								<MenuItem value={"personal"}>personal</MenuItem>
+							</Select>
+						</FormControl>
 					</Grid>
+					
+
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
 					<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Email</Box>
+							<Box sx={classes.title}>Email*</Box>
 							<TextField id="email" onChange={handleOnChange}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Gender</Box>
-							<TextField id="gender" onChange={handleOnChange}/>
+							<Box sx={classes.title}>Gender*</Box>
+							<FormControl required sx={{ minWidth: 120 }}>
+								<Select
+									id="gender"
+									onChange={handleOnChange}
+								>
+									<MenuItem value={"not specific"}>not specific</MenuItem>
+									<MenuItem value={"male"}>male</MenuItem>
+									<MenuItem value={"female"}>female</MenuItem>
+								</Select>
+							</FormControl>
 						</Grid>
 					</Grid>
 					<Grid item xs={8}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
