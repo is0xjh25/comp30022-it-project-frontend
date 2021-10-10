@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
 import CustomerTable from './CustomerTable';
 import { getMyPermissionLevel } from '../../api/Manage';
 import { useParams } from 'react-router-dom';
-
-// const createData()
+import { Paper, TableContainer} from '@mui/material';
 
 export default function Customer(props) {
     let {orgId, depId} = useParams();

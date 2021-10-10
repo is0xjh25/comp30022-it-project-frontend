@@ -1,27 +1,30 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
+
+// Import from mui
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AlertDialog from '../Dialog/AlertDialog';
-import SelectDialog from '../Dialog/SelectDialog';
-import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import { Button } from '@mui/material'
+import { 
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Typography,
+    Toolbar,
+    Button
+} from '@mui/material'
+
+// Import from local
+import AlertDialog from '../Dialog/AlertDialog';
+import { getAllCustomer, handleDeleteCustomer } from '../../api/Contact';
 import { getOrganization, getDepartment } from '../../api/Manage';
 
-// functions for sorting 
+// Functions for sorting 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -121,11 +124,9 @@ const EnhancedTableToolbar = (props) => {
             >
                 {organization} / {department}
             </Typography>
-            {/* <Tooltip title="Filter list"> */}
             <IconButton>
                 <FilterListIcon onClick={handleChangeOrgDep}/>
             </IconButton>
-            {/* </Tooltip> */}
             <Button variant="contained" onClick={handleCreateContact}
             >
                 Add Contact
@@ -134,9 +135,6 @@ const EnhancedTableToolbar = (props) => {
         </Toolbar>
     )
 }
-
-// EnhancedTableToolbar.propTypes = {
-// };
 
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
@@ -196,62 +194,21 @@ function EnhancedTableRow(props) {
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => {setAlertOpen(false)}}/>
 
-            
-            {/* <SelectDialog
-                items={selectItems}
-                currentSelected={currentSelected}
-                title={`Change role for ${row.name}`}
-                label="Role"
-                open={selectOpen}
-                handleChange={selectChange}
-                handleClose={selectClose}
-                handleConfirm={handleSelectConfirm}
-            /> */}
         </TableRow>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-      width: '100%',
-    },
-    paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2),
-    },
-    table: {
-      minWidth: 750,
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1,
-    },
-  }));
 
 export default function CustomerTable(props) {
     //=============== Data from Parent ==================
     const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
     const departmentId = props.departmentId;
-    // const handleDialogOpen = props.handleDialogOpen;
 
     //=============== Table Settings ==================
-    const classes = useStyles();
-    // const [order, setOrder] = useState('asc');
-    // const [orderBy, setOrderBy] = useState('manage');
-    // const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
-    // const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
@@ -323,8 +280,6 @@ export default function CustomerTable(props) {
     const handleClickRow = () => {
         alert("Row clicked")
     }
-
-    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

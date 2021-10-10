@@ -91,7 +91,7 @@ export default function EditCustomer(props) {
 		}
     };
 
-	const handleDiscard = () => {
+	const confirmDiscard = () => {
 		props.setStatus('display');
 	}
 
