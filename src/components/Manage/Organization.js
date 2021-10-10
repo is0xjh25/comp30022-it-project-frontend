@@ -4,11 +4,6 @@ import { useState, useEffect } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 
-// import { makeStyles } from '@material-ui/core/styles';
-import CreateOrg from '../../components/Popup/CreateOrg';
-import JoinOrg from '../../components/Popup/JoinOrg';
-import AlertDialog from '../Dialog/AlertDialog';
-
 import { 
     useHistory,  
     useRouteMatch 
@@ -31,88 +26,15 @@ import {
     
 } from '@mui/material'
 
-import {
-    makeStyles
-} from '@mui/styles';
-
-
 import {getOrganization, deleteOrganization, searchMemberInOrg} from '../../api/Manage';
+import CreateOrg from '../../components/Popup/CreateOrg';
+import JoinOrg from '../../components/Popup/JoinOrg';
+import AlertDialog from '../Dialog/AlertDialog';
 
-// CSS style configuration
-const useStyles = makeStyles({
-    // palette: {
-    //     background: {
-    //         default: '#757ce8'
-    //     }
-    // },
-
-    // typography: {
-    //     button: {
-    //         textTransform: 'none'
-    //     },
-    // },
-
-    topic: {
-        // marginTop: theme.spacing(5),
-        // marginLeft: theme.spacing(20),
-        // display: 'flex',
-        // justifyContent: 'flex-start',
-        
-        color: "primary.main",
-    },
-
-    orgGrid: {
-        direction: 'column',
-        justifyContent: 'space-around',
-        wrap: 'nowrap',
-        bgcolor: 'background.paper',
-        borderColor: 'text.primary',
-        m: 1,
-        padding: '30px',
-    },
-    ownBox: {
-        display: 'flex',
-        justifyContent: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        // color: theme.palette.success.main,
-    },
-    memberBox: {
-        display: 'flex',
-        justifyContent: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-    },
-    plusBox: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-    },
-    transferOwnerButton: {
-        position: 'relative',
-        width: 60,
-        height: 60,
-    },
-    deleteButton: {
-        position: 'relative',
-        width: 60,
-        height: 60,
-    }
-});
-
-// loop through all organizations of this user,
+// Loop through all organizations of this user,
 // and display them according to the user's ownership
 function EachOrganization(props) {
     const {org, update} = props;
-    const classes = useStyles();
 
     const history = useHistory();
     let {url} = useRouteMatch();
@@ -121,16 +43,23 @@ function EachOrganization(props) {
 
     };
 
-
-
     return(
         org.owner === true ? 
             <OwnedOrganization org={org} update={update} showDepartment={showDepartment}/>
         :
             <Grid key={org.id} item xs={8}>
-                <Box className={classes.memberBox} bgcolor="info.main">
+                <Box 
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        height: 60,
+                        borderRadius: 2,
+                        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                        bgcolor: 'info.main'
+                    }} 
+                >
                     <Button onClick={() => showDepartment(org.id)}>
-                        {org.name}
+                        <Typography color="text.primary">{org.name}</Typography>
                     </Button>
                 </Box>
             </Grid>
@@ -141,10 +70,9 @@ function EachOrganization(props) {
 
 function OwnedOrganization(props) {
     const {org, update, showDepartment} = props;
-    const classes = useStyles();
 
     //================ Delete Organization ==================
-    // if the user owns the organization, delete button is displayed
+    // If the user owns the organization, delete button is displayed
     const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Delete Confirm';
     const alertMessage = `Do you want to delete ${org.name}?`;
@@ -193,23 +121,29 @@ function OwnedOrganization(props) {
     const handleSelecteMember = (event, e) => {
 		setSelectedMember(e);
 	}
-
     
-
     return (
         <Grid key={org.id} item xs={8}>
-            <Box sx={{display:"flex"}}>
-            <Button onClick={() => showDepartment(org.id)} className={classes.ownBox} sx={{color: "black"}} fullWidth variant="contained">
-                    {org.name}
+            <Box 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: 60,
+                    borderRadius: 2,
+                    boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                    bgcolor: 'success.light'
+                }} 
+            >
+                <Button onClick={() => showDepartment(org.id)} fullWidth >
+                    <Typography sx={{ pl: '120px'}} color="text.primary">{org.name}</Typography>
+                </Button>
 
-            </Button>
-                <IconButton aria-label="personOutlined" onClick={handleTransfer} className={classes.transferOwnerButton}>
+                <IconButton aria-label="personOutlined" onClick={handleTransfer} sx={{height: 60, width: 60}} >
                     <PersonOutlineOutlinedIcon />
                 </IconButton>
                 
-                <IconButton onClick={handleDeleteOrg} aria-label="delete" className={classes.deleteButton}>
+                <IconButton aria-label="delete" onClick={handleDeleteOrg} sx={{height: 60, width: 60}} >
                     <DeleteIcon />
-
                 </IconButton>
             </Box>
             <AlertDialog alertTitle={alertTitle}
@@ -247,31 +181,27 @@ function OwnedOrganization(props) {
                     </ToggleButtonGroup>
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleTransferCancel} color="primary">
-                    Cancel
-                </Button>
-                <Button disabled={selectedMember===undefined} >
-                    Transfer
-                </Button>
-                    {/* {button} */}
+                    <Button onClick={handleTransferCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button disabled={selectedMember===undefined} >
+                        Transfer
+                    </Button>
                 </DialogActions>
             </Dialog>
-
-
-
         </Grid>
     )
 
 }
 
-// the organization component, it displays the user's current joined organizations,
+// The organization component, it displays the user's current joined organizations,
 // and offer buttons for create/join new organizations
 export default function Organization(props) {
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
     const [updateCount, setUpdateCount] = useState(0);
 
-    // request data from backend API everytime updates
+    // Request data from backend API everytime updates
     useEffect(() => {
         getOrganization().then(res => {
             if (res.ok) {
@@ -293,30 +223,48 @@ export default function Organization(props) {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
-    const classes = useStyles();
-
-    // display loading page if the request is not finished
+    // Display loading page if the request is not finished
     if (loading) {
         return <div>loading...</div>
     }
 
     return (
-        <div>
-            <Typography variant="h6" className={classes.topic}>
+        <Grid>
+            <Typography variant="h6">
                 My Orgnizations
             </Typography>
 
-            <Grid className={classes.orgGrid} container rowSpacing={5}>
+            <Grid 
+                sx={{
+                    diplay: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    m: 1,
+                    alignSelf: 'center',
+                }} 
+                container 
+                rowSpacing={5}
+            >
                 {organizations.map((org) => {
                     return (<EachOrganization key={org.id} org={org} update={update}/>)
                 })}
 
                 <Grid item xs={8}>
-                    <Box className={classes.plusBox} bgcolor="text.disabled" sx={{display:'flex', flexDirection: 'row'}}>
+                    <Box
+                        sx={{
+                            diplay: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            height: 60,
+                            borderRadius: 2,
+                            boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                            bgcolor: 'text.disabled',
+
+                        }} >
                         <CreateOrg update={update} /> + <JoinOrg update={update}/>
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </Grid>
     )
 }
