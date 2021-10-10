@@ -3,14 +3,17 @@ import { useState, useEffect } from 'react';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+
+// import { makeStyles } from '@material-ui/core/styles';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
-import {getOrganization, deleteOrganization, searchMemberInOrg} from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
+
+import { 
+    useHistory,  
+    useRouteMatch 
+} from 'react-router-dom';
+
 import {
     Button,
     IconButton,
@@ -21,40 +24,47 @@ import {
     TextField,
     DialogActions,
     ToggleButtonGroup,
-    ToggleButton
+    ToggleButton,
+    Grid,
+    Typography,
+    Box,
+    
 } from '@mui/material'
 
-import { useHistory,  useRouteMatch } from 'react-router-dom';
+import {
+    makeStyles
+} from '@mui/styles';
+
+
+import {getOrganization, deleteOrganization, searchMemberInOrg} from '../../api/Manage';
 
 // CSS style configuration
-const useStyles = makeStyles((theme) => ({
-    palette: {
-        background: {
-            default: '#757ce8'
-        }
-    },
+const useStyles = makeStyles({
+    // palette: {
+    //     background: {
+    //         default: '#757ce8'
+    //     }
+    // },
 
-    typography: {
-        button: {
-            textTransform: 'none'
-        },
-    },
+    // typography: {
+    //     button: {
+    //         textTransform: 'none'
+    //     },
+    // },
 
     topic: {
-        marginTop: theme.spacing(5),
-        marginLeft: theme.spacing(20),
-        display: 'flex',
-        justifyContent: 'flex-start',
-        component: "h1",
+        // marginTop: theme.spacing(5),
+        // marginLeft: theme.spacing(20),
+        // display: 'flex',
+        // justifyContent: 'flex-start',
+        
         color: "primary.main",
     },
 
     orgGrid: {
         direction: 'column',
         justifyContent: 'space-around',
-        warp: 'nowrap',
-        border: 5,
-        borderRadius: 5,
+        wrap: 'nowrap',
         bgcolor: 'background.paper',
         borderColor: 'text.primary',
         m: 1,
@@ -67,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
         border: 4,
         borderRadius: 8,
         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        color: theme.palette.success.main,
+        // color: theme.palette.success.main,
     },
     memberBox: {
         display: 'flex',
@@ -96,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
         width: 60,
         height: 60,
     }
-}));
+});
 
 // loop through all organizations of this user,
 // and display them according to the user's ownership
@@ -189,7 +199,7 @@ function OwnedOrganization(props) {
     return (
         <Grid key={org.id} item xs={8}>
             <Box sx={{display:"flex"}}>
-            <Button onClick={() => showDepartment(org.id)} className={classes.ownBox} sx={{bgcolor: "success.light",color: "black"}} fullWidth variant="contained">
+            <Button onClick={() => showDepartment(org.id)} className={classes.ownBox} sx={{color: "black"}} fullWidth variant="contained">
                     {org.name}
 
             </Button>
@@ -292,20 +302,18 @@ export default function Organization(props) {
 
     return (
         <div>
-            <Typography className={classes.topic}>
+            <Typography variant="h6" className={classes.topic}>
                 My Orgnizations
             </Typography>
 
-            <Grid className={classes.orgGrid} container spacing={5}>
+            <Grid className={classes.orgGrid} container rowSpacing={5}>
                 {organizations.map((org) => {
                     return (<EachOrganization key={org.id} org={org} update={update}/>)
                 })}
 
                 <Grid item xs={8}>
                     <Box className={classes.plusBox} bgcolor="text.disabled" sx={{display:'flex', flexDirection: 'row'}}>
-                        {/* <Button> */}
-                            <CreateOrg update={update} /> + <JoinOrg update={update}/>
-                        {/* </Button> */}
+                        <CreateOrg update={update} /> + <JoinOrg update={update}/>
                     </Box>
                 </Grid>
             </Grid>
