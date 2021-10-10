@@ -6,11 +6,12 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import AlertDialog from '../Dialog/AlertDialog';
-import { updateCustomer } from '../../api/Contact';
+import { handleUpdateCustomer } from '../../api/Contact';
 
 export default function EditCustomer(props) {
 
 	const customerId = props.customerId;
+	const departmentId = props.data.department_id;
 	const [firstName, setFirstName] = useState(props.data.first_name);
 	const [lastName, setLastName] = useState(props.data.last_name);
 	const [middleName, setMiddleName] = useState(props.data.middle_name);
@@ -22,7 +23,6 @@ export default function EditCustomer(props) {
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setorganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
-	
 	const classes = {
 		title: {
 		  	fontSize:30,
@@ -39,7 +39,7 @@ export default function EditCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		grid: {
+		gird: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
@@ -72,7 +72,7 @@ export default function EditCustomer(props) {
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
 			setLastName(e.target.value);
-		} else if (e.target.id === "middleName") {
+		} else if (e.target.id === "middleNmae") {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
@@ -91,16 +91,17 @@ export default function EditCustomer(props) {
 		}
     };
 
-	const confirmDiscard = () => {
-		props.setPageStatus('view');
+	const handleDiscard = () => {
+		props.setStatus('display');
 	}
 
 	const handleUpdate = () => {
 
 		const data = {
-			"first_name":firstName,
-			"last_name":lastName,
-			"middle_name":middleName,
+			"departmentId":departmentId,
+			"firstName":firstName,
+			"lastName":lastName,
+			"middleName":middleName,
 			"email":email,
 			"phone":phone,
 			"description":description,
@@ -111,12 +112,12 @@ export default function EditCustomer(props) {
 			"customerType":customerType
 		}
 
-		updateCustomer(data, customerId).then(res => {
+		handleUpdateCustomer(data, customerId).then(res => {
 			if (res.code===200) {
 				alert("Successfully updated");
-				props.setPageStatus('view');
+				props.setStatus('display');
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
 	}
@@ -124,7 +125,7 @@ export default function EditCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${firstName} ${lastName}?`;
+	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}

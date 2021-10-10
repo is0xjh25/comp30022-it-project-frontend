@@ -3,33 +3,17 @@ import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { displayCustomer, deleteCustomer } from '../../api/Contact';
+import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
-import AlertDialog from '../Dialog/AlertDialog';
-import { useHistory, useParams } from 'react-router';
-import { getMyPermissionLevel } from '../../api/Manage';
 
 export default function DisplayCustomer(props) {
-	
-    const history = useHistory();
-    const {depId, customerId} = useParams();
-    const [authority, setAuthority] = useState(1);
-	const [pageStatus, setPageStatus] = useState("view");
+	//const {authority, customerId} = props;
+	const customerId = 0;
+	const authority = 0;
+	const [status, setStatus] = useState("display");
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
-
-    // Alart Dialog
-	const [alertOpen, setAlertOpen] = useState(false);
-    const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${data.first_name} ${data.last_name}?`;
-    const handleDelete = function() {
-        setAlertOpen(true);
-    }
-    const handleAlertConfirm = function() {
-        confirmDelete();
-        setAlertOpen(false);
-    }
 
 	const classes = {
 		title: {
@@ -52,7 +36,7 @@ export default function DisplayCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		grid: {
+		gird: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
@@ -87,22 +71,16 @@ export default function DisplayCustomer(props) {
 
 	// Fetch data
 	useEffect(() => {
-		displayCustomer(customerId).then(res => {
+		handleDisplayCustomer(customerId).then(res => {
 			if (res.code===200) {
+				console.log(data);
 				setData(res.data);
-                setLoading(false);
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
-
-        getMyPermissionLevel(depId).then(res => {
-            if(res.code === 200) {
-                setAuthority(res.data.authority_level);
-            }
-        });
-        
-    }, [pageStatus, customerId, depId])
+        setLoading(false);
+    }, [status])
 
 	useEffect(() => {
 		return () => {
@@ -114,30 +92,38 @@ export default function DisplayCustomer(props) {
     }
 
 	const confirmDelete = () => {
-		deleteCustomer(customerId).then(res => {
-			if (res.code === 200) {
+		handleDeleteCustomer(info, customerId).then(res => {
+			if (res.ok) {
 				alert("Successfully deleted");
 				handleBack();
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				alert(res.msg);
 			}
 		})
 	}
-
-	const handleBack = () => {
-        history.goBack();
-    }
+	//Haven't done
+	const handleBack = () => {}
 
 	const handleEdit = () => {
-		setPageStatus("edit");
+		setStatus("edit");
 	}
 
-
+	// Alart Dialog
+	const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Delete Confirm';
+    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const handleDelete = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        confirmDelete();
+        setAlertOpen(false);
+    }
 		
 	const showDisplay = 
 	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
 		<Grid container item columnSpacing={4}>
-			<Grid item xs={2} textAlign='center' sx={classes.grid}>
+			<Grid item xs={2} textAlign='center' sx={classes.gird}>
 				<Avatar sx={{ width: 70, height: 70}}></Avatar>
 			</Grid>
 			<Grid item xs={5} textAlign='center' sx={classes.box}>
@@ -196,20 +182,20 @@ export default function DisplayCustomer(props) {
 				<Button style={classes.backButton} variant="outlined" onClick={handleBack}>Back</Button>
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority >= 3 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
+				{authority === 0 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority >= 2 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
+				{authority === 0 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
 			</Grid>
 		</Grid>
 	</Grid>)
 
 	return (
 			<div>
-				{pageStatus === 'view' ? (
+				{status === 'display' ? (
 					showDisplay
-					) : pageStatus === 'edit' ? (
-						<EditCustomer setPageStatus={setPageStatus} data={data} customerId={customerId}/>
+					) : status === 'edit' ? (
+						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
 					): null 
 				}
 				<AlertDialog alertTitle={alertTitle}

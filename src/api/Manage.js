@@ -1,6 +1,24 @@
-import { getCookie, checkUnauthorized } from "./Util";
+const { formatMs } = require('@material-ui/core');
+
+require('dotenv').config();
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
 
 // Gets all users from a department
 function getAllUsers(departmentId, currentPage) {
@@ -14,31 +32,9 @@ function getAllUsers(departmentId, currentPage) {
     }
     return new Promise((resovle) => {
         fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             res.json().then(value => resovle(value));    
         }).catch(err => {
     
-        })
-    })
-}
-
-function searchMember(departmentId, searchKey, size, current) {
-    const url = `${BASE_URL}/department/searchMember?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
-
-    const requestInit = {
-        method: 'GET',
-        headers: {
-            Authorization: getCookie('token'),
-        }
-    }
-    return new Promise((resovle) => {
-        fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(value => resovle(value));    
         })
     })
 }
@@ -53,27 +49,21 @@ function changePermission(userId, permissionLevel, departmentId) {
             Authorization: getCookie('token'),
         },
     }
-    return new Promise(resolve => {
-        fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(resBody => {
-                resolve(resBody);
-            })
-        }).catch(err => {
-    
+    fetch(url, requestInit).then(res => {
+        res.json.then(resJson => {
+            console.log(resJson)
+            return resJson;
         })
-    })
+    }).catch(err => {
 
+    })
 }
 
 // Accept user into a department
 function acceptUser(userId, departmentId) {
-    return changePermission(userId, 1, departmentId)
+    changePermission(userId, 1, departmentId)
 }
 
-// Delete a user from a department
 function deleteUser(userId, departmentId) {
     const url = BASE_URL + '/permission?user_id=' + userId + '&department_id=' + departmentId;
     const requestInit = {
@@ -82,29 +72,20 @@ function deleteUser(userId, departmentId) {
             Authorization: getCookie('token'),
         }
     }
-    return new Promise(resolve => {
-        fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(resBody => {
-                resolve(resBody);
-            })
-            
-        }).catch(err => {
-    
-        })
-    })
+    fetch(url, requestInit).then(res => {
+        console.log(res);
+        return res.body.data;
+    }).catch(err => {
 
+    })
 }
 
-// Delince a user's request to join a department
 function declineUser(userId, departmentId) {
-    return deleteUser(userId, departmentId)
+    deleteUser(userId, departmentId)
 }
 
 // Search an organisation
-function searchOrg(organisation) {
+function handleSearchOrg(organisation) {
 
     const info = {
         method: 'GET',
@@ -114,9 +95,6 @@ function searchOrg(organisation) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/organization/name?organization_name=${organisation}`, info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -128,7 +106,7 @@ function searchOrg(organisation) {
 }
 
 // Join an organisation
-function joinOrg(organisationId) {
+function handleJoinOrg(organisationId) {
 
     const body = new FormData();
     body.append("organization_id", organisationId);
@@ -142,9 +120,6 @@ function joinOrg(organisationId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization/join", info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -156,7 +131,7 @@ function joinOrg(organisationId) {
 }
 
 // Join a department
-function joinDep(departmentId) {
+function handleJoinDep(departmentId) {
     const body = new FormData();
     body.append("department_id", departmentId);
 
@@ -169,9 +144,6 @@ function joinDep(departmentId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/department/join", info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -183,7 +155,7 @@ function joinDep(departmentId) {
 }
 
 // Create an organisation
-function createOrg(organisation) {
+function handleCreateOrg(organisation) {
     
     const body = new FormData();
     body.append("organization_name", organisation);
@@ -197,9 +169,6 @@ function createOrg(organisation) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization", info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -212,7 +181,7 @@ function createOrg(organisation) {
 
 
 // Create a department
-function createDep(organisationId, department) {
+function handleCreateDep(organisationId, department) {
     
     const body = new FormData();
     body.append("organization_id", organisationId);
@@ -227,9 +196,6 @@ function createDep(organisationId, department) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + "/organization/department", info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {
             resolve(res);
         } else {
@@ -240,7 +206,6 @@ function createDep(organisationId, department) {
     })
 }
 
-// Get all organization of the current user
 function getOrganization() {
     const info = {
         method: 'GET',
@@ -252,9 +217,6 @@ function getOrganization() {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + '/organization/myOrganization', info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             if (res.ok) {
                 resolve(res);
             } else {
@@ -265,7 +227,6 @@ function getOrganization() {
     })
 }
 
-// Get all department of the current user and current organization
 function getDepartment(organizationId) {
     const info = {
         method: 'GET',
@@ -277,9 +238,6 @@ function getDepartment(organizationId) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/organization/departments?organization_id=${organizationId}`, info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             if (res.ok) {
                 resolve(res);
             } else {
@@ -290,7 +248,6 @@ function getDepartment(organizationId) {
     })
 }
 
-// Delete an organization
 function deleteOrganization(origanizationId) {
     const url = `${BASE_URL}/organization?organization_id=${origanizationId}`;
     const info = {
@@ -302,17 +259,14 @@ function deleteOrganization(origanizationId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             res.json().then(resBody => {
+                console.log(resBody);
                 resolve(resBody);
             })
         })
     })
 }
 
-// Delete an organization
 function deleteDepartment(departmentId) {
     const url = `${BASE_URL}/department?department_id=${departmentId}`;
     const info = {
@@ -324,17 +278,14 @@ function deleteDepartment(departmentId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             res.json().then(resBody => {
+                console.log(resBody);
                 resolve(resBody);
             })
         })
     })
 }
 
-// Get my permission level from this department
 function getMyPermissionLevel(departmentId) {
     const url = `${BASE_URL}/permission/myPermission?department_id=${departmentId}`;
     const info = {
@@ -346,54 +297,25 @@ function getMyPermissionLevel(departmentId) {
     return new Promise((resolve, reject) => {
         fetch(url, info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            if (res.ok) {
-                res.json().then(resBody => {
-                    resolve(resBody);
-                })
-            } else {
-                alert(res.json().then((resBody) => {alert(resBody.msg)}))
-            }
-        })
-        .catch((error) => {reject(error)})
-    })
-}
-
-function searchMemberInOrg(orgId, searchKey) {
-    const size = 999;
-    const url = `${BASE_URL}/organization/searchMember?organization_id=${orgId}&search_key=${searchKey}&size=${size}&current=${1}`;
-
-    const requestInit = {
-        method: 'GET',
-        headers: {
-            Authorization: getCookie('token'),
-        }
-    }
-    return new Promise((resovle) => {
-        fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(value => resovle(value));    
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
         })
     })
 }
 
-export {
+module.exports = {
+    getCookie,
     getAllUsers,
-    searchMember,
-    searchMemberInOrg,
     changePermission,
     acceptUser,
     deleteUser,
     declineUser,
-    searchOrg,
-    joinOrg,
-    joinDep,
-    createOrg,
-    createDep,
+    handleSearchOrg,
+    handleJoinOrg,
+    handleJoinDep,
+    handleCreateOrg,
+    handleCreateDep,
     getOrganization,
     getDepartment,
     deleteOrganization,

@@ -7,12 +7,9 @@ import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
 import Customer from '../../components/Contact/Customer';
-import DisplayCustomer from '../../components/Contact/DisplayCustomer';
+
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
-
-import DisplayEvents from '../../components/Event/DisplayEvents';
-import ToDoList from '../../components/ToDoList/ToDoList';
 
 import {
     Button,
@@ -24,8 +21,6 @@ import {
     FormControl,
     Select,
     OutlinedInput,
-    Stack,
-    Grid,
     
 } from '@mui/material'
 
@@ -42,27 +37,10 @@ import {
   Redirect,
   useHistory
 } from "react-router-dom";
-// import { Grid } from '@material-ui/core';
-
 
 
 require('dotenv').config();
 
-function Events(props) {
-    return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={8}>
-                <DisplayEvents/>
-            </Grid>
-            <Grid item xs={4}>
-                <ToDoList/>
-            </Grid>
-        </Grid>
-    )
-}
-
-
-// The component to render when Manage is selected
 function Manage(props) {
   let {path} = useRouteMatch();
 
@@ -81,39 +59,27 @@ function Manage(props) {
   )
 }
 
-// The component to render when Contacts is selected
 function Contacts(props) {
-    let { path } = useRouteMatch();
-    
+    let {path, url} = useRouteMatch();
+    const [dialogOpen, setDialogOpen] = useState(true);
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
     const [currentOrganization, setCurrentOrganization] = useState(0);
     const [currentDepartment, setCurrentDepartment] = useState(0);
     const history = useHistory();
-    const [dialogOpen, setDialogOpen] = useState(false);
-
-    const clearSelected = () => {
-        setCurrentDepartment(1);
-        setCurrentOrganization(1);
-    }
 
     const handleDialogOpen = () => {
         setDialogOpen(true);
     }
 
     const handleDialogClose = function() {
-        clearSelected();
         setDialogOpen(false);
+
     }
 
     const handleDialogConfirm = function() {
-        if(currentOrganization < 1 || currentDepartment < 1) {
-            alert('Please select an organization and departmnet!');
-        }else {
-            history.push(`${path}/${currentOrganization}/${currentDepartment}`);
-            setDialogOpen(false);
-            clearSelected();
-        }
+        history.push(`${path}/${currentOrganization}/${currentDepartment}`);
+        setDialogOpen(false);
     }
 
     const handleOrgChange = function(event) {
@@ -128,11 +94,9 @@ function Contacts(props) {
                         return dep.status !== 'notJoin';
                     });
                     if(data.length === 0) {
-                        setDepartments(data);
                         alert('There is no department you can access in this organization!');
                     }else {
                         setDepartments(data);
-                        setCurrentDepartment(0);
                     }
                 }else {
                     alert(resBody.msg);
@@ -206,53 +170,11 @@ function Contacts(props) {
                 </DialogActions>
             </Dialog>
             <Switch>
-                <Route path={`${path}/:orgId/:depId/:customerId`} >
-                    <DisplayCustomer/>
-                </Route>
                 <Route path={`${path}/:orgId/:depId`} >
                     <Customer handleDialogOpen={handleDialogOpen}/>
                 </Route>
                 <Route exact path={`${path}`} >
-                    <Box sx={{m:50, bgcolor:'white'}}>
-                        <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
-                        <DialogContent>
-                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5 }}>
-                                <FormControl sx={{ m: 1, minWidth: 200 }}>
-                                    <InputLabel>{"Organization"}</InputLabel>
-                                    <Select
-                                    native
-                                    value={currentOrganization}
-                                    onChange={handleOrgChange}
-                                    input={<OutlinedInput label={'Organization'}/>}
-                                    >
-                                    <option aria-label="None" value={-1} />
-                                    {organizations.map(item => {
-                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
-                                    })}
-                                    </Select>
-                                </FormControl>
-                                <FormControl disabled={departments.length <= 0} sx={{ m: 1, minWidth: 200 }}>
-                                    <InputLabel>{"Department"}</InputLabel>
-                                    <Select
-                                    native
-                                    value={currentDepartment}
-                                    onChange={handleDepChange}
-                                    input={<OutlinedInput label={'Department'}/>}
-                                    >
-                                    <option aria-label="None" value={-1} />
-                                    {departments.map(item => {
-                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
-                                    })}
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleDialogClose}>Cancel</Button>
-                            <Button onClick={handleDialogConfirm}>Ok</Button>
-                        </DialogActions>
-                    </Box>
-
+                    Try again
                 </Route>
             </Switch>
         </div>
@@ -304,9 +226,6 @@ function Home(props) {
             </Route>
             <Route path={`${url}Contacts`}>
                 <Contacts/>
-            </Route>
-            <Route path={`${url}Events`}>
-                <Events/>
             </Route>
             <Route path={`${url}Manage`}>
                 <Manage/>

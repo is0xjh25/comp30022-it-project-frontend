@@ -1,10 +1,25 @@
-import { getCookie, checkUnauthorized } from "./Util";
-
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
 
-// Get all customer of an organization and department
+// get all customer of an organization and department
 function getAllCustomer (orgId, departId, pageSize, currentPage) {
+    // const orgId = 3
+    // const departId = 4
     const info = {
         method: 'GET',
         headers: {'Authorization': getCookie('token')},
@@ -13,67 +28,55 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + `/contact?organization_id=${orgId}&department_id=${departId}&size=${pageSize}&current=${currentPage}`, info)
         .then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
             if (res.ok) {
                 res.json().then(resBody => {
                     resolve(resBody)
                 });
             } else {
-                // res.json().then(body=>{alert(body.msg)})
+                res.json().then(body=>{alert(body.msg)})
             }
         })
         .catch(error => {reject(error)})
     })
 }
 
-function searchCustomer(departmentId, searchKey, size, current) {
-    const url = `${BASE_URL}/contact/search?department_id=${departmentId}&search_key=${searchKey}&size=${size}&current=${current}`;
-
-    const requestInit = {
-        method: 'GET',
-        headers: {
-            Authorization: getCookie('token'),
-        }
-    }
-    return new Promise((resovle) => {
-        fetch(url, requestInit).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(value => resovle(value));    
-        })
-    })
-}
-
 // Create a customer
-function createCustomer(data, departmentId) {
-    data['department_id'] = departmentId;
+function handleCreateCustomer(data, departmentId) {
+    
+    const body = new FormData();
+    body.append("department_id", departmentId);
+    body.append("email", data.email);
+    body.append("phone", data.phone);
+    body.append("description", data.description);
+    body.append("first_name", data.firstName);
+    body.append("last_name", data.lastName);
+    body.append("middle_name", data.middleName);
+    body.append("gender", data.gender);
+    body.append("birthday", data.dob);
+    body.append("address", data.address);
+    body.append("organization", data.organization);
+    body.append("customer_type", data.customerType);
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
-        body: JSON.stringify(data)
+        headers: {'Authorization': getToken()},
+        body: body
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact`, info)
+    fetch(BASE_URL + `/contact?department_id=${departmentId}`, info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {   
-            res.json().then(bodyRes=>{resolve(bodyRes);});
+            resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
-    }})
+        }})
     .catch(error => {reject(error);})
     })
 }
 
 // Get customer's information
-function displayCustomer(customerId) {
+function handleDisplayCustomer(customerId) {
 
     const info = {
         method: 'GET',
@@ -81,11 +84,8 @@ function displayCustomer(customerId) {
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
+    fetch(BASE_URL + `/contact/detail?client_id=${customerId}`, info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {   
             res.json().then(bodyRes=>{resolve(bodyRes)});
         } else {
@@ -96,7 +96,7 @@ function displayCustomer(customerId) {
 }
 
 // Delete one customer's information
-function deleteCustomer(customerId) {
+function handleDeleteCustomer(customerId) {
 
     const info = {
         method: 'DELETE',
@@ -106,40 +106,43 @@ function deleteCustomer(customerId) {
     return new Promise((resolve, reject) => {
     fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        if (res.ok) {
-            res.json().then(resBody => {
-                resolve(resBody)
-            })
+        if (res.ok) {   
+            resolve(res);
         } else {
-            res.json().then(body => {alert(body.msg)})
-        }
-    })
-    .catch(error => {reject(error)})
+            alert(res.msg);
+        }})
+    .catch(error => {reject(error);})
     })
 }
 
 // Update Customer information
-function updateCustomer(data, customerId) {
+function handleUpdateCustomer(data, customerId) {
     
-    data['id'] = customerId;
+    const body = new FormData();
+    body.append("department_id", data.departmentId);
+    body.append("email", data.email);
+    body.append("phone", data.phone);
+    body.append("description", data.description);
+    body.append("first_name", data.firstName);
+    body.append("last_name", data.lastName);
+    body.append("middle_name", data.middleName);
+    body.append("gender", data.gender);
+    body.append("birthday", data.dob);
+    body.append("address", data.address);
+    body.append("organization", data.organization);
+    body.append("customer_type", data.customerType);
 
     const info = {
         method: 'PUT',
-        headers: {'Authorization': getCookie('token'), 'Content-Type':'application/json'},
-        body: JSON.stringify(data)
+        headers: {'Authorization': getToken()},
+        body: body
     };
 
     return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact`, info)
+    fetch(BASE_URL + `/contact?client_id=${customerId}`, info)
     .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
         if (res.ok) {   
-            res.json().then(bodyRes=>{resolve(bodyRes);});
+            resolve(res);
         } else {
             res.json().then(bodyRes=>{alert(bodyRes.msg);});
         }})
@@ -147,30 +150,10 @@ function updateCustomer(data, customerId) {
     })
 }
 
-// Delete one customer's information
-function searchAllCustomers(searchkey) {
-
-    const info = {
-        method: 'GET',
-        headers: {'Authorization': getCookie('token')},
-    };
-    
-    return new Promise((resovle) => {
-        fetch(BASE_URL + `/contact/searchAll?search_key=${searchkey}`, info).then(res => {
-            if(checkUnauthorized(res)) {
-                return;
-            }
-            res.json().then(value => resovle(value));    
-        })
-    })
-}
-
-export {
+module.exports = {
     getAllCustomer,
-    searchCustomer,
-    createCustomer,
-    displayCustomer,
-    deleteCustomer,
-    updateCustomer,
-    searchAllCustomers
+    handleCreateCustomer,
+    handleDisplayCustomer,
+    handleDeleteCustomer,
+    handleUpdateCustomer
 }

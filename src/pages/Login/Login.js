@@ -4,6 +4,7 @@ import Image from '../../images/road.jpg';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Resend from './Resend';
+import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
 	
@@ -12,29 +13,38 @@ class Login extends React.Component {
 		this.state = this.getInitialState();
 	}
 	
-	getInitialState = () => ({pageStatus: "signIn"});
+	componentDidMount() {
+		if (localStorage.getItem("Token") !== null) {
+		  sessionStorage.setItem("Token", localStorage.getItem("Token"));
+		  <Redirect to={'/'} />
+		}
+	}
+
+	getInitialState = () => ({status: "signIn"});
 
     reset = () => this.setState(this.getInitialState());
 
-	setPageStatus = (a) => this.setState({pageStatus: a});
+	setStatus = (a) => this.setState({status: a});
 
 	render() {
 		
-		// Switch components depending on pageStatus
-		let pageStatus = this.state.pageStatus;
+		let status = this.state.status;
 
 		return(
 			<React.Fragment>
-				<div className={'Login-imageBlock'} >
-					<img src={Image} className={'Login-image'} alt=""/>
+				<div className = {'Login-imageBlock'} >
+					<img src={Image} className = {'Login-image'} alt = ""/>
 				</div>
-				<div className={'Login-sideBlock'}>
-					{pageStatus === 'signIn' ? (
-							<SignIn setPageStatus={this.setPageStatus} />
-						) : pageStatus === 'signUp' ? (
-							<SignUp setPageStatus={this.setPageStatus} />
-						) : pageStatus === 'resend' ? (
-							<Resend setPageStatus={this.setPageStatus} />
+				<div className = {'Login-sideBlock'}>
+					{status === 'signIn' ? (
+							<SignIn
+							setStatus={this.setStatus} />
+						) : status === 'signUp' ? (
+							<SignUp
+							setStatus={this.setStatus} />
+						) : status === 'resend' ? (
+							<Resend 
+							setStatus={this.setStatus} />
 						) : null 
 					}
 				</div>

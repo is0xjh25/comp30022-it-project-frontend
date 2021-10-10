@@ -6,11 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {createDep} from '../../api/Manage';
+import {handleCreateDep} from '../../api/Manage';
 
 export default function CreateDep(props) {
-	
 	const update = props.update;
+
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
@@ -37,7 +37,7 @@ export default function CreateDep(props) {
 	const handleCreate = () =>{
 		
 		if (department !== "") {
-			createDep(props.organization_id, department).then(res => {
+			handleCreateDep(props.organization_id, department).then(res => {
 			if (res.ok) {
 				update();
 				alert("Successfully created");

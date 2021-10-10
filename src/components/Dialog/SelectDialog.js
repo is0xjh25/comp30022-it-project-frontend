@@ -10,7 +10,6 @@ import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Box from "@material-ui/core/Box";
 
-// A common select dialog implementation, can customize title, message, select items and so on..
 export default function DialogSelect(props) {
     const {items, currentSelected ,title , label, open, handleChange, handleClose, handleConfirm} = props;
 
