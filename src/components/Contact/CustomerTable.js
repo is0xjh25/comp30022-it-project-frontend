@@ -26,7 +26,7 @@ import ImageIcon from '@material-ui/icons/Image';
 
 // Columns are the labels of the table
 const columns = [
-    { id: 'avatar', label: 'avator', minWidth: 50, align: 'center'},
+    { id: 'avatar', label: 'avator', minWidth: 40, align: 'center'},
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
@@ -192,7 +192,7 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customer_id}>
-            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="normal">
                 <Avatar src={`data:image/gif;base64,${row.photo}`} sx={{ align: 'right'}}>
                     <ImageIcon/>
                 </Avatar>

@@ -163,6 +163,7 @@ export default function EditCustomer(props) {
 								<label htmlFor="contained-button-file">
 								<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
 										uploadContactPhoto(customerId, e.currentTarget.files[0]);
+										window.location.reload();
 									}}/>
 								<IconButton color="primary" aria-label="upload picture" component="span">
 									<ChangeCircleRoundedIcon size="small"/>
@@ -171,7 +172,7 @@ export default function EditCustomer(props) {
 							}
 						>
 							<Avatar src={`data:image/gif;base64,${photo}`}
-								sx={{ width: 70, height: 70}}>
+								sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>
 					</Grid>
@@ -227,7 +228,7 @@ export default function EditCustomer(props) {
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
-							<FormControl fullWidth>
+							<FormControl>
 								<Select
 									id="gender"
 									value={gender}
