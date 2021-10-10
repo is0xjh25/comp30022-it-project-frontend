@@ -207,7 +207,7 @@ export default function AddCustomer(props) {
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
-							<FormControl>
+							<FormControl fullWidth>
 								<Select
 									id="gender"
 									value={gender}

@@ -240,7 +240,6 @@ export default function DisplayUser() {
 									<label htmlFor="contained-button-file">
 									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
 											uploadUserPhoto(e.currentTarget.files[0]);
-											window.location.reload();
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
 										<ChangeCircleRoundedIcon size="small"/>
@@ -248,7 +247,7 @@ export default function DisplayUser() {
 									</label>
 								}
 							>
-								<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
+								<Avatar id="user_avator" src={`data:image/gif;base64,${data.photo}`}
 									sx={{ width: 70, height: 70}}>
 								</Avatar>
 							</Badge>
