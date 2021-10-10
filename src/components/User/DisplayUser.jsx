@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
-import { uploadPhoto } from '../../api/UploadPhoto';
+import { Input,uploadUserPhoto } from '../../api/UploadPhoto';
 import AlertDialog from '../Dialog/AlertDialog';
 import {
 	Avatar,
@@ -13,7 +13,6 @@ import {
     TextField,
 	Badge 
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 
 export default function DisplayUser() {
@@ -227,9 +226,7 @@ export default function DisplayUser() {
 		rightButton = <Button xs={6} textAlign='center' style={classes.editButton} variant="outlined" onClick={handleUpdate}>Update</Button>;
 	}
 
-	const Input = styled('input')({
-		display: 'none',
-	  });
+
 
 	return (
 			<div>
@@ -242,7 +239,7 @@ export default function DisplayUser() {
 								badgeContent={
 									<label htmlFor="contained-button-file">
 									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
-											uploadPhoto(e.currentTarget.files[0]);
+											uploadUserPhoto(e.currentTarget.files[0]);
 											window.location.reload();
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
@@ -250,7 +247,7 @@ export default function DisplayUser() {
 									</IconButton>
 									</label>
 								}
-							>{/* A JSX comment */}
+							>
 								<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
 									sx={{ width: 70, height: 70}}>
 								</Avatar>

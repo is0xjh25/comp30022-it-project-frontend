@@ -21,9 +21,12 @@ import { getOrganization, getDepartment } from '../../api/Manage';
 import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
 import SearchBar from '../SearchBar/SearchBar';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
 
 // Columns are the labels of the table
 const columns = [
+    { id: 'photo', label: 'Photo', minWidth: 50, align: 'center'},
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
@@ -189,6 +192,11 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customer_id}>
+            <TableCell onClick={onRowClick} align="right" component="th" scope="row" padding="none">
+                <Avatar src={`data:image/gif;base64,${row.photo}`}>
+                    <ImageIcon/>
+                </Avatar>
+            </TableCell>
             <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
                 {row.name}
             </TableCell>
