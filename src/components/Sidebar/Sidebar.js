@@ -74,7 +74,7 @@ function Sidebar(props) {
         <div className='sidebar-user'>
             <div className='sidebar-user-avatar-container'>
                 <div className='sidebar-user-avatar'>
-                    <Avatar>
+                    <Avatar src={`data:image/gif;base64,${currentUser.photo}`}>
                         <ImageIcon/>
                     </Avatar>
                 </div>
