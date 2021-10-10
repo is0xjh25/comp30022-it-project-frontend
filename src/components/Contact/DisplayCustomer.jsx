@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import { handleDisplayCustomer, handleDeleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
 import Box from '@mui/material/Box';
+import AlertDialog from '../Dialog/AlertDialog';
 
 export default function DisplayCustomer(props) {
 	//const {authority, customerId} = props;
@@ -92,7 +93,7 @@ export default function DisplayCustomer(props) {
     }
 
 	const confirmDelete = () => {
-		handleDeleteCustomer(info, customerId).then(res => {
+		handleDeleteCustomer(customerId).then(res => {
 			if (res.ok) {
 				alert("Successfully deleted");
 				handleBack();
@@ -111,7 +112,7 @@ export default function DisplayCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Delete Confirm';
-    const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+    const alertMessage = `Do you want to delete {data.first_name} {data.last_name}?`;
     const handleDelete = function() {
         setAlertOpen(true);
     }
@@ -198,12 +199,13 @@ export default function DisplayCustomer(props) {
 						<EditCustomer setStatus={setStatus} data={data} customerId={customerId}/>
 					): null 
 				}
-				<AlertDialog alertTitle={alertTitle}
-                alertMessage={alertMessage}
-                open={alertOpen}
-                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
-                handleConfirm={handleAlertConfirm}
-                handleCancel={() => { setAlertOpen(false) }}
+				<AlertDialog 
+					alertTitle={alertTitle}
+					alertMessage={alertMessage}
+					open={alertOpen}
+					handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+					handleConfirm={handleAlertConfirm}
+					handleCancel={() => { setAlertOpen(false) }}
                 />
 			</div>
 	);

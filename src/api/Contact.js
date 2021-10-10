@@ -59,7 +59,7 @@ function handleCreateCustomer(data, departmentId) {
 
     const info = {
         method: 'POST',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 
@@ -134,7 +134,7 @@ function handleUpdateCustomer(data, customerId) {
 
     const info = {
         method: 'PUT',
-        headers: {'Authorization': getToken()},
+        headers: {'Authorization': getCookie('token')},
         body: body
     };
 
