@@ -289,34 +289,40 @@ function Home(props) {
 
 
   return(
-    <div className='home-main-container'>
-      <div className='sidebar-container'>
-        <Sidebar selectedPage={selectedPage} changePage={changePage} currentUser={currentUser}/>
-      </div>
-      <div className='sidebar-body'>
-        <Switch>
-
-            <Route exact path={`${url}`}>
-                <Redirect to={`${url}Dashboard`}/>
-            </Route>
-            <Route path={`${url}Dashboard`}>
+    <Grid container>
+        <Grid item xs={2}>
+            <Sidebar selectedPage={selectedPage} changePage={changePage} currentUser={currentUser}/>
+        </Grid>
+        <Grid item xs={10}>
+            <Switch>
                 
-            </Route>
-            <Route path={`${url}Contacts`}>
-                <Contacts/>
-            </Route>
-            <Route path={`${url}Events`}>
-                <Events/>
-            </Route>
-            <Route path={`${url}Manage`}>
-                <Manage/>
-            </Route>
-            <Route path={`${url}TestContact/:orgId/:depId`}>
-                <Customer/>
-            </Route>
-        </Switch>
-      </div>
-    </div>
+                <Route exact path={`${url}`}>
+                    <Redirect to={`${url}Dashboard`}/>
+                </Route>
+
+                <Route path={`${url}Dashboard`}>
+                </Route>
+
+                <Route path={`${url}Contacts`}>
+                    <Contacts/>
+                </Route>
+
+                <Route path={`${url}Events`}>
+                    <Events/>
+                </Route>
+
+                <Route path={`${url}Manage`}>
+                    <Manage/>
+                </Route>
+
+                <Route path={`${url}TestContact/:orgId/:depId`}>
+                    <Customer/>
+                </Route>
+
+            </Switch>
+        </Grid>
+
+    </Grid>
   )
 }
 

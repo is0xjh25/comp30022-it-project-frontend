@@ -1,46 +1,39 @@
 import React, { useState } from 'react';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 
-import Dashboard from '@material-ui/icons/Dashboard';
-import Contact from '@material-ui/icons/Person';
-import Event from '@material-ui/icons/ChatBubble';
-import Manage from '@material-ui/icons/People';
-import ImageIcon from '@material-ui/icons/Image';
-import SettingsIcon from '@material-ui/icons/MoreHoriz'
-import LogOutIcon from '@material-ui/icons/ExitToApp';
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+    Dashboard,
+    Person as Contact,
+    ChatBubble as Event,
+    People as Manage,
+    Image as ImageIcon,
+    MoreHoriz as SettingsIcon,
+    ExitToApp as LogOutIcon
+} from '@material-ui/icons';
+
+
+import {
+    Drawer,
+    Button,
+    List,
+    Divider,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Avatar,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Typography,
+    Grid
+
+} from '@mui/material';
+
+
 import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
 
-
-
-import './Sidebar.css';
-
-require('dotenv').config();
-
-const useStyles = makeStyles((theme) => ({
-    divider: {
-        background: '#109CF1'
-    },
-
-}))
-
-function MyDivider() {
-    const classes = useStyles();
-    return <Divider className={classes.divider} variant='middle'></Divider>
-}
 
 function Sidebar(props) {
     const {changePage, selectedPage, currentUser} = props;
@@ -65,32 +58,31 @@ function Sidebar(props) {
     ]
 
     const title = (
-        <div className='sidebar-title'>
+        <Typography  variant='h3' sx={{color: '#109CF1', textAlign: 'center', py: '2%', fontFamily: 'NTR', fortStyle: 'normal'}}>
             ConnecTI
-        </div>
+        </Typography>
     )
 
     const user = (
-        <div className='sidebar-user'>
-            <div className='sidebar-user-avatar-container'>
-                <div className='sidebar-user-avatar'>
-                    <Avatar src={`data:image/gif;base64,${currentUser.photo}`}>
+        <Grid container>
+            <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                <Avatar src={`data:image/gif;base64,${currentUser.photo}`}>
                         <ImageIcon/>
-                    </Avatar>
-                </div>
-                <div className='sidebar-user-text'>
-                    Edit Profile
-                </div>
-            </div>
-            <div className='sidebar-user-main'>
-                <div className='sidebar-user-name'>
-                    {`${currentUser.first_name} ${currentUser.last_name}`}
-                </div>
-                <div className='sidebar-user-email'>
-                    {`${currentUser.email}`}
-                </div>
-            </div>
-        </div>
+                </Avatar>
+            </Grid>
+            <Grid container item xs={9} direction='column'>
+                <Grid sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography >
+                        {`${currentUser.first_name} ${currentUser.last_name}`}
+                    </Typography>
+                </Grid>
+                <Grid>
+                    <Typography sx={{display: 'flex', justifyContent: 'center', color: 'gray', fontSize: 'small'}}> 
+                        {`${currentUser.email}`}
+                    </Typography>
+                </Grid>
+            </Grid>
+        </Grid>
     )
 
     const navList = (
@@ -103,24 +95,6 @@ function Sidebar(props) {
                     </ListItem>
                 ))}
             </List>
-        </div>
-    )
-
-    const recentContacts = (
-        <div>
-            {/* <List>
-                {[1,2,3,4,5].map(item => (
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <ImageIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Mrs." secondary="Andy Liu" />
-                </ListItem>
-                ))}
-
-            </List> */}
         </div>
     )
 
@@ -188,20 +162,25 @@ function Sidebar(props) {
     )
 
     return(
-        <div>
-            <Drawer variant='permanent'>
-                {title}
-                {user}
-                {navList}
-                <MyDivider />
-                {recentContacts}
-                <div className='sidebar-stick-bottom'>
-                    {settings}
-                    {logOut}
-                </div>
-            </Drawer>
-            {process.env.BASE_URL}
-        </div>
+        <Drawer 
+        variant='permanent'
+
+        sx={{
+            width: '100%',
+            '& .MuiDrawer-paper' : {
+                width: '16.7%', // 16.7% = 2/12
+                maxWidth: '16.7%'
+            }
+        }}>
+            {title}
+            {user}
+            {navList}
+            <Divider />
+            <div className='sidebar-stick-bottom'>
+                {settings}
+                {logOut}
+            </div>
+        </Drawer>
     )
 }
 
