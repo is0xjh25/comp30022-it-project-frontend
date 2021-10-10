@@ -66,8 +66,8 @@ function Sidebar(props) {
     const user = (
         <Grid container>
             <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
-                <Avatar >
-                    <ImageIcon/>
+                <Avatar src={`data:image/gif;base64,${currentUser.photo}`}>
+                        <ImageIcon/>
                 </Avatar>
             </Grid>
             <Grid container item xs={9} direction='column'>

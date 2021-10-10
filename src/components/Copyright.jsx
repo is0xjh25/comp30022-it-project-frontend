@@ -1,5 +1,8 @@
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import {
+	Typography,
+	Link
+} from '@mui/material';
+
 
 function Copyright() {
 	return (

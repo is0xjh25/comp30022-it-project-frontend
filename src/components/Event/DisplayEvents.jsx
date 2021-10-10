@@ -1,8 +1,8 @@
-import React, { Fragment, useState, useEffect } from "react";
-import DateFnsUtils from '@date-io/date-fns';
+import { Fragment, useState, useEffect } from "react";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
+import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";

@@ -256,8 +256,8 @@ function EnhancedTableRow(props) {
     >
       
       <TableCell padding="normal">
-        <Avatar>
-          <ImageIcon />
+        <Avatar src={`data:image/gif;base64,${row.photo}`}>
+          <ImageIcon/>
         </Avatar>
       </TableCell>
       <TableCell component="th" scope="row" padding="none">

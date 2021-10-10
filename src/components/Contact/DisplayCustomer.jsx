@@ -1,14 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import { displayCustomer, deleteCustomer } from '../../api/Contact';
 import EditCustomer from './EditCustomer';
-import Box from '@mui/material/Box';
 import AlertDialog from '../Dialog/AlertDialog';
 import { useHistory, useParams } from 'react-router';
 import { getMyPermissionLevel } from '../../api/Manage';
+import {
+    Button,
+	Box,
+	Grid,
+	Avatar
+} from '@mui/material';
+
 
 export default function DisplayCustomer(props) {
 	

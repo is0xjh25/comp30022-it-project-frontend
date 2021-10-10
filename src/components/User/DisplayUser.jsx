@@ -1,13 +1,20 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
+import { uploadPhoto } from '../../api/UploadPhoto';
 import AlertDialog from '../Dialog/AlertDialog';
+import {
+	Avatar,
+	Box,
+    Button,
+	IconButton,
+	Grid,
+    TextField,
+	Badge 
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 
 export default function DisplayUser() {
     
@@ -219,15 +226,38 @@ export default function DisplayUser() {
 		leftButton = <Button xs={6} textAlign='center' style={classes.discardButton} variant="outlined" onClick={handleDiscard}>Discard</Button>;
 		rightButton = <Button xs={6} textAlign='center' style={classes.editButton} variant="outlined" onClick={handleUpdate}>Update</Button>;
 	}
-		
+
+	const Input = styled('input')({
+		display: 'none',
+	  });
+
 	return (
 			<div>
 				<Grid container rowSpacing={10} sx={{pt:8, px:15}}>
 					<Grid container item columnSpacing={5}>
 						<Grid item xs={12} textAlign='center' sx={classes.grid}>
-							<Avatar sx={{ width: 70, height: 70}}></Avatar>
+							<Badge
+								overlap="circular"
+								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+								badgeContent={
+									<label htmlFor="contained-button-file">
+									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
+											uploadPhoto(e.currentTarget.files[0]);
+											window.location.reload();
+										}}/>
+									<IconButton color="primary" aria-label="upload picture" component="span">
+										<ChangeCircleRoundedIcon size="small"/>
+									</IconButton>
+									</label>
+								}
+							>{/* A JSX comment */}
+								<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
+									sx={{ width: 70, height: 70}}>
+								</Avatar>
+							</Badge>
 						</Grid>
 					</Grid>
+					
 					<Grid container item rowSpacing={5} columnSpacing={3}>
 						<Grid item xs={6} textAlign='center'sx={classes.box}>
 							<Box sx={classes.title}>First Name</Box> 
