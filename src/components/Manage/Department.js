@@ -49,7 +49,7 @@ function OwnedDepartment(props) {
                     bgcolor: 'success.light'
                 }} 
             >
-                <Button onClick={() => showMembers(department.id)} alignItems='center'>
+                <Button onClick={() => showMembers(department.id)} fullWidth>
                     <Typography sx={{ pl: '60px'}} color="text.primary">{department.name}</Typography>
                 </Button>
                 <IconButton onClick={handleDeleteDep} aria-label="delete" sx={{height: 60, width: 60}} >
