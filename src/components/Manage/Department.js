@@ -1,95 +1,26 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import CreateDep from '../../components/Popup/CreateDep';
-import {getDepartment, deleteDepartment, joinDep} from '../../api/Manage';
-import AlertDialog from '../Dialog/AlertDialog';
-
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
 
-// CSS style configuration
-const useStyles = makeStyles((theme) => ({
-    palette: {
-        background: {
-            default: '#757ce8'
-        }
-    },
+// MUI import
+import DeleteIcon from '@material-ui/icons/Delete';
+import {
+    Button,
+    IconButton,
+    Grid,
+    Typography,
+    Box,
+    
+} from '@mui/material'
 
-    typography: {
-        button: {
-            textTransform: 'none'
-        },
-    },
+// Local import
+import {getDepartment, deleteDepartment, joinDep} from '../../api/Manage';
+import AlertDialog from '../Dialog/AlertDialog';
+import CreateDep from '../../components/Popup/CreateDep';
 
-    topic: {
-        marginTop: theme.spacing(5),
-        marginLeft: theme.spacing(20),
-        display: 'flex',
-        justifyContent: 'flex-start',
-        component: "h1",
-        color: "primary.main",
-    },
-
-    manageGrid: {
-        alignItems: 'flex-start',
-        direction: 'column',
-        justifyContent: 'space-around',
-        warp: 'nowrap',
-        border: 5,
-        borderRadius: 5,
-        bgcolor: 'background.paper',
-        borderColor: 'text.primary',
-        m: 1,
-        padding: '30px',
-    },
-    ownBox: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-        color: theme.palette.success.main,
-    },
-    memberBox: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-    },
-    plusBox: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: 60,
-        border: 4,
-        borderRadius: 8,
-        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-    },
-    transferOwnerButton: {
-        position: 'absolute',
-        right: 300
-    },
-    deleteButton: {
-        position: 'absolute',
-        right: 250,
-    }
-}));
-
-// if the user owns the department, delete button is diaplayed
+// If the user owns the department, delete button is diaplayed
 function OwnedDepartment(props) {
     const {department, update, showMembers} = props;
-    const classes = useStyles();
 
     //================ Delete Department ==================
 
@@ -105,14 +36,23 @@ function OwnedDepartment(props) {
         update();
     }
 
-    // link the department to member management page
+    // Link the department to member management page
     return(
         <Grid key={department.id} item xs={8}>
-            <Box className={classes.ownBox} bgcolor="success.main">
+            <Box 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: 60,
+                    borderRadius: 2,
+                    boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                    bgcolor: 'success.light'
+                }} 
+            >
                 <Button onClick={() => showMembers(department.id)} alignItems='center'>
-                    {department.name}
+                    <Typography sx={{ pl: '60px'}} color="text.primary">{department.name}</Typography>
                 </Button>
-                <IconButton onClick={handleDeleteDep} aria-label="delete" className={classes.deleteButton}>
+                <IconButton onClick={handleDeleteDep} aria-label="delete" sx={{height: 60, width: 60}} >
                     <DeleteIcon />
                 </IconButton>
             </Box>
@@ -127,10 +67,9 @@ function OwnedDepartment(props) {
     )
 }
 
-// display all not joined department in the organization, and click to send a join request
+// Display all not joined department in the organization, and click to send a join request
 function NotJoinedDepartment(props) {
     const {department, update} = props;
-    const classes = useStyles();
 
     //================ Delete Department ==================
 
@@ -149,9 +88,20 @@ function NotJoinedDepartment(props) {
 
     return (
         <Grid key={department.id} item xs={8}>
-            <Box className={classes.plusBox} bgcolor="text.disabled">
+            <Box
+                sx={{
+                    diplay: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    height: 60,
+                    borderRadius: 2,
+                    boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                    bgcolor: 'text.disabled',
+
+                }} 
+            >
                 <Button onClick={handleJoinDepartment}>
-                    {department.name}
+                    <Typography color="text.primary">{department.name}</Typography>
                 </Button>
             </Box>
             <AlertDialog alertTitle={alertTitle}
@@ -165,7 +115,7 @@ function NotJoinedDepartment(props) {
     )
 }
 
-// loop through all department in this organization, and display them according to 
+// Loop through all department in this organization, and display them according to 
 // the user's authority level
 export default function Department(props) {
     const [loading, setLoading] = useState(true);
@@ -179,7 +129,7 @@ export default function Department(props) {
         setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
     }
 
-    // request data from backend API
+    // Request data from backend API
     useEffect(() => {
         const id = orgId;
         getDepartment(id).then(res => {
@@ -196,20 +146,18 @@ export default function Department(props) {
         })
     }, [updateCount])
 
-    const classes = useStyles();
-
-    // display loading page if the request is not finished
+    // Display loading page if the request is not finished
     if (loading) {
         return <div>loading...
         </div>
     }
 
-    // diaplay members in the department
+    // Diaplay members in the department
     const showMembers = (depId) => {
         history.push(`${url}/${depId}`);
     }
 
-    // diplay departments accordingly
+    // Diplay departments accordingly
     const own = [];
     const member = [];
     const other = [];
@@ -221,9 +169,18 @@ export default function Department(props) {
         } else if(department.status==="member") {
             member.push(
                 <Grid key={department.id} item xs={8}>
-                    <Box className={classes.memberBox} bgcolor="info.main">
+                    <Box 
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            height: 60,
+                            borderRadius: 2,
+                            boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                            bgcolor: 'info.main'
+                        }} 
+                    >
                         <Button onClick={() => showMembers(department.id)}>
-                            {department.name}
+                            <Typography color="text.primary">{department.name}</Typography>
                         </Button>
                     </Box>
                 </Grid>
@@ -237,24 +194,53 @@ export default function Department(props) {
 
     return (
         <div>
-            <Typography className={classes.topic}>
+            <Typography variant="h6">
                 Joined Departments
             </Typography>
 
-            <Grid className={classes.manageGrid} container spacing={5}>
+            <Grid
+                sx={{
+                    diplay: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    m: 1,
+                }} 
+                container 
+                rowSpacing={5}
+            >
                 {own}
                 {member}
             </Grid>
 
-            <Typography className={classes.topic}>
+            <Typography variant="h6">
                 Not Joined Departments
             </Typography>
 
-            <Grid className={classes.manageGrid} container spacing={5}>
+            <Grid
+                sx={{
+                    diplay: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    m: 1,
+                }} 
+                container 
+                rowSpacing={5}
+            >
                 {other}
                 
                 <Grid key="createNew" item xs={8}>
-                    <Box className={classes.plusBox} bgcolor="text.disabled">
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 60,
+                            borderRadius: 2,
+                            boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                            bgcolor: 'text.disabled',
+
+                        }} 
+                    >
                         <Button>
                             <CreateDep organization_id={orgId} update={update}/>
                         </Button>

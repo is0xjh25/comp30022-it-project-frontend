@@ -1,14 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
-
 import { 
     useHistory,  
     useRouteMatch 
 } from 'react-router-dom';
 
+// MUI import
+import DeleteIcon from '@material-ui/icons/Delete';
+import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import {
     Button,
     IconButton,
@@ -26,6 +25,7 @@ import {
     
 } from '@mui/material'
 
+// Local import
 import {getOrganization, deleteOrganization, searchMemberInOrg} from '../../api/Manage';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
@@ -96,14 +96,12 @@ function OwnedOrganization(props) {
     }
     
     const handleTransferCancel = function() {
-        console.log("Cancelled");
         setTransferOpen(false);
         setSelectedMember(undefined);
         setMembers([]);
     }
 
     const handleOnChange = function(event) {
-        console.log(event.target.value);
         searchMemberInOrg(org.id, event.target.value).then(res => {
             if (res.code === 200) {
                 const data = res.data
@@ -249,18 +247,19 @@ export default function Organization(props) {
                     return (<EachOrganization key={org.id} org={org} update={update}/>)
                 })}
 
-                <Grid item xs={8}>
+                <Grid key="createOrJoin" item xs={8}>
                     <Box
                         sx={{
-                            diplay: 'flex',
-                            flexDirection: 'row',
+                            display: 'flex',
+                            alignItems: 'center',
                             justifyContent: 'center',
                             height: 60,
                             borderRadius: 2,
                             boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                             bgcolor: 'text.disabled',
 
-                        }} >
+                        }} 
+                    >
                         <CreateOrg update={update} /> + <JoinOrg update={update}/>
                     </Box>
                 </Grid>
