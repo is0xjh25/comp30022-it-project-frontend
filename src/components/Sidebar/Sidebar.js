@@ -21,7 +21,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { handleLogout } from '../../api/Login';
+import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
 
 
@@ -84,7 +84,7 @@ function Sidebar(props) {
             </div>
             <div className='sidebar-user-main'>
                 <div className='sidebar-user-name'>
-                    {`${currentUser.firstName} ${currentUser.lastName}`}
+                    {`${currentUser.first_name} ${currentUser.last_name}`}
                 </div>
                 <div className='sidebar-user-email'>
                     {`${currentUser.email}`}
@@ -148,11 +148,11 @@ function Sidebar(props) {
 	
 	// Logout
   	const handleConfirm = () => {
-		handleLogout().then(res => {
+		logout().then(res => {
 			if (res.ok) {
 				alert("Successfully logout");
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-				history.push("./login");
+				history.push("/Login");
 			} else {
 				console.log("!!!");
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});

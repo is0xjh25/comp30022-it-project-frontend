@@ -9,10 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import { handleSignUp } from '../../api/Login';
+import { useHistory , NavLink } from 'react-router-dom';
+import { signUp } from '../../api/Login';
+import { setCookie } from '../../api/Util';
 
+// Style sheet
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		fontFamily: 'Optima-Italic',
@@ -54,7 +55,6 @@ export default function SignUp(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [organization, setorganization] = useState("");
-	const [error, setError] = useState("");
 
 	let history = useHistory();
 
@@ -78,57 +78,62 @@ export default function SignUp(props) {
 	const handleValidation = () => {
 
 		let formIsValid = true;
-		
+		let alertMessage = "";
+
 		if (!password) {
 			formIsValid = false;
-			setError("Password cannot be empty ಠ_ಠ");
+			alertMessage = "Password cannot be empty ಠ_ಠ";
 		}
 
 		if (!email) {
 			formIsValid = false;
-			setError("Email cannot be empty (ʘдʘ╬)");
+			alertMessage = "Email cannot be empty (ʘдʘ╬)";
 		} else if (typeof email !== "undefined") {
 			 let lastAtPos = email.lastIndexOf('@');
 			 let lastDotPos = email.lastIndexOf('.');
 			 if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
 				formIsValid = false;
-				setError("Invalid email 눈_눈");
+				alertMessage = "Invalid email 눈_눈";
 			}
 		}
 
 		if (!phone) {
 			formIsValid = false;
-			setError("Phone Number cannot be empty ಠ_ಠ");
+			alertMessage = "Phone Number cannot be empty ಠ_ಠ";
 		} else if (typeof phone !== "undefined") {
 			if (phone.length !== 10) {
 			   formIsValid = false;
-			   setError("Invalid phone number 눈_눈");
+			   alertMessage = "Invalid phone number 눈_눈";
 			}        
 		}
 
 		if (!lastName) {
 			formIsValid = false;
-			setError("Last Name cannot be empty ಠ_ಠ");
+			alertMessage = "Last Name cannot be empty ಠ_ಠ";
 		} else if (typeof lastName !== "undefined") {
 			if (!lastName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
-			   setError("Invalid last name 눈_눈");
+			   alertMessage = "Invalid last name 눈_눈";
 			}        
 		}
 
 		if (!firstName) {
 			formIsValid = false;
-			setError("First Name cannot be empty ಠ_ಠ");
+			alertMessage = "First Name cannot be empty ಠ_ಠ";
 		} else if (typeof firstName !== "undefined") {
 			if (!firstName.match(/^[a-zA-Z-]+$/)) {
 			   formIsValid = false;
-			   setError("Invalid first name 눈_눈");
+			   alertMessage = "Invalid first name 눈_눈";
 			}        
 		}
 
 		if (!email && !password && !firstName && !lastName && !phone) {
 			formIsValid = false;
-			setError("Hey, just tell me something about you (#｀皿´)");
+			alertMessage = "Hey, just tell me something about you (#｀皿´)";
+		}
+
+		if (alertMessage !== "") {
+			alert(alertMessage);
 		}
 
 		return formIsValid;
@@ -139,19 +144,19 @@ export default function SignUp(props) {
 		e.preventDefault();
 
 		if (handleValidation()) {
-			handleSignUp (email, password, firstName, lastName, phone, organization).then(res => {
+			signUp (email, password, firstName, lastName, phone, organization).then(res => {
 			if (res.ok) {
-				alert("Welcom to join ConnecTI !");
-				let data = res.headers.get("Authorization");
-				sessionStorage.setItem('Token', data);
-				history.push('/');
+				setCookie('token', res.headers.get("Authorization"), 1)
+                res.json().then(resBody => {
+                    console.log(resBody);
+                })
+				alert("Please go to your email and activiate your account");
+				history.push('/login');
 			} else {
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
-				history.push('/Login');
+				history.push('/login');
 			}
 			})
-		} else {
-		   	alert(error);
 		}
 	};
 
@@ -245,12 +250,12 @@ export default function SignUp(props) {
 			</Button>
 			<Grid container>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("resend")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setStatus("signIn")}>
+				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("signIn")}>
 					{"Already have an account"}
 				</NavLink>
 				</Grid>

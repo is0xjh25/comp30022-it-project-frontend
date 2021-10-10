@@ -3,9 +3,8 @@ import {Switch, Route } from 'react-router-dom';
 import Swagger from './Swagger/Swagger';
 import Home from './Home/Home';
 import Login from './Login/Login';
-
-import Member from '../components/Members/Members'
-import DisplayCustomer from '../components/Contact/DisplayCustomer';
+import Verify from './Login/Verify';
+import DisplayUser from '../components/User/DisplayUser';
 
 function PageNavigator() {
     return (
@@ -17,19 +16,15 @@ function PageNavigator() {
             <Route path ='/login'>
                 <Login/>
             </Route>
-
-            <Route path ='/member'>
-                <Member/>
+            <Route path ='/verify'>
+                <Verify/>
             </Route>
-            
-            <Route path='/asd'>
-                <DisplayCustomer />
+            <Route path ='/user'>
+                <DisplayUser/>
             </Route>
-
             <Route path='/'>
                 <Home/>
             </Route>
-
             
         </Switch>
     );

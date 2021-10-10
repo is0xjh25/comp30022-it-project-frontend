@@ -22,10 +22,7 @@ import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } fr
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 
-
-
-
-
+import {formatTime} from '../../api/Util';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -62,6 +59,7 @@ const headCells = [
   { id: 'manage', numeric: true, disablePadding: false, label: 'Manage' },
 ];
 
+// The table head of the table
 function EnhancedTableHead(props) {
   const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -108,6 +106,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
+// The permission levels in the department
 const permissionLevels = [
   {authorityLevel: 0, name: 'Pending to join'},
   {authorityLevel: 1, name: 'Member'},
@@ -138,10 +137,16 @@ function EnhancedTableRow(props) {
     setAlertOpen(true);
   }
   const handleAlertConfirm = function() {
-    deleteUser(row.userId, departmentId);
-    alert(`${row.name} is deleted`);
-    setAlertOpen(false);
-    update();
+    deleteUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            alert(`${row.name} is deleted`);
+            setAlertOpen(false);
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+
   }
 
 
@@ -164,16 +169,16 @@ function EnhancedTableRow(props) {
   }
 
   const selectChange = function(event) {
-    console.log(event.target.value);
     setCurrentSelected(Number(event.target.value) || -1);
   }
   const handleChangeRole = function() {
     setSelectOpen(true);
   }
+  // When assign role is confirmed
   const handleSelectConfirm = function() {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
-      alert(`${row.userId} is now assigned to ${permissionLevelMap[currentSelected]}`);
-      changePermission(row.userId, currentSelected, departmentId);
+      alert(`${row.name} is now assigned to ${permissionLevelMap[currentSelected]}`);
+      changePermission(row.user_id, currentSelected, departmentId);
       setSelectOpen(false);
       setCurrentSelected(-1);
     } else {
@@ -183,17 +188,31 @@ function EnhancedTableRow(props) {
   }
 
   const handleAccept = function() {
-    acceptUser(row.userId, departmentId);
-    update();
+    acceptUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            console.log('successfully accepted the user');
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+    
   }
 
   const handleDecline = function() {
-    declineUser(row.userId, departmentId);
-    update();
+    declineUser(row.user_id, departmentId).then(res => {
+        if(res.code === 200) {
+            console.log('successfully declined the user');
+            update();
+        }else {
+            alert(res.msg);
+        }
+    });
+
   }
 
   var manage;
-  if (row.authorityLevel === 0) {
+  if (row.authority_level === 0) {
     manage = (
       <div>
         <Button variant='contained' onClick={handleAccept}>
@@ -203,7 +222,7 @@ function EnhancedTableRow(props) {
           Decline
         </Button>
       </div>)
-  } else if (myPremissionLevel > row.authorityLevel) {
+  } else if (myPremissionLevel > row.authority_level) {
     manage = (
       <div>
         <IconButton onClick={handleChangeRole}>
@@ -233,7 +252,7 @@ function EnhancedTableRow(props) {
       hover
       role="checkbox"
       tabIndex={-1}
-      key={row.userId}
+      key={row.user_id}
     >
       
       <TableCell padding="normal">
@@ -245,8 +264,8 @@ function EnhancedTableRow(props) {
         {row.name}
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>
-      <TableCell align="center">{permissionLevelMap[row.authorityLevel]}</TableCell>
-      <TableCell align="center">{row.recentActivity}</TableCell>
+      <TableCell align="center">{permissionLevelMap[row.authority_level]}</TableCell>
+      <TableCell align="center">{row.recent_activity === null ? '' : formatTime(row.recent_activity, 'MM-dd HH:mm')}</TableCell>
       <TableCell align="center">
         {manage}
       </TableCell>
@@ -304,8 +323,8 @@ const useStyles = makeStyles((theme) => ({
 // Table to display members
 export default function EnhancedTable(props) {
   //================ Data from parent ==================
-  const departmentId = props.departmentId
-  const myPremissionLevel = props.myPremissionLevel;
+  const { rows, setRows, departmentId, myPremissionLevel } = props;
+
 
   //================ Table settings ==================
   const classes = useStyles();
@@ -313,33 +332,25 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = useState('manage');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState([]);
   const [updateCount, setUpdateCount] = useState(0);
 
   const update = function() {
     setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
   }
 
+  // Fetch the initial data of the table
   useEffect(function fetchTableData() {
-    console.log(updateCount)
     if (departmentId) {
       getAllUsers(departmentId, 1).then(res => {
-        console.log(res);
         if (res.code === 200) {
-          const data = res.data
-          const records = data.records
-          records.forEach(row => {
-            row.name = row.firstName + ' ' + row.lastName
-          });
-          console.log(records);
-          setRows(records);
-        }else {
-          console.log('Failed to fetch table data, using mock data')
-          const records = [
-            {name: 'Yiyang Huang', userId: 100, email:'abc', authorityLevel: 5},
-            {name: 'regular member', userId: 101, email: 'def', authorityLevel: 1}
-          ]
-          setRows(records)
+            const data = res.data
+            const records = data.records
+            records.forEach(row => {
+                row.name = row.first_name + ' ' + row.last_name
+            });
+            setRows(records);
+            }else {
+            alert(res.msg);
         }
 
       });
@@ -351,7 +362,6 @@ export default function EnhancedTable(props) {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -380,7 +390,7 @@ export default function EnhancedTable(props) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <EnhancedTableRow key={row.userId} row={row} myPremissionLevel={myPremissionLevel} departmentId={departmentId} update={update} />
+                    <EnhancedTableRow key={row.user_id} row={row} myPremissionLevel={myPremissionLevel} departmentId={departmentId} update={update} />
                   );
                 })}
               {emptyRows > 0 && (

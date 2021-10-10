@@ -19,7 +19,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 export default function AddCustomer(props) {
 
-	const departmentId = props.departmentId;
+    const {departmentId, handleClose, update} = props;
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
@@ -27,19 +27,10 @@ export default function AddCustomer(props) {
 	const [email, setEmail] = useState("");
 	const [address, setAddress] = useState("");
 	const [gender, setGender] = useState("");
-	const [birthday, setbirthday] = useState("");
+	const [birthday, setBirthday] = useState("");
 	const [description, setDescription] = useState("");
 	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
-	const [open, setOpen] = useState(false);
-	
-	const handleClickOpen = () => {
-		setOpen(true);
-  	};
-
- 	 const handleClickClose = () => {
-	  	setOpen(false);
-  	};
 
 	const classes = {
 		title: {
@@ -57,7 +48,7 @@ export default function AddCustomer(props) {
 			borderRadius:15,
 			px:5
 		},
-		gird: {
+		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
@@ -91,7 +82,7 @@ export default function AddCustomer(props) {
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
 			setLastName(e.target.value);
-		} else if (e.target.id === "middleNmae") {
+		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
@@ -106,16 +97,16 @@ export default function AddCustomer(props) {
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
 		} else if (e.target.id === "birthday") {
-			setbirthday(e.target.value);
+			setBirthday(e.target.value);
 		}
     };
 
 	const handleCreate = () => {
 		
 		const data = {
-			"firstName":firstName,
-			"lastName":lastName,
-			"middleName":middleName,
+			"first_name":firstName,
+			"last_name":lastName,
+			"middle_name":middleName,
 			"email":email,
 			"phone":phone,
 			"description":description,
@@ -123,12 +114,14 @@ export default function AddCustomer(props) {
 			"birthday":birthday,
 			"address":address,
 			"organization":organization,
-			"customerType":customerType
+			"customer_type":customerType
 		}
 
-		handleCreateCustomer(data, departmentId).then(res => {
+		createCustomer(data, departmentId).then(res => {
 			if (res.code===200) {
 				alert("Successfully created");
+                handleClose();
+                update();
 			} else {
 				alert(res.msg);
 			}
@@ -137,13 +130,13 @@ export default function AddCustomer(props) {
 
 	// Go back to table
 	const confirmDiscard = () => {
-
+        handleClose();
 	}
 
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
-	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${data.first_name} {data.last_name}?`;
+	const alertTitle = 'Discard Confirm';
+	const alertMessage = `Do you want to leave without saving?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}
@@ -154,10 +147,7 @@ export default function AddCustomer(props) {
 
 	return (
 		<div>
-		<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-		Create Customer
-		</Button>
-		<Grid container rowSpacing={5} sx={{pt:5, px :15}}>
+		    <Grid container rowSpacing={5} sx={{pt:5, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
 						<Avatar sx={{ width: 70, height: 70}}></Avatar>
