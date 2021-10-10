@@ -1,13 +1,15 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
 import AlertDialog from '../Dialog/AlertDialog';
+import {
+	Avatar,
+	Box,
+    Button,
+	Grid,
+    TextField
+} from '@mui/material';
 
 export default function DisplayUser() {
     

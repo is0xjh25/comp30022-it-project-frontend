@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import Favicon from '../../images/favicon.png'
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
 import { signUp } from '../../api/Login';
 import { setCookie } from '../../api/Util';
+import {
+	Box,
+	Container,
+	CssBaseline, 
+    Button,
+	Grid,
+    TextField,
+	Typography
+} from '@mui/material';
 
 // Style sheet
 const useStyles = makeStyles((theme) => ({

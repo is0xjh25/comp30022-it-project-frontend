@@ -1,12 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
+import {
+    Button,
+	Box,
+    TextField,
+	Grid,
+	Avatar
+} from '@mui/material';
+
 
 export default function EditCustomer(props) {
 
