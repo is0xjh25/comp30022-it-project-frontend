@@ -256,11 +256,11 @@ function EnhancedTableRow(props) {
     >
       
       <TableCell padding="normal">
-        <Avatar src={`data:image/gif;base64,${row.photo}`}>
+        <Avatar src={`data:image/gif;base64,${row.photo}`} sx={{ align: 'center'}}>
           <ImageIcon/>
         </Avatar>
       </TableCell>
-      <TableCell component="th" scope="row" padding="none">
+      <TableCell align="center" component="th" scope="row" padding="none">
         {row.name}
       </TableCell>
       <TableCell align="center">{row.email}</TableCell>

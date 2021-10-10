@@ -9,12 +9,8 @@ import {
     Avatar,
 	Box,
     Button,
-	IconButton,
 	Grid,
-	Badge 
 } from '@mui/material';
-import { Input,uploadContactPhoto } from '../../api/UploadPhoto';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 
 
 export default function DisplayCustomer(props) {
@@ -145,25 +141,9 @@ export default function DisplayCustomer(props) {
 	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
 		<Grid container item columnSpacing={4}>
 			<Grid item xs={2} textAlign='center' sx={classes.grid}>
-				<Badge
-					overlap="circular"
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-					badgeContent={
-						<label htmlFor="contained-button-file">
-						<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
-								uploadContactPhoto(data.id, e.currentTarget.files[0]);
-								window.location.reload();
-							}}/>
-						<IconButton color="primary" aria-label="upload picture" component="span">
-							<ChangeCircleRoundedIcon size="small"/>
-						</IconButton>
-						</label>
-					}
-				>
-					<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
-						sx={{ width: 70, height: 70}}>
-					</Avatar>
-				</Badge>
+				<Avatar src={`data:image/gif;base64,${data.photo}`}
+					sx={{ width: 70, height: 70}}>
+				</Avatar>
 			</Grid>
 			<Grid item xs={5} textAlign='center' sx={classes.box}>
 				<Box sx={classes.title} >First Name</Box>
