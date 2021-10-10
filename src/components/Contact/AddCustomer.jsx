@@ -7,7 +7,10 @@ import {
 	Box,
     TextField,
 	Grid,
-	Avatar
+	Avatar,
+	MenuItem,
+	FormControl,
+	Select
 } from '@mui/material';
 
 export default function AddCustomer(props) {
@@ -90,6 +93,14 @@ export default function AddCustomer(props) {
 			setCustomerType(e.target.value);
 		} else if (e.target.id === "birthday") {
 			setBirthday(e.target.value);
+		}
+    };
+
+	const handleOnSelect = (e,id) => {
+		if (id === "customerType") {
+			setCustomerType(e.target.value);
+		}else if (id === "gender") {
+			setGender(e.target.value);
 		}
     };
 
@@ -176,7 +187,16 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Customer Type</Box>
-						<TextField id="customerType" defaultValue={"company/personal"} onChange={handleOnChange}/>
+						<FormControl fullWidth>
+							<Select
+								id="customerType"
+								value={customerType}
+								onChange={(event) => handleOnSelect(event,"customerType")}
+							>
+								<MenuItem value={"company"}>company</MenuItem>
+								<MenuItem value={"personal"}>personal</MenuItem>
+							</Select>
+						</FormControl>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -187,7 +207,17 @@ export default function AddCustomer(props) {
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
-							<TextField id="gender" defaultValue={"male/female"} onChange={handleOnChange}/>
+							<FormControl>
+								<Select
+									id="gender"
+									value={gender}
+									onChange={(event) => handleOnSelect(event,"gender")}
+								>
+									<MenuItem value={"male"}>male</MenuItem>
+									<MenuItem value={"female"}>female</MenuItem>
+									<MenuItem value={"not specified"}>not specified</MenuItem>
+								</Select>
+							</FormControl>
 						</Grid>
 					</Grid>
 					<Grid item xs={8}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>

@@ -7,8 +7,15 @@ import {
 	Box,
     TextField,
 	Grid,
-	Avatar
+	Avatar,
+	IconButton,
+	Badge,
+	MenuItem,
+	FormControl,
+	Select
 } from '@mui/material';
+import { Input,uploadContactPhoto } from '../../api/UploadPhoto';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 
 
 export default function EditCustomer(props) {
@@ -25,6 +32,7 @@ export default function EditCustomer(props) {
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setorganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
+	const [photo, setPhoto] = useState(props.data.photo);
 	
 	const classes = {
 		title: {
@@ -98,6 +106,14 @@ export default function EditCustomer(props) {
 		props.setPageStatus('view');
 	}
 
+	const handleOnSelect = (e,id) => {
+		if (id === "customerType") {
+			setCustomerType(e.target.value);
+		}else if (id === "gender") {
+			setGender(e.target.value);
+		}
+    };
+
 	const handleUpdate = () => {
 
 		const data = {
@@ -111,7 +127,7 @@ export default function EditCustomer(props) {
 			"birthday":birthday,
 			"address":address,
 			"organization":organization,
-			"customerType":customerType
+			"customer_type":customerType
 		}
 
 		updateCustomer(data, customerId).then(res => {
@@ -140,7 +156,25 @@ export default function EditCustomer(props) {
 		<Grid container rowSpacing={5} sx={{pt:5, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
-						<Avatar sx={{ width: 70, height: 70}}></Avatar>
+						<Badge
+							overlap="circular"
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+							badgeContent={
+								<label htmlFor="contained-button-file">
+								<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
+										uploadContactPhoto(customerId, e.currentTarget.files[0]);
+										window.location.reload();
+									}}/>
+								<IconButton color="primary" aria-label="upload picture" component="span">
+									<ChangeCircleRoundedIcon size="small"/>
+								</IconButton>
+								</label>
+							}
+						>
+							<Avatar src={`data:image/gif;base64,${photo}`}
+								sx={{ width: 70, height: 70}}>
+							</Avatar>
+						</Badge>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>First Name</Box>
@@ -174,7 +208,16 @@ export default function EditCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Customer Type</Box>
-						<TextField id="customerType" defaultValue={customerType} onChange={handleOnChange}/>
+						<FormControl fullWidth>
+							<Select
+								id="customerType"
+								value={customerType}
+								onChange={(event) => handleOnSelect(event,"customerType")}
+							>
+								<MenuItem value={"company"}>company</MenuItem>
+								<MenuItem value={"personal"}>personal</MenuItem>
+							</Select>
+						</FormControl>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -185,7 +228,17 @@ export default function EditCustomer(props) {
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
-							<TextField id="gender"  defaultValue={gender} onChange={handleOnChange}/>
+							<FormControl>
+								<Select
+									id="gender"
+									value={gender}
+									onChange={(event) => handleOnSelect(event,"gender")}
+								>
+									<MenuItem value={"male"}>male</MenuItem>
+									<MenuItem value={"female"}>female</MenuItem>
+									<MenuItem value={"not specified"}>not specified</MenuItem>
+								</Select>
+							</FormControl>
 						</Grid>
 					</Grid>
 					<Grid item xs={8}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
