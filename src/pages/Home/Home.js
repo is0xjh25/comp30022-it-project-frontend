@@ -290,9 +290,9 @@ function Home(props) {
 
   return(
     <Grid container>
-        {/* <Grid item xs={2}>
+        <Grid item xs={2}>
             <Sidebar selectedPage={selectedPage} changePage={changePage} currentUser={currentUser}/>
-        </Grid> */}
+        </Grid>
         <Grid item xs={10}>
             <Switch>
                 
