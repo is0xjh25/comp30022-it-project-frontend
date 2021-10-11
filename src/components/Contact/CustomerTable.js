@@ -1,28 +1,38 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Dialog } from '@mui/material';
-import AlertDialog from '../Dialog/AlertDialog';
-import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
-import { Button } from '@mui/material'
-import { getOrganization, getDepartment } from '../../api/Manage';
-import AddCustomer from './AddCustomer';
 import { useHistory, useRouteMatch } from 'react-router';
+
+// Import from MUI
+import { 
+    IconButton,
+    DeleteIcon,
+    FilterListIcon,
+    ImageIcon
+ } from '@material-ui/core';
+
+import { 
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Typography,
+    Toolbar,
+    Button,
+    Avatar,
+    Dialog,
+    
+} from '@mui/material'
+
+// Import from local
+import AlertDialog from '../Dialog/AlertDialog';
 import SearchBar from '../SearchBar/SearchBar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
+import AddCustomer from './AddCustomer';
+import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
+import { getOrganization, getDepartment } from '../../api/Manage';
 
 // Columns are the labels of the table
 const columns = [

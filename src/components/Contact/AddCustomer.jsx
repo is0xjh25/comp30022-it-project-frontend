@@ -2,6 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { createCustomer } from '../../api/Contact';
+import DateFnsUtils from '@date-io/date-fns';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import {
     Button,
 	Box,
@@ -156,11 +160,11 @@ export default function AddCustomer(props) {
 						<Avatar sx={{ width: 1, height: 1}}></Avatar>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>First Name</Box>
+						<Box sx={classes.title}>First Name*</Box>
 						<TextField id="firstName" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Last Name</Box>
+						<Box sx={classes.title}>Last Name*</Box>
 						<TextField id="lastName" onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
@@ -174,8 +178,25 @@ export default function AddCustomer(props) {
 						<TextField id="organization" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="birthday" defaultValue={"1900-01-01"} onChange={handleOnChange}/>
+						<Box sx={classes.title}>Date of Birth*</Box>
+						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							{/* <DesktopDatePicker
+								id="birthday"
+								inputFormat="yyyy-MM-dd"
+								value={birthday}
+								onChange={handleOnChange}
+								renderInput={(params) => <TextField {...params} />}
+							/> */}
+							<KeyboardDatePicker
+								variant="inline"
+								inputVariant="outlined"
+								id="birthday"
+								inputFormat="yyyy-MM-dd"
+								value={birthday}
+								onChange={handleOnChange}
+								InputAdornmentProps={{ position: "start" }}
+							/>
+						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -186,7 +207,7 @@ export default function AddCustomer(props) {
 						<TextField id="address" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Customer Type</Box>
+						<Box sx={classes.title}>Customer Type*</Box>
 						<FormControl fullWidth>
 							<Select
 								id="customerType"

@@ -3,9 +3,12 @@ import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
 import { Input,uploadContactPhoto } from '../../api/UploadPhoto';
-import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
-import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+
+import { 
+	ArrowBackSharpIcon,
+	UpdateSharpIcon
+  } from '@material-ui/icons';
+// import {ChangeCircleRoundedIcon} from '@material-ui/icons';
 import {
 	Box,
     TextField,
@@ -143,7 +146,7 @@ export default function EditCustomer(props) {
 										window.location.reload();
 									}}/>
 								<IconButton color="primary" aria-label="upload picture" component="span">
-									<ChangeCircleRoundedIcon size="small"/>
+									{/* <ChangeCircleRoundedIcon size="small"/> */}
 								</IconButton>
 								</label>
 							}

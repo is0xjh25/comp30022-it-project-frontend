@@ -1,31 +1,36 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
+// Import from MUI
+import {
+    AddIcon,
+    EditIcon,
+    DeleteIcon
+ } from '@material-ui/icons';
+import {
+    Box,
+    Table,
+    TableCell,
+    TableContainer,
+    TableRow,
+    ToolBar,
+    Typography,
+    Paper,
+    Checkbox,
+    Chip,
+    Grid,
+    Collapse,
+    IconButton,
+    
+} from '@mui/material';
+
+// Import from local
 import {
     getAllToDo,
     updateToDo,
     deleteToDo
 } from '../../api/ToDoList';
-
 import { toLocalTime } from '../../api/Util';
-
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 

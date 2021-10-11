@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
+import { useParams } from 'react-router-dom';
+import { Paper, TableContainer} from '@mui/material';
+
 import CustomerTable from './CustomerTable';
 import { getMyPermissionLevel } from '../../api/Manage';
-import { useParams } from 'react-router-dom';
 
 // This component reads organization id and department id from parameters
 // and return a table of contacts
