@@ -2,8 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 import {
-    Button,
 	Box,
     TextField,
 	Grid,
@@ -15,7 +17,7 @@ import {
 	Select
 } from '@mui/material';
 import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+
 
 export default function EditCustomer(props) {
 
@@ -36,42 +38,17 @@ export default function EditCustomer(props) {
 	const classes = {
 		title: {
 		  	fontSize:30,
-			fontFamily:'Arial',
+			position:'static',
+			fontFamily:'NTR',
 			fontWeight:'bold',
-			bgcolor:'coral',
+			bgcolor:'#ff5722',
 			borderRadius:15
-		},
-		descriptionBody: {
-			fontSize:25,
-			fontFamily:'Arial',
-			textAlign:'left',
-			bgcolor:'coral',
-			borderRadius:15,
-			px:5
 		},
 		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
 			color:'black'
-		},
-		box: {
-			display:'flex', 
-			flexDirection:'column'
-		},
-		discardButton: {
-			borderRadius: 20,
-			backgroundColor: 'Crimson',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		updateButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
 		}
 	};
 
@@ -141,8 +118,8 @@ export default function EditCustomer(props) {
 
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
-	const alertTitle = 'Delete Confirm';
-	const alertMessage = `Do you want to delete ${firstName} ${lastName}?`;
+	const alertTitle = "Discard Confirm";
+	const alertMessage = "Do you want to leave without saving?";
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}
@@ -152,12 +129,12 @@ export default function EditCustomer(props) {
 	}
 
 	return (
-		<Grid container rowSpacing={5} sx={{pt:5, px :15}}>
+		<Grid container rowSpacing={5} sx={{pt:10, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
 						<Badge
 							overlap="circular"
-							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+							anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
 							badgeContent={
 								<label htmlFor="contained-button-file">
 								<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
@@ -247,18 +224,22 @@ export default function EditCustomer(props) {
 						defaultValue={description}
 						onChange={handleOnChange}
 						multiline
-						rows={10}
+						rows={12}
 						/>
 					</Grid>
 				</Grid>
 				<Grid container item>
 					<Grid item xs={4} textAlign='center'>
-						<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
+						<IconButton>
+							<ArrowBackSharpIcon color="error" fontSize="large"  onClick={handleDiscard}/>
+						</IconButton>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
-						<Button variant="outlined" style={classes.updateButton} onClick={handleUpdate}>Update</Button>
+						<IconButton>
+							<UpdateSharpIcon color="primary" fontSize="large" onClick={handleUpdate}/>
+						</IconButton>
 					</Grid>
 				</Grid>
 				<AlertDialog alertTitle={alertTitle}
