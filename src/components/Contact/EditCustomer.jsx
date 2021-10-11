@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
-import { Input,uploadContactPhoto } from '../../api/UploadPhoto';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
@@ -17,7 +16,7 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
-
+import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
 
 
 export default function EditCustomer(props) {
@@ -148,7 +147,7 @@ export default function EditCustomer(props) {
 								</label>
 							}
 						>
-							<Avatar src={`data:image/gif;base64,${photo}`}
+							<Avatar src={processPhoto(photo)}
 								sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>

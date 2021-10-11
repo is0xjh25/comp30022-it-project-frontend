@@ -21,7 +21,7 @@ import EditPermission from '@material-ui/icons/Person';
 import { getAllUsers, changePermission, acceptUser, deleteUser, declineUser } from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
-
+import {processPhoto} from '../../api/Photo';
 import {formatTime} from '../../api/Util';
 
 
@@ -256,7 +256,7 @@ function EnhancedTableRow(props) {
     >
       
       <TableCell padding="normal">
-        <Avatar src={`data:image/gif;base64,${row.photo}`} sx={{ align: 'center'}}>
+        <Avatar src={processPhoto(row.photo)} sx={{ align: 'center'}}>
           <ImageIcon/>
         </Avatar>
       </TableCell>
