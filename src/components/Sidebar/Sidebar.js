@@ -101,7 +101,7 @@ function Sidebar(props) {
     const settings = (
         <div>
             <ListItem button>
-                <ListItemIcon>
+                <ListItemIcon onClick={()=>changePage("Settings")}>
                     <SettingsIcon/>
                 </ListItemIcon>
                 <ListItemText primary="Settings"></ListItemText>
