@@ -76,7 +76,7 @@ function uploadContactPhoto(contactId, photo){
 }
 
 function processPhoto(photo){
-    console.log(photo);
+
     if(photo === null){
         return defaultPhoto
     }
