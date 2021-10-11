@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 
 import {formatTime} from '../../api/Util';
+import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
 
 
 export default function EditCustomer(props) {
@@ -158,7 +159,7 @@ export default function EditCustomer(props) {
 								</label>
 							}
 						>
-							<Avatar src={`data:image/gif;base64,${photo}`}
+							<Avatar src={processPhoto(photo)}
 								sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>

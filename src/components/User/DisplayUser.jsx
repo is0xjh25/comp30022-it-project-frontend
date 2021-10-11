@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
-import { Input,uploadUserPhoto } from '../../api/UploadPhoto';
+import { Input,uploadUserPhoto } from '../../api/Photo';
 import AlertDialog from '../Dialog/AlertDialog';
 import {
 	Avatar,
@@ -13,7 +13,8 @@ import {
     TextField,
 	Badge 
 } from '@mui/material';
-// import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+import {processPhoto} from '../../api/Photo';
 
 export default function DisplayUser() {
     
@@ -247,7 +248,7 @@ export default function DisplayUser() {
 									</label>
 								}
 							>
-								<Avatar id="user_avator" src={`data:image/gif;base64,${data.photo}`}
+								<Avatar id="user_avator" src={processPhoto(data.photo)}
 									sx={{ width: 70, height: 70}}>
 								</Avatar>
 							</Badge>

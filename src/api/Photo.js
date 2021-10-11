@@ -1,5 +1,6 @@
 import { getCookie, checkUnauthorized } from './Util';
 import { styled } from '@mui/material/styles';
+import defaultPhoto from  '../images/default.gif'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -74,8 +75,19 @@ function uploadContactPhoto(contactId, photo){
     
 }
 
+function processPhoto(photo){
+
+    if(photo === null){
+        return defaultPhoto
+    }
+    else{
+        return `data:image/gif;base64,${photo}`
+    }
+}
+
 export {
     Input,
     uploadUserPhoto,
-    uploadContactPhoto
+    uploadContactPhoto,
+    processPhoto
 }

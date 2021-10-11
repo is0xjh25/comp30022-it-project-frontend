@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ImageIcon from '@material-ui/icons/Image';
+import { height } from '@mui/system';
 import { 
     Paper,
     Table,
@@ -30,6 +31,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import AddCustomer from './AddCustomer';
 import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
 import { getOrganization, getDepartment } from '../../api/Manage';
+import { processPhoto } from '../../api/Photo';
 
 // Columns are the labels of the table
 const columns = [
@@ -200,8 +202,8 @@ function EnhancedTableRow(props) {
     return (
         <TableRow hover role="checkbox" key={row.customer_id}>
             <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="normal">
-                <Avatar src={`data:image/gif;base64,${row.photo}`} sx={{ align: 'right'}}>
-                    <ImageIcon/>
+                <Avatar src={processPhoto(row.photo)} sx={{align: 'right'}}>
+
                 </Avatar>
             </TableCell>
             <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
