@@ -8,7 +8,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
-import {ChangeCircleRoundedIcon} from '@material-ui/icons/ChangeCircleRounded';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 import {
 	Box,
     TextField,
@@ -21,8 +21,8 @@ import {
 	Select
 } from '@mui/material';
 
-import {formatTime} from '../../api/Util';
-import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
+import { formatTime } from '../../api/Util';
+import { Input, uploadContactPhoto, processPhoto } from '../../api/Photo';
 
 
 export default function EditCustomer(props) {
