@@ -2,6 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
+
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
@@ -16,7 +20,9 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
-import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
+
+import { formatTime } from '../../api/Util';
+import { Input, uploadContactPhoto, processPhoto } from '../../api/Photo';
 
 
 export default function EditCustomer(props) {
@@ -29,7 +35,7 @@ export default function EditCustomer(props) {
 	const [email, setEmail] = useState(props.data.email);
 	const [address, setAddress] = useState(props.data.address);
 	const [gender, setGender] = useState(props.data.gender);
-	const [birthday, setbirthday] = useState(props.data.birthday);
+	const [birthday, setBirthday] = useState(typeof(props.data.birthday) !== String ? null : props.data.birthday);
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setorganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
@@ -74,7 +80,7 @@ export default function EditCustomer(props) {
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
 		} else if (e.target.id === "birthday") {
-			setbirthday(e.target.value);
+			setBirthday(e.target.value);
 		}
     };
 
@@ -87,6 +93,11 @@ export default function EditCustomer(props) {
 			setCustomerType(e.target.value);
 		}else if (id === "gender") {
 			setGender(e.target.value);
+		}else if (id === "birthday") {
+			const birthdayYear = e.getFullYear();
+			const birthdayMonthDate = formatTime(e, 'MM-dd');
+			console.log(birthdayYear+'-'+birthdayMonthDate);
+			setBirthday(birthdayYear+'-'+birthdayMonthDate);
 		}
     };
 
@@ -167,12 +178,20 @@ export default function EditCustomer(props) {
 						<TextField id="middleName"  defaultValue={middleName} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>organization</Box>
+						<Box sx={classes.title}>Organization</Box>
 						<TextField id="organization"  defaultValue={organization} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="birthday" defaultValue={birthday} onChange={handleOnChange}/>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DesktopDatePicker
+										id="birthday"
+										inputFormat="yyyy-MM-dd"
+										value={birthday}
+										onChange={(event) => handleOnSelect(event, "birthday")}
+										renderInput={(params) => <TextField {...params} />}
+								/>
+							</LocalizationProvider>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>

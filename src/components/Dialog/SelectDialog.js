@@ -1,14 +1,18 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Box from "@material-ui/core/Box";
+
+// Import from MUI
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    InputLabel,
+    FormControl,
+    Select,
+    OutlinedInput,
+    Box
+} from '@mui/material'
 
 // A common select dialog implementation, can customize title, message, select items and so on..
 export default function DialogSelect(props) {
