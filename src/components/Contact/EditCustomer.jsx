@@ -14,9 +14,8 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
-import { Input,uploadContactPhoto } from '../../api/UploadPhoto';
+import { Input,uploadContactPhoto,processPhoto } from '../../api/Photo';
 import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
-
 
 export default function EditCustomer(props) {
 
@@ -171,7 +170,7 @@ export default function EditCustomer(props) {
 								</label>
 							}
 						>
-							<Avatar src={`data:image/gif;base64,${photo}`}
+							<Avatar src={processPhoto(photo)}
 								sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>

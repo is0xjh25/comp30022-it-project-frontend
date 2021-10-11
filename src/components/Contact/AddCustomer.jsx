@@ -12,6 +12,7 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
+import {processPhoto} from '../../api/Photo';
 
 export default function AddCustomer(props) {
 
@@ -153,7 +154,8 @@ export default function AddCustomer(props) {
 		    <Grid container rowSpacing={5} sx={{pt:5, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
-						<Avatar sx={{ width: 1, height: 1}}></Avatar>
+						<Avatar src={processPhoto(null)} sx={{ width: 1, height: 1}}>
+						</Avatar>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>First Name</Box>
