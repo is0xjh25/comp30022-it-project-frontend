@@ -11,7 +11,7 @@ import {
     TableCell,
     TableContainer,
     TableRow,
-    ToolBar,
+    Toolbar,
     Typography,
     Paper,
     Checkbox,
