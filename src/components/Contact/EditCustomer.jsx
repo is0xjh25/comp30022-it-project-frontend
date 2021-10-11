@@ -149,7 +149,7 @@ export default function EditCustomer(props) {
 							}
 						>
 							<Avatar src={`data:image/gif;base64,${photo}`}
-								sx={{ width: 70, height: 70}}>
+								sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>
 					</Grid>

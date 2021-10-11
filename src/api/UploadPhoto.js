@@ -25,11 +25,11 @@ function uploadUserPhoto(photo){
             if(checkUnauthorized(res)) {
                 return;
             }
-
             if (res.ok) {
                 res.json().then(resBody => {
                     resolve(resBody)
                 })
+                window.location.reload();
             } else {
                 res.json().then(body => {alert(body.msg)})
             }
@@ -59,17 +59,17 @@ function uploadContactPhoto(contactId, photo){
             if(checkUnauthorized(res)) {
                 return;
             }
-
             if (res.ok) {
                 res.json().then(resBody => {
                     resolve(resBody)
                 })
+                window.location.reload();
             } else {
                 res.json().then(body => {alert(body.msg)})
             }
+            
         })
         .catch(error => {reject(error)})
-        
     })
     
 }
