@@ -107,10 +107,15 @@ export default function AddCustomer(props) {
 		}else if (id === "gender") {
 			setGender(e.target.value);
 		}else if (id === "birthday") {
-			const birthdayYear = e.getFullYear();
-			const birthdayMonthDate = formatTime(e, 'MM-dd');
-			console.log(birthdayYear+'-'+birthdayMonthDate);
-			setBirthday(birthdayYear+'-'+birthdayMonthDate);
+			if(e!=null){
+				const birthdayYear = e.getFullYear();
+				const birthdayMonthDate = formatTime(e, 'MM-dd');
+				setBirthday(birthdayYear+'-'+birthdayMonthDate);
+			}
+			else{
+				setBirthday(null);
+			}
+			
 		}
     };
 
@@ -190,7 +195,7 @@ export default function AddCustomer(props) {
 							<DesktopDatePicker
 									id="birthday"
 									inputFormat="yyyy-MM-dd"
-									value={birthday}
+									value={new Date(birthday)}
 									onChange={(event) => handleOnSelect(event, "birthday")}
 									renderInput={(params) => <TextField {...params} />}
 							/>
