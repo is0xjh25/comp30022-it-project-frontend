@@ -224,7 +224,7 @@ export default function DisplayUser() {
 
 	return (
 			<div>
-				<Grid container rowSpacing={8} sx={{pt:8, px:15}}>
+				<Grid container rowSpacing={8} sx={{pt:5, px:15, minWidth:700}}>
 					<Grid container item columnSpacing={5}>
 						<Grid item xs={12} textAlign='center' sx={classes.grid}>
 							<Badge

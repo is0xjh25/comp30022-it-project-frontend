@@ -119,7 +119,7 @@ export default function DisplayCustomer(props) {
 	}
 
 	const showDisplay = 
-	(<Grid container rowSpacing={8} sx={{pt:10, px:15}}>
+	(<Grid container rowSpacing={8} sx={{pt:10, px:15, minWidth:1000}}>
 		<Grid container item columnSpacing={4}>
 			<Grid item xs={2} textAlign='center' sx={classes.grid}>
 				<Avatar src={`data:image/gif;base64,${data.photo}`}

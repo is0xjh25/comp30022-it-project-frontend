@@ -130,7 +130,7 @@ export default function EditCustomer(props) {
 	}
 
 	return (
-		<Grid container rowSpacing={5} sx={{pt:10, px :15}}>
+		<Grid container rowSpacing={5} sx={{pt:10, px:15, minWidth:1000}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
 						<Badge
