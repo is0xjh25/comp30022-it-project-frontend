@@ -2,14 +2,11 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 
-// Import from MUI
-import { 
-    IconButton,
-    DeleteIcon,
-    FilterListIcon,
-    ImageIcon
- } from '@material-ui/core';
-
+// Import from mui
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import ImageIcon from '@material-ui/icons/Image';
 import { 
     Paper,
     Table,

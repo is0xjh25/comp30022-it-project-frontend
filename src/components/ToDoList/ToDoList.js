@@ -2,11 +2,9 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 // Import from MUI
-import {
-    AddIcon,
-    EditIcon,
-    DeleteIcon
- } from '@material-ui/icons';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
     Box,
     Table,
