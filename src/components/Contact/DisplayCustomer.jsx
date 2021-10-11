@@ -14,7 +14,7 @@ import {
 	Grid,
 	IconButton
 } from '@mui/material';
-
+import {processPhoto} from '../../api/Photo';
 
 export default function DisplayCustomer(props) {
 	
@@ -122,8 +122,8 @@ export default function DisplayCustomer(props) {
 	(<Grid container rowSpacing={8} sx={{pt:10, px:15, minWidth:1000}}>
 		<Grid container item columnSpacing={4}>
 			<Grid item xs={2} textAlign='center' sx={classes.grid}>
-				<Avatar src={`data:image/gif;base64,${data.photo}`}
-					sx={{ width: 70, height: 70}}>
+				<Avatar src={processPhoto(data.photo)}
+					sx={{ width: 1/2, height: 1}}>
 				</Avatar>
 			</Grid>
 			<Grid item xs={5} textAlign='center' rowSpacing={10}>

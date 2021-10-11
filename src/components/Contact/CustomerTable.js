@@ -1,32 +1,41 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
+import { useHistory, useRouteMatch } from 'react-router';
+
+// Import from mui
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Dialog } from '@mui/material';
-import AlertDialog from '../Dialog/AlertDialog';
-import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
-import { Button } from '@mui/material'
-import { getOrganization, getDepartment } from '../../api/Manage';
-import AddCustomer from './AddCustomer';
-import { useHistory, useRouteMatch } from 'react-router';
-import SearchBar from '../SearchBar/SearchBar';
-import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
+import { height } from '@mui/system';
+import { 
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Typography,
+    Toolbar,
+    Button,
+    Avatar,
+    Dialog,
+    
+} from '@mui/material'
+
+// Import from local
+import AlertDialog from '../Dialog/AlertDialog';
+import SearchBar from '../SearchBar/SearchBar';
+import AddCustomer from './AddCustomer';
+import { getAllCustomer, deleteCustomer as deleteCustomerBackend, searchCustomer } from '../../api/Contact';
+import { getOrganization, getDepartment } from '../../api/Manage';
+import { processPhoto } from '../../api/Photo';
 
 // Columns are the labels of the table
 const columns = [
-    { id: 'avatar', label: 'avator', minWidth: 50, align: 'center'},
+    { id: 'avatar', label: 'avator', minWidth: 40, align: 'center'},
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
@@ -192,9 +201,9 @@ function EnhancedTableRow(props) {
 
     return (
         <TableRow hover role="checkbox" key={row.customer_id}>
-            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">
-                <Avatar src={`data:image/gif;base64,${row.photo}`} sx={{ align: 'right'}}>
-                    <ImageIcon/>
+            <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="normal">
+                <Avatar src={processPhoto(row.photo)} sx={{align: 'right'}}>
+
                 </Avatar>
             </TableCell>
             <TableCell onClick={onRowClick} align="center" component="th" scope="row" padding="none">

@@ -2,6 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { createCustomer } from '../../api/Contact';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Button,
 	Box,
@@ -12,6 +15,9 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
+import {processPhoto} from '../../api/Photo';
+
+import {formatTime} from '../../api/Util';
 
 export default function AddCustomer(props) {
 
@@ -23,7 +29,7 @@ export default function AddCustomer(props) {
 	const [email, setEmail] = useState("");
 	const [address, setAddress] = useState("");
 	const [gender, setGender] = useState("");
-	const [birthday, setBirthday] = useState("");
+	const [birthday, setBirthday] = useState("2000-01-01");
 	const [description, setDescription] = useState("");
 	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
@@ -91,16 +97,20 @@ export default function AddCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} else if (e.target.id === "birthday") {
-			setBirthday(e.target.value);
-		}
+		} 
     };
 
 	const handleOnSelect = (e,id) => {
+		console.log(e)
 		if (id === "customerType") {
 			setCustomerType(e.target.value);
 		}else if (id === "gender") {
 			setGender(e.target.value);
+		}else if (id === "birthday") {
+			const birthdayYear = e.getFullYear();
+			const birthdayMonthDate = formatTime(e, 'MM-dd');
+			console.log(birthdayYear+'-'+birthdayMonthDate);
+			setBirthday(birthdayYear+'-'+birthdayMonthDate);
 		}
     };
 
@@ -153,14 +163,15 @@ export default function AddCustomer(props) {
 		    <Grid container rowSpacing={5} sx={{pt:5, px :15}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
-						<Avatar sx={{ width: 70, height: 70}}></Avatar>
+						<Avatar src={processPhoto(null)} sx={{ width: 1, height: 1}}>
+						</Avatar>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>First Name</Box>
+						<Box sx={classes.title}>First Name*</Box>
 						<TextField id="firstName" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Last Name</Box>
+						<Box sx={classes.title}>Last Name*</Box>
 						<TextField id="lastName" onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
@@ -175,7 +186,15 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-						<TextField id="birthday" defaultValue={"1900-01-01"} onChange={handleOnChange}/>
+						<LocalizationProvider dateAdapter={AdapterDateFns}>
+							<DesktopDatePicker
+									id="birthday"
+									inputFormat="yyyy-MM-dd"
+									value={birthday}
+									onChange={(event) => handleOnSelect(event, "birthday")}
+									renderInput={(params) => <TextField {...params} />}
+							/>
+						</LocalizationProvider>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Phone</Box>
@@ -186,7 +205,7 @@ export default function AddCustomer(props) {
 						<TextField id="address" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Customer Type</Box>
+						<Box sx={classes.title}>Customer Type*</Box>
 						<FormControl fullWidth>
 							<Select
 								id="customerType"
@@ -206,8 +225,8 @@ export default function AddCustomer(props) {
 							<TextField id="email" onChange={handleOnChange}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Gender</Box>
-							<FormControl>
+							<Box sx={classes.title}>Gender*</Box>
+							<FormControl fullWidth>
 								<Select
 									id="gender"
 									value={gender}

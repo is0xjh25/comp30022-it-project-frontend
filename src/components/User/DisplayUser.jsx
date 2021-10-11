@@ -2,12 +2,11 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
-import { Input,uploadUserPhoto } from '../../api/UploadPhoto';
+import { Input,uploadUserPhoto } from '../../api/Photo';
 import AlertDialog from '../Dialog/AlertDialog';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 import {
 	Avatar,
 	Box,
@@ -16,6 +15,9 @@ import {
     TextField,
 	Badge 
 } from '@mui/material';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+import {processPhoto} from '../../api/Photo';
+
 
 export default function DisplayUser() {
     
@@ -234,15 +236,14 @@ export default function DisplayUser() {
 									<label htmlFor="contained-button-file">
 									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
 											uploadUserPhoto(e.currentTarget.files[0]);
-											window.location.reload();
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
-										<ChangeCircleRoundedIcon size="small"/>
+										{/* <ChangeCircleRoundedIcon size="small"/> */}
 									</IconButton>
 									</label>
 								}
 							>
-								<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
+								<Avatar id="user_avator" src={processPhoto(data.photo)}
 									sx={{ width: 70, height: 70}}>
 								</Avatar>
 							</Badge>

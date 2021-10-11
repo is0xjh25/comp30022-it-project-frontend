@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Paper from '@mui/material/Paper';
+
+// Import from MUI
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { Button } from '@mui/material';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import { Dialog, DialogTitle } from '@mui/material';
+import {
+    TextField,
+    Stack,
+    Button,
+    DialogContent,
+    DialogActions,
+    Dialog,
+    DialogTitle
+} from '@mui/material';
 
+// Import from local
 import { createNewToDo } from '../../api/ToDoList';
 
 export default function AddToDo(props) {
