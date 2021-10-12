@@ -337,6 +337,12 @@ export default function DisplayOneEvent(props) {
 				<Box >Description</Box>
 				<TextField id="description" defaultValue= {data.description} multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
+			<Grid item xs={6} textAlign='center'>
+					<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
+				</Grid>
+				<Grid item xs={6} textAlign='center'>
+					<Button variant="outlined" style={classes.createButton} onClick={handleUpdate}>Update</Button>
+				</Grid>
 			<Grid item xs={12} textAlign='center'>Current contact</Grid>
 			<Grid container item xs={12} textAlign='center'>
 				<Grid item xs={2} textAlign='center'>
@@ -379,15 +385,11 @@ export default function DisplayOneEvent(props) {
 					}
 				</Grid>
 			</Grid>
-			<Grid item xs={4} textAlign='center'>
-				<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
-			</Grid>
-			<Grid item xs={4} textAlign='center'>
+
+			<Grid item xs={12} textAlign='center'>
 				<Button variant="outlined" onClick={handleAddContact}>Add contact</Button>
 			</Grid>
-			<Grid item xs={4} textAlign='center'>
-				<Button variant="outlined" style={classes.createButton} onClick={handleUpdate}>Update</Button>
-			</Grid>
+			
 			<AlertDialog 
 			alertTitle={discardAlertTitle}
 			alertMessage={discardAlertMessage}
@@ -410,6 +412,7 @@ export default function DisplayOneEvent(props) {
 			open={deleteAlertOpen}
 			handleClose={() => { setDeleteAlertOpen(false) }}
 			handleConfirm={handleDeleteAlertConfirm}
+			handleCancel={() => { setDeleteAlertOpen(false) }}
 			/>
 			<Dialog open={addContactOpen} onClose={handleAddContactCancel} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Add a Contact</DialogTitle>
