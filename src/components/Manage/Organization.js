@@ -22,11 +22,12 @@ import {
     Grid,
     Typography,
     Box,
+    Avatar
     
 } from '@mui/material'
 
 // Local import
-import {getOrganization, deleteOrganization, searchMemberInOrg} from '../../api/Manage';
+import {getOrganization, deleteOrganization, searchMemberInOrg, transferOwnership} from '../../api/Manage';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
 import AlertDialog from '../Dialog/AlertDialog';
@@ -47,7 +48,6 @@ function EachOrganization(props) {
         org.owner === true ? 
             <OwnedOrganization org={org} update={update} showDepartment={showDepartment}/>
         :
-            <Grid key={org.id} item xs={8}>
                 <Box 
                     sx={{
                         display: 'flex',
@@ -55,14 +55,14 @@ function EachOrganization(props) {
                         height: 60,
                         borderRadius: 2,
                         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                        bgcolor: 'info.main'
+                        bgcolor: 'info.main',
+                        my: '40px'
                     }} 
                 >
                     <Button onClick={() => showDepartment(org.id)}>
                         <Typography color="text.primary">{org.name}</Typography>
                     </Button>
                 </Box>
-            </Grid>
     )
 
 
@@ -88,7 +88,8 @@ function OwnedOrganization(props) {
     //================ Transfer Organization Ownership==================
     const [transferOpen, setTransferOpen] = useState(false);
     const [members, setMembers] = useState([]);
-    const [selectedMember, setSelectedMember] = useState(undefined);
+    const [selectedMember, setSelectedMember] = useState(null);
+    const [confirm, setConfirm] = useState(false);
 
 
     const handleTransfer = function() {
@@ -97,11 +98,13 @@ function OwnedOrganization(props) {
     
     const handleTransferCancel = function() {
         setTransferOpen(false);
-        setSelectedMember(undefined);
+        setSelectedMember(null);
         setMembers([]);
+        setConfirm(false);
     }
 
     const handleOnChange = function(event) {
+        setSelectedMember(null);
         searchMemberInOrg(org.id, event.target.value).then(res => {
             if (res.code === 200) {
                 const data = res.data
@@ -119,9 +122,25 @@ function OwnedOrganization(props) {
     const handleSelecteMember = (event, e) => {
 		setSelectedMember(e);
 	}
+
+    const handleSubmitTransfer = () => {
+        console.log(selectedMember);
+        transferOwnership(org.id, selectedMember.user_id).then(res => {
+            if (res.code === 200) {
+                alert("Successfully transfered the owner!");
+                }else {
+                alert(res.msg);
+            }
+        })
+        update();
+    }
+    
+    const handleClickTransfer = () => {
+        setConfirm(true);
+    }
     
     return (
-        <Grid key={org.id} item xs={8}>
+        <Box key={org.id} item xs={8}>
             <Box 
                 sx={{
                     display: 'flex',
@@ -129,7 +148,8 @@ function OwnedOrganization(props) {
                     height: 60,
                     borderRadius: 2,
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                    bgcolor: 'success.light'
+                    bgcolor: 'success.light',
+                    my: '40px'
                 }} 
             >
                 <Button onClick={() => showDepartment(org.id)} fullWidth >
@@ -154,40 +174,74 @@ function OwnedOrganization(props) {
 
             <Dialog open={transferOpen} onClose={handleTransferCancel} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Transfer Ownership</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Start typing the name of the member.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="organization"
-                        label="search"
-                        type="organization"
-                        fullWidth
-                        onChange={handleOnChange}
-                        // error={!available && !firstTry ? true : false}
-                        // helperText={available || firstTry ? "Ready to join" : "organization does not exist"}
-                    />
-                    <ToggleButtonGroup orientation="vertical" value={selectedMember} exclusive onChange={handleSelecteMember} sx={{display:"flex", justifyContent: 'center'}}>
-                        {members.map( (member) => {
-                            return (<ToggleButton key={member.user_id} value={member.user_id} aria-label={member.name}>
-                                {member.name}
-                            </ToggleButton>)
 
-                        })}
-                    </ToggleButtonGroup>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleTransferCancel} color="primary">
-                        Cancel
-                    </Button>
-                    <Button disabled={selectedMember===undefined} >
-                        Transfer
-                    </Button>
-                </DialogActions>
+                {confirm ? 
+                <Box>
+                    <DialogContent>
+                        <DialogContentText>
+                            Do you want to transfer the owner of the organization to this member?
+                        </DialogContentText>
+                        <Box sx={{mt: 4, display: 'flex', flexDirection:'row'}}>
+                            <Avatar src={`data:image/gif;base64,${selectedMember.photo}`} sx={{height: '100px', width: '100px'}}>
+                            </Avatar>
+                            <Grid container direction='column' sx={{ml: 3}}>
+                                <Grid item sx={{height: '50px', display: 'flex', alignItems: 'center'}}>
+                                    <Typography variant="h5" sx={{fontWeight: 'bold', mr: 3}}>Name</Typography>
+                                    <Typography variant="h5">{selectedMember.first_name + ' ' + selectedMember.last_name}</Typography>
+                                </Grid>
+                                <Grid item sx={{height: '50px', display: 'flex', alignItems: 'center'}}>
+                                    <Typography variant="h5" sx={{fontWeight: 'bold', mr: 3}}>Email</Typography>
+                                    <Typography variant="h6">{selectedMember.email}</Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => {setConfirm(false)}} color="primary">
+                            Back
+                        </Button>
+                        <Button disabled={selectedMember===null} onClick={handleSubmitTransfer} >
+                            Transfer
+                        </Button>
+                    </DialogActions>
+                </Box> :                 
+                <Box>
+                    <DialogContent>
+                        <DialogContentText>
+                            Start typing the name of the member.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="organization"
+                            label="search"
+                            type="organization"
+                            fullWidth
+                            onChange={handleOnChange}
+                            // error={!available && !firstTry ? true : false}
+                            // helperText={available || firstTry ? "Ready to join" : "organization does not exist"}
+                        />
+                        <ToggleButtonGroup orientation="vertical" value={selectedMember} exclusive onChange={handleSelecteMember} sx={{display:"flex", justifyContent: 'center'}}>
+                            {members.map( (member) => {
+                                return (<ToggleButton key={member.user_id} value={member} aria-label={member.name}>
+                                    {member.name}
+                                </ToggleButton>)
+
+                            })}
+                        </ToggleButtonGroup>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleTransferCancel} color="primary">
+                            Cancel
+                        </Button>
+                        <Button disabled={selectedMember===null} onClick={handleClickTransfer} >
+                            Transfer
+                        </Button>
+                    </DialogActions>
+                </Box>}
             </Dialog>
-        </Grid>
+
+        </Box>
     )
 
 }
@@ -227,27 +281,30 @@ export default function Organization(props) {
     }
 
     return (
-        <Grid>
-            <Typography variant="h6">
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: '45px'}}>
+            <Typography variant="h6" sx={{alignSelf: 'flex-start', ml: '45px'}}>
                 My Orgnizations
             </Typography>
+            <Box sx={{width: '75%'}}>
+                
 
-            <Grid 
-                sx={{
-                    diplay: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    m: 1,
-                    alignSelf: 'center',
-                }} 
-                container 
-                rowSpacing={5}
-            >
-                {organizations.map((org) => {
-                    return (<EachOrganization key={org.id} org={org} update={update}/>)
-                })}
+                <Box 
+                    sx={{
+                        diplay: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        m: 1,
+                        // alignSelf: 'center',
+                        textAlign: 'center',
+                        alignItems: 'center'
+                    }} 
+                    container 
+                    rowSpacing={5}
+                >
+                    {organizations.map((org) => {
+                        return (<EachOrganization key={org.id} org={org} update={update}/>)
+                    })}
 
-                <Grid key="createOrJoin" item xs={8}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -262,8 +319,9 @@ export default function Organization(props) {
                     >
                         <CreateOrg update={update} /> + <JoinOrg update={update}/>
                     </Box>
-                </Grid>
-            </Grid>
-        </Grid>
+                </Box>
+            </Box>
+        </Box>
+        
     )
 }
