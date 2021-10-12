@@ -100,7 +100,7 @@ function Sidebar(props) {
 
     const settings = (
         <div>
-            <ListItem button>
+            <ListItem button onClick={()=>changePage("Settings")}>
                 <ListItemIcon>
                     <SettingsIcon/>
                 </ListItemIcon>
