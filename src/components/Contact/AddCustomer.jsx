@@ -5,8 +5,10 @@ import { createCustomer } from '../../api/Contact';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import {
-    Button,
+    IconButton,
 	Box,
     TextField,
 	Grid,
@@ -39,14 +41,14 @@ export default function AddCustomer(props) {
 		  	fontSize:30,
 			fontFamily:'Arial',
 			fontWeight:'bold',
-			bgcolor:'coral',
+			bgcolor:'#ff5722',
 			borderRadius:15
 		},
 		descriptionBody: {
 			fontSize:25,
 			fontFamily:'Arial',
 			textAlign:'left',
-			bgcolor:'coral',
+			bgcolor:'#ff5722',
 			borderRadius:15,
 			px:5
 		},
@@ -55,24 +57,6 @@ export default function AddCustomer(props) {
 			justifyContent:'center', 
 			alignItems:'center',
 			color:'black'
-		},
-		box: {
-			display:'flex', 
-			flexDirection:'column'
-		},
-		discardButton: {
-			borderRadius: 20,
-			backgroundColor: 'Crimson',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		createButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
 		}
 	};
 
@@ -160,10 +144,10 @@ export default function AddCustomer(props) {
 
 	return (
 		<div>
-		    <Grid container rowSpacing={5} sx={{pt:5, px :15}}>
+		    <Grid container rowSpacing={5} sx={{pt:5, px :15, minWidth:1000}}>
 				<Grid container item columnSpacing={4}>
 					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
-						<Avatar src={processPhoto(null)} sx={{ width: 1, height: 1}}>
+						<Avatar src={processPhoto(null)} sx={{ width: 0.5, height: 1}}>
 						</Avatar>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
@@ -251,12 +235,16 @@ export default function AddCustomer(props) {
 				</Grid>
 				<Grid container item>
 					<Grid item xs={4} textAlign='center'>
-						<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
+						<IconButton>
+							<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleDiscard}/>
+						</IconButton>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
-						<Button variant="outlined" style={classes.createButton} onClick={handleCreate}>Create</Button>
+						<IconButton>
+							<UpdateSharpIcon color="primary" fontSize="large" onClick={handleCreate}/>
+						</IconButton>
 					</Grid>
 				</Grid>
 			</Grid>
