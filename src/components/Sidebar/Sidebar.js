@@ -26,7 +26,8 @@ import {
     DialogContentText,
     DialogTitle,
     Typography,
-    Grid
+    Grid,
+    Box
 
 } from '@mui/material';
 
@@ -58,13 +59,13 @@ function Sidebar(props) {
     ]
 
     const title = (
-        <Typography  variant='h3' sx={{color: '#109CF1', textAlign: 'center', py: '2%', fontFamily: 'NTR', fortStyle: 'normal'}}>
+        <Grid sx={{fontSize: '50px',color: '#109CF1', textAlign: 'center', py: '2%', fontFamily: 'NTR', fortStyle: 'normal'}}>
             ConnecTI
-        </Typography>
+        </Grid>
     )
 
     const user = (
-        <Grid container>
+        <Grid container sx={{my: '10px'}}>
             <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
                 <Avatar src={processPhoto(currentUser.photo)}>
                         <ImageIcon/>
@@ -76,37 +77,51 @@ function Sidebar(props) {
                         {`${currentUser.first_name} ${currentUser.last_name}`}
                     </Typography>
                 </Grid>
-                <Grid>
-                    <Typography sx={{display: 'flex', justifyContent: 'center', color: 'gray', fontSize: 'small'}}> 
+                <Grid sx={{display: 'flex', justifyContent: 'center', color: 'gray', fontSize: 'small'}}>
+                    {/* <Typography sx={{display: 'flex', justifyContent: 'center', color: 'gray', fontSize: 'small'}}>  */}
                         {`${currentUser.email}`}
-                    </Typography>
+                    {/* </Typography> */}
                 </Grid>
             </Grid>
         </Grid>
     )
 
     const navList = (
-        <div className='sidebar-container'>
             <List>
+                <Grid container>
                 {navItems.map((item, index) => (
                     <ListItem onClick={() => changePage(item.name)} button key={item.name} selected={item.name === selectedPage}>
-                        <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.name}></ListItemText>
+                        <Grid item container>
+                            <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                            </Grid>
+                            <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+                                <ListItemText primary={item.name}></ListItemText>
+                            </Grid>
+                        </Grid>
+                        
+                        
                     </ListItem>
                 ))}
+                </Grid>
             </List>
-        </div>
     )
 
     const settings = (
-        <div>
-            <ListItem button onClick={()=>changePage("Settings")}>
-                <ListItemIcon>
-                    <SettingsIcon/>
-                </ListItemIcon>
+
+        <ListItem button onClick={()=>changePage("Settings")}>
+            <Grid item container>
+                <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <ListItemIcon>
+                        <SettingsIcon/>
+                    </ListItemIcon>
+                </Grid>
+                <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+
                 <ListItemText primary="Settings"></ListItemText>
-            </ListItem>
-        </div>
+                </Grid>
+            </Grid>
+        </ListItem>
     )
 
     const [logoutAlertOpen, setLogoutAlertOpen] = useState(false);
@@ -135,30 +150,22 @@ function Sidebar(props) {
 	}
 
     const logOut = (
-        <div>
-            <ListItem button onClick={handleClickOpen}>
-                <ListItemIcon>
-                    <LogOutIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Log out"></ListItemText>
-            </ListItem>
-            <Dialog open={logoutAlertOpen} onClose={handleClickClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">See you next time</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Do you really want to leave?
-                </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleClickClose} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={handleConfirm} color="primary">
-                    Confirm
-                </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+        
+        <ListItem button onClick={handleClickOpen}>
+            <Grid item container>
+                <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <ListItemIcon>
+                        <LogOutIcon/>
+                    </ListItemIcon>
+                </Grid>
+                <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <ListItemText primary="Log out"></ListItemText>
+                </Grid>
+            </Grid>
+            
+        </ListItem>
+
+        
     )
 
     return(
@@ -176,10 +183,28 @@ function Sidebar(props) {
             {user}
             {navList}
             <Divider />
-            <div className='sidebar-stick-bottom'>
-                {settings}
-                {logOut}
-            </div>
+            <List sx={{position: 'absolute', bottom: '10px', width: '100%'}}>
+                <Grid container>
+                    {settings}
+                    {logOut}
+                </Grid>
+            </List>
+            <Dialog open={logoutAlertOpen} onClose={handleClickClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">See you next time</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Do you really want to leave?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleClickClose} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={handleConfirm} color="primary">
+                    Confirm
+                </Button>
+                </DialogActions>
+            </Dialog>
         </Drawer>
     )
 }

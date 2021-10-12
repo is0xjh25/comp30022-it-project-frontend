@@ -238,7 +238,7 @@ export default function DisplayUser() {
 											uploadUserPhoto(e.currentTarget.files[0]);
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
-										{<ChangeCircleRoundedIcon size="small"/> }
+										<ChangeCircleRoundedIcon size="small"/>
 									</IconButton>
 									</label>
 								}
