@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import AlertDialog from '../Dialog/AlertDialog';
 import { updateCustomer } from '../../api/Contact';
-
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -23,6 +22,7 @@ import {
 
 import { formatTime } from '../../api/Util';
 import { Input, uploadContactPhoto, processPhoto } from '../../api/Photo';
+import { SettingsPhoneTwoTone } from '@material-ui/icons';
 
 
 export default function EditCustomer(props) {
@@ -146,10 +146,10 @@ export default function EditCustomer(props) {
 	}
 
 	return (
-		<Grid container rowSpacing={5} sx={{pt:10, px :15}}>
+		<Grid container rowSpacing={5} sx={{pt:10, px:15, minWidth:1000}}>
 				<Grid container item columnSpacing={4}>
-					<Grid item xs={2} textAlign='center' sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
-						<Badge
+					<Grid item xs={2} sx={{display:"flex", justifyContent:'center', alignItems:'center'}}>
+						<Badge sx={{justifyContent:'center'}}
 							overlap="circular"
 							anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
 							badgeContent={
@@ -157,15 +157,14 @@ export default function EditCustomer(props) {
 								<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
 										uploadContactPhoto(customerId, e.currentTarget.files[0]);
 										window.location.reload();
+										setPhoto(e);
 									}}/>
 								<IconButton color="primary" aria-label="upload picture" component="span">
-									<ChangeCircleRoundedIcon size="small"/>
+									<ChangeCircleRoundedIcon size="medium"/>
 								</IconButton>
 								</label>
-							}
-						>
-							<Avatar src={processPhoto(photo)}
-								sx={{ width: 1, height: 1}}>
+							}>
+							<Avatar src={processPhoto(photo)} sx={{ width: 1/2, height: 1}}>
 							</Avatar>
 						</Badge>
 					</Grid>
@@ -256,7 +255,7 @@ export default function EditCustomer(props) {
 				<Grid container item>
 					<Grid item xs={4} textAlign='center'>
 						<IconButton>
-							<ArrowBackSharpIcon color="error" fontSize="large"  onClick={handleDiscard}/>
+							<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleDiscard}/>
 						</IconButton>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>

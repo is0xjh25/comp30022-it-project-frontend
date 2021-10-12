@@ -13,7 +13,6 @@ import {
     TextField,
 	Badge 
 } from '@mui/material';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 import {processPhoto} from '../../api/Photo';
 
 export default function DisplayUser() {
