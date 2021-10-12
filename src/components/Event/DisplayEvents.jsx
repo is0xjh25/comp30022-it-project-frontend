@@ -20,7 +20,7 @@ import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
-import { toAUSTime } from "../../api/Util";
+import { toLocalTime } from "../../api/Util";
 
 export default function DisplayEvents() {
 
@@ -207,7 +207,7 @@ export default function DisplayEvents() {
 									{e.status}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
-									{toAUSTime(e.start_time)}
+									{toLocalTime(e.start_time)}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
 									{e.description}

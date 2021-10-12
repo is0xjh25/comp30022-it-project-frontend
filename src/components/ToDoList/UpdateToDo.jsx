@@ -22,17 +22,13 @@ export default function UpdateToDo(props) {
     const { original, open, handleClose, update } = props;
 
     // Attributes for updating to-do
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState(new Date(original.date_time));
     const [description, setDescription] = useState(original.description);
 
     useEffect(() => {
-        setTime(new Date());
+        setTime(new Date(original.date_time));
         setDescription("");
     }, [open])
-
-    // const handleChangeTime = (e) => {
-    //     setTime(e);
-    // }
 
     const handleOnChange = (e) => {
         if (e.target.id === "description") {
@@ -76,8 +72,9 @@ export default function UpdateToDo(props) {
                     justifyContent="center" 
                     alignItems="center"
                     spacing={2}
+                    sx={{mt: 1}}
                 >
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns} >
                         <DesktopDateTimePicker
                             renderInput={(params) => <TextField {...params} />}
                             label="Select time"
@@ -85,14 +82,12 @@ export default function UpdateToDo(props) {
                             onChange={(e) => {
                                 setTime(e)
                             }}
-                            sx={{mt: 2}}
                         />
                     </LocalizationProvider>
                     <TextField
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}
-                        sx={{mt: 2}}
                     />
                 </Stack>
             </DialogContent>

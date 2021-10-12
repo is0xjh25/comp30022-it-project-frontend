@@ -62,6 +62,7 @@ export default function AddToDo(props) {
                     justifyContent="center" 
                     alignItems="center"
                     spacing={2}
+                    sx={{mt: 1}}
                 >
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDateTimePicker
@@ -77,7 +78,6 @@ export default function AddToDo(props) {
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}
-                        sx={{mt: 2}}
                     />
                 </Stack>
             </DialogContent>
