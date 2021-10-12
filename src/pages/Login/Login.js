@@ -1,9 +1,12 @@
 import React from 'react';
-import './Login.css';
-import Image from '../../images/road.jpg';
+import BackGroundImage from '../../images/road.jpg';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Resend from './Resend';
+import {
+	Box,
+	Grid
+} from '@mui/material';
 
 class Login extends React.Component {
 	
@@ -24,11 +27,11 @@ class Login extends React.Component {
 		let pageStatus = this.state.pageStatus;
 
 		return(
-			<React.Fragment>
-				<div className={'Login-imageBlock'} >
-					<img src={Image} className={'Login-image'} alt=""/>
-				</div>
-				<div className={'Login-sideBlock'}>
+			<Grid container sx={{minWidth:1920}}>
+				<Grid item xs={9}>
+					<Box component="img" src={BackGroundImage} sx={{height: '100%', width: '100%'}} alt=""/>
+				</Grid>
+				<Grid item xs={3}>
 					{pageStatus === 'signIn' ? (
 							<SignIn setPageStatus={this.setPageStatus} />
 						) : pageStatus === 'signUp' ? (
@@ -37,8 +40,8 @@ class Login extends React.Component {
 							<Resend setPageStatus={this.setPageStatus} />
 						) : null 
 					}
-				</div>
-			</React.Fragment>
+				</Grid>
+			</Grid>
 		);
 	}
 }

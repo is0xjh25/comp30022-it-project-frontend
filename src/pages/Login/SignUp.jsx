@@ -18,7 +18,7 @@ import {
 // Style sheet
 const useStyles = makeStyles((theme) => ({
 	headLine: {
-		fontFamily: 'Optima-Italic',
+		fontFamily: 'NTR',
 		fontSize: 50,
 		marginTop: theme.spacing(5),
 		display: 'flex',
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	favicon: {
 		position: 'relative',
-		top:100,
-		left: 360,
+		top:105,
+		left: 370,
 		width: 40,
 		height: 40
 	},		
@@ -169,7 +169,7 @@ export default function SignUp(props) {
 			<img src={Favicon} alt='' className={classes.favicon}></img>
 			<h3 className={classes.headLine}>Join ConnecTi</h3>
 		</div>
-		<div className={classes.paper} fontWeight="fontWeightBold">
+		<div className={classes.paper}>
 			<Typography component="h1" variant="h5">
 			Personal Information
 			</Typography>
@@ -250,14 +250,14 @@ export default function SignUp(props) {
 			>
 				Sign up
 			</Button>
-			<Grid container>
+			<Grid container sx={{fontSize:14}}>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("resend")}>
+				<NavLink to='./Login' onClick={() => props.setPageStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={() => props.setPageStatus("signIn")}>
+				<NavLink to='./Login' onClick={() => props.setPageStatus("signIn")}>
 					{"Already have an account"}
 				</NavLink>
 				</Grid>
