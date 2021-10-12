@@ -35,7 +35,7 @@ export default function EditCustomer(props) {
 	const [email, setEmail] = useState(props.data.email);
 	const [address, setAddress] = useState(props.data.address);
 	const [gender, setGender] = useState(props.data.gender);
-	const [birthday, setBirthday] = useState(typeof(props.data.birthday) !== String ? null : props.data.birthday);
+	const [birthday, setBirthday] = useState(props.data.birthday);
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setorganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
@@ -89,15 +89,21 @@ export default function EditCustomer(props) {
 	}
 
 	const handleOnSelect = (e,id) => {
+		console.log(e)
 		if (id === "customerType") {
 			setCustomerType(e.target.value);
 		}else if (id === "gender") {
 			setGender(e.target.value);
 		}else if (id === "birthday") {
-			const birthdayYear = e.getFullYear();
-			const birthdayMonthDate = formatTime(e, 'MM-dd');
-			console.log(birthdayYear+'-'+birthdayMonthDate);
-			setBirthday(birthdayYear+'-'+birthdayMonthDate);
+			if(e!=null){
+				const birthdayYear = e.getFullYear();
+				const birthdayMonthDate = formatTime(e, 'MM-dd');
+				setBirthday(birthdayYear+'-'+birthdayMonthDate);
+			}
+			else{
+				setBirthday(null);
+			}
+			
 		}
     };
 
@@ -183,11 +189,11 @@ export default function EditCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Date of Birth</Box>
-							<LocalizationProvider dateAdapter={AdapterDateFns}>
+							<LocalizationProvider dateAdapter={AdapterDateFns} >
 								<DesktopDatePicker
 										id="birthday"
 										inputFormat="yyyy-MM-dd"
-										value={birthday}
+										value={new Date(birthday)}
 										onChange={(event) => handleOnSelect(event, "birthday")}
 										renderInput={(params) => <TextField {...params} />}
 								/>
