@@ -5,13 +5,16 @@ import EditCustomer from './EditCustomer';
 import AlertDialog from '../Dialog/AlertDialog';
 import { useHistory, useParams } from 'react-router';
 import { getMyPermissionLevel } from '../../api/Manage';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditSharpIcon from '@material-ui/icons/EditSharp';
 import {
-    Button,
+    Avatar,
 	Box,
 	Grid,
-	Avatar
+	IconButton
 } from '@mui/material';
-
+import {processPhoto} from '../../api/Photo';
 
 export default function DisplayCustomer(props) {
 	
@@ -36,23 +39,27 @@ export default function DisplayCustomer(props) {
 
 	const classes = {
 		title: {
-		  	fontSize:30,
-			fontFamily:'Arial',
-			fontWeight:'bold'
-		},
+			fontSize:30,
+		  	position:'static',
+		  	fontFamily:'NTR',
+		  	fontWeight:'bold',
+		  	bgcolor:'#35baf6',
+		  	borderRadius:15
+	  	},
 		body: {
 			fontSize:25,
 			fontFamily:'Arial',
+			borderColor: 'black',
 			textAlign:'center',
-			bgcolor:'coral',
-			borderRadius:15
+			m: 1,
+			px:5
 		},
 		descriptionBody: {
 			fontSize:25,
 			fontFamily:'Arial',
+			borderColor: 'black',
 			textAlign:'left',
-			bgcolor:'coral',
-			borderRadius:15,
+			m: 1,
 			px:5
 		},
 		grid: {
@@ -60,31 +67,6 @@ export default function DisplayCustomer(props) {
 			justifyContent:'center', 
 			alignItems:'center',
 			color:'black'
-		},
-		box: {
-			display:'flex', 
-			flexDirection:'column'
-		},
-		backButton: {
-			borderRadius: 20,
-			backgroundColor: 'CornflowerBlue',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		deleteButton: {
-			borderRadius: 20,
-			backgroundColor: 'Crimson',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		editButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
 		}
 	};
 
@@ -92,6 +74,7 @@ export default function DisplayCustomer(props) {
 	useEffect(() => {
 		displayCustomer(customerId).then(res => {
 			if (res.code===200) {
+				console.log(res.data.birthday);
 				setData(res.data);
                 setLoading(false);
 			} else {
@@ -135,74 +118,81 @@ export default function DisplayCustomer(props) {
 		setPageStatus("edit");
 	}
 
-
-		
 	const showDisplay = 
-	(<Grid container rowSpacing={10} sx={{pt:10, px:15}}>
+	(<Grid container rowSpacing={8} sx={{pt:10, px:15, minWidth:1000}}>
 		<Grid container item columnSpacing={4}>
 			<Grid item xs={2} textAlign='center' sx={classes.grid}>
-				<Avatar sx={{ width: 70, height: 70}}></Avatar>
+				<Avatar src={processPhoto(data.photo)} sx={{ width: 1/2, height: 1}}>
+				</Avatar>
 			</Grid>
-			<Grid item xs={5} textAlign='center' sx={classes.box}>
+			<Grid item xs={5} textAlign='center' rowSpacing={10}>
 				<Box sx={classes.title} >First Name</Box>
-				<Box sx={classes.body}>{data.first_name}</Box>
+				<Box sx={classes.body}>{data.first_name !== "" ? data.first_name : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={5}  textAlign='center' sx={classes.box}>
+			<Grid item xs={5}  textAlign='center'>
 				<Box sx={classes.title}>Last Name</Box>
-				<Box sx={classes.body}>{data.last_name}</Box>
+				<Box sx={classes.body}>{data.last_name !== "" ? data.last_name : "~No Record~"}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item rowSpacing={5} columnSpacing={3}>
-			<Grid item xs={4} textAlign='center'sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>Middle Name</Box>
-				<Box sx={classes.body}>{data.middle_name}</Box>
+				<Box sx={classes.body}>{data.middle_name !== "" ? data.middle_name : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={4} textAlign='center' sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>organization</Box>
-				<Box sx={classes.body}>{data.organization}</Box>
+				<Box sx={classes.body}>{data.organization !== "" ? data.organization : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={4} textAlign='center' sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>Date of Birth</Box>
-				<Box sx={classes.body}>{data.birthday}</Box>
+				<Box sx={classes.body}>{data.birthday !== null ? data.birthday : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={4} textAlign='center' sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>Phone</Box>
-				<Box sx={classes.body}>{data.phone}</Box>
+				<Box sx={classes.body}>{data.phone !== "" ? data.phone : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={4} textAlign='center' sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>Address</Box>
-				<Box sx={classes.body}>{data.address}</Box>
+				<Box sx={classes.body}>{data.address !== "" ? data.address : "~No Record~"}</Box>
 			</Grid>
-			<Grid item xs={4} textAlign='center' sx={classes.box}>
+			<Grid item xs={4} textAlign='center'>
 				<Box sx={classes.title}>Customer Type</Box>
-				<Box sx={classes.body}>{data.customer_type}</Box>
+				<Box sx={classes.body}>{data.customer_type !== "" ? data.customer_type : "~No Record~"}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item rowSpacing={5} columnSpacing={3}>
 			<Grid container item xs={4} textAlign='center' rowSpacing={15}>
-				<Grid item xs={12} textAlign='center' sx={classes.box}>
+				<Grid item xs={12} textAlign='center'>
 					<Box sx={classes.title}>Email</Box>
-					<Box sx={classes.body}>{data.email}</Box>
+					<Box sx={classes.body}>{data.email !== "" ? data.email : "~No Record~"}</Box>
 				</Grid>
-				<Grid item xs={12} textAlign='center' sx={classes.box}>
+				<Grid item xs={12} textAlign='center'>
 					<Box sx={classes.title}>Gender</Box>
-					<Box sx={classes.body}>{data.gender}</Box>
+					<Box sx={classes.body}>{data.gender !== "" ? data.gender : "~No Record~"}</Box>
 				</Grid>
 			</Grid>
-			<Grid item xs={8}  textAlign='center' sx={classes.box}>
+			<Grid item xs={8}  textAlign='center' >
 				<Box sx={classes.title}>Description</Box>
-				<Box sx={classes.descriptionBody}>{data.description}</Box>
+				<Box sx={classes.descriptionBody}>{data.description !== "" ? data.description : "~No Record~"}</Box>
 			</Grid>
 		</Grid>
 		<Grid container item>
 			<Grid item xs={4} textAlign='center'>
-				<Button style={classes.backButton} variant="outlined" onClick={handleBack}>Back</Button>
+				<IconButton>
+					<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleBack}/>
+				</IconButton>
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority >= 3 ? <Button style={classes.deleteButton}variant="outlined" onClick={handleDelete}>Delete</Button> : null} 
+				{authority >= 3 ? 
+				<IconButton>
+					<DeleteIcon color="secondary" fontSize="large" onClick={handleDelete}/>
+				</IconButton> : null}	
 			</Grid>
 			<Grid item xs={4} textAlign='center'>
-				{authority >= 2 ? <Button style={classes.editButton} variant="outlined" onClick={handleEdit}>Edit</Button> : null}
+				{authority >= 2 ? 
+				<IconButton>
+					<EditSharpIcon color="primary" fontSize="large" onClick={handleEdit}/>
+				</IconButton> : null}	
 			</Grid>
 		</Grid>
 	</Grid>)

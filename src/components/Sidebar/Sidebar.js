@@ -34,7 +34,7 @@ import {
 
 import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
-
+import {processPhoto} from '../../api/Photo';
 
 function Sidebar(props) {
     const {changePage, selectedPage, currentUser} = props;
@@ -67,7 +67,7 @@ function Sidebar(props) {
     const user = (
         <Grid container sx={{my: '10px'}}>
             <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
-                <Avatar src={`data:image/gif;base64,${currentUser.photo}`}>
+                <Avatar src={processPhoto(currentUser.photo)}>
                         <ImageIcon/>
                 </Avatar>
             </Grid>
@@ -108,7 +108,8 @@ function Sidebar(props) {
     )
 
     const settings = (
-        <ListItem button >
+
+        <ListItem button onClick={()=>changePage("Settings")}>
             <Grid item container>
                 <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
                     <ListItemIcon>
@@ -116,6 +117,7 @@ function Sidebar(props) {
                     </ListItemIcon>
                 </Grid>
                 <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+
                 <ListItemText primary="Settings"></ListItemText>
                 </Grid>
             </Grid>

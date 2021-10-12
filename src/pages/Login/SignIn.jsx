@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center'
 	},
 	firstLine: {
-		fontFamily: 'Optima-Italic',
+		fontFamily: 'NTR',
 		fontSize: 30
 	},
 	secondLine: {
-		fontFamily: 'Optima-Italic',
+		fontFamily: 'NTR',
 		fontSize: 70,
 		marginTop: theme.spacing(0)
 	},
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	form: {
 		width: '100%',
-		marginTop: theme.spacing(1)
+		marginTop: theme.spacing(2)
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2)
@@ -132,7 +132,7 @@ export default function SignIn(props) {
 		</div>
 		<div className={classes.paper}>
 			<Typography component="h1" variant="h5">
-			Sign in
+			Sign In
 			</Typography>
 			<form className={classes.form} noValidate >
 			<TextField
@@ -169,14 +169,14 @@ export default function SignIn(props) {
 			>
 				Sign In
 			</Button>
-			<Grid container>
+			<Grid container sx={{fontSize:14}}>
 				<Grid item xs>
-				<NavLink to='./Login' variant="body2" onClick={()=>props.setPageStatus("resend")}>
+				<NavLink to='./Login' onClick={()=>props.setPageStatus("resend")}>
 					{"Forgot password?"}
 				</NavLink>
 				</Grid>
-				<Grid item>
-				<NavLink to='./Login' variant="body2" onClick={()=>props.setPageStatus("signUp")}>
+				<Grid item >
+				<NavLink to='./Login' onClick={()=>props.setPageStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

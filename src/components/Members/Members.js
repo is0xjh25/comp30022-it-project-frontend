@@ -3,9 +3,7 @@ import React, {useState, useEffect} from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import { useParams } from 'react-router-dom';
 
-
 import Table from './Table';
-
 
 import './Members.css'
 import { getMyPermissionLevel, searchMember } from '../../api/Manage';

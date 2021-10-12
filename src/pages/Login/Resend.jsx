@@ -18,7 +18,7 @@ import {
 const useStyles = makeStyles((theme) => ({
 	headLine: {
 		fontSize: 19,
-		fontFamily: 'Optima-Italic',
+		fontFamily: 'NTR',
 		marginTop: theme.spacing(30),
 		display: 'flex',
 		flexDirection: 'column',
@@ -126,14 +126,14 @@ export default function Resend(props) {
 			>
 				Send
 			</Button>
-			<Grid container>
+			<Grid container sx={{fontSize:14}}>
 				<Grid item xs>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signIn")}>
+				<NavLink to = '/Login' onClick={() => props.setPageStatus("signIn")}>
 					{"Oops! I just remembered"}
 				</NavLink>
 				</Grid>
 				<Grid item>
-				<NavLink to = '/Login' variant="2" onClick={() => props.setPageStatus("signUp")}>
+				<NavLink to = '/Login' onClick={() => props.setPageStatus("signUp")}>
 					{"Don't have an account? Sign Up"}
 				</NavLink>
 				</Grid>

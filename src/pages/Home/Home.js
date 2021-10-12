@@ -8,9 +8,9 @@ import Organization from '../../components/Manage/Organization';
 import Department from '../../components/Manage/Department';
 import Customer from '../../components/Contact/Customer';
 import DisplayCustomer from '../../components/Contact/DisplayCustomer';
+import DisplayUser from '../../components/User/DisplayUser';
 import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
-
 import DisplayEvents from '../../components/Event/DisplayEvents';
 import ToDoList from '../../components/ToDoList/ToDoList';
 
@@ -24,9 +24,7 @@ import {
     FormControl,
     Select,
     OutlinedInput,
-    Stack,
     Grid,
-    
 } from '@mui/material'
 
 import {
@@ -56,6 +54,16 @@ function Events(props) {
             </Grid>
             <Grid item xs={4}>
                 <ToDoList/>
+            </Grid>
+        </Grid>
+    )
+}
+
+function Settings(props) {
+    return (
+        <Grid container sx={{mt: 10}}>
+            <Grid item xs={12}>
+                <DisplayUser/>
             </Grid>
         </Grid>
     )
@@ -271,7 +279,7 @@ function Home(props) {
   const changePage = function(toPage) {
     setSelectedPage(toPage);
     history.push(`/${toPage}`);
-  }
+}
 
 
 
@@ -313,6 +321,10 @@ function Home(props) {
 
                 <Route path={`${url}Manage`}>
                     <Manage/>
+                </Route>
+
+                <Route path={`${url}Settings`}>
+                    <Settings/>
                 </Route>
 
                 <Route path={`${url}TestContact/:orgId/:depId`}>

@@ -2,19 +2,21 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getUserInfo, updateUserInfo } from '../../api/Util';
-import { uploadPhoto } from '../../api/UploadPhoto';
+import { Input,uploadUserPhoto } from '../../api/Photo';
 import AlertDialog from '../Dialog/AlertDialog';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import EditSharpIcon from '@material-ui/icons/EditSharp';
+import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import {
 	Avatar,
 	Box,
-    Button,
 	IconButton,
 	Grid,
     TextField,
 	Badge 
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+import {processPhoto} from '../../api/Photo';
+
 
 export default function DisplayUser() {
     
@@ -32,10 +34,13 @@ export default function DisplayUser() {
 
 	const classes = {
 		title: {
-		  	fontSize:30,
-			fontFamily:'Arial',
-			fontWeight:'bold'
-		},
+			fontSize:30,
+		  	position:'static',
+		  	fontFamily:'NTR',
+		  	fontWeight:'bold',
+		  	bgcolor:'#35baf6',
+		  	borderRadius:15
+	  	},
 		body: {
 			fontSize:25,
 			fontFamily:'Arial',
@@ -51,27 +56,6 @@ export default function DisplayUser() {
 		box: {
 			display:'flex', 
 			flexDirection:'column'
-		},
-		backButton: {
-			borderRadius: 20,
-			backgroundColor: 'CornflowerBlue',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		discardButton: {
-			borderRadius: 20,
-			backgroundColor: 'Crimson',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		editButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
 		}
 	};
 
@@ -220,20 +204,28 @@ export default function DisplayUser() {
 	let leftButton; 
 	let rightButton;
 	if (status === "view") {
-		leftButton = <Button xs={6} textAlign='center' style={classes.backButton} variant="outlined" onClick={handleBack}>BACK</Button>;
-		rightButton = <Button xs={6} textAlign='center' style={classes.editButton} variant="outlined" onClick={handleEdit}>EDIT</Button>;
+		leftButton = 
+			<IconButton xs={6}>
+				<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleBack}/>
+			</IconButton>;
+		rightButton = 
+			<IconButton xs={6}>
+				<EditSharpIcon color="primary" fontSize="large" onClick={handleEdit}/>
+			</IconButton>;
 	} else if (status === "edit") {
-		leftButton = <Button xs={6} textAlign='center' style={classes.discardButton} variant="outlined" onClick={handleDiscard}>Discard</Button>;
-		rightButton = <Button xs={6} textAlign='center' style={classes.editButton} variant="outlined" onClick={handleUpdate}>Update</Button>;
+		leftButton = 
+			<IconButton xs={6}>
+				<ArrowBackSharpIcon color="secondary" fontSize="large" onClick={handleDiscard}/>
+			</IconButton>;
+		rightButton = 
+			<IconButton xs={6}>
+				<UpdateSharpIcon color="primary" fontSize="large" onClick={handleUpdate}/>
+			</IconButton>;
 	}
-
-	const Input = styled('input')({
-		display: 'none',
-	  });
 
 	return (
 			<div>
-				<Grid container rowSpacing={10} sx={{pt:8, px:15}}>
+				<Grid container rowSpacing={8} sx={{pt:5, px:15, minWidth:700}}>
 					<Grid container item columnSpacing={5}>
 						<Grid item xs={12} textAlign='center' sx={classes.grid}>
 							<Badge
@@ -242,16 +234,15 @@ export default function DisplayUser() {
 								badgeContent={
 									<label htmlFor="contained-button-file">
 									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
-											uploadPhoto(e.currentTarget.files[0]);
-											window.location.reload();
+											uploadUserPhoto(e.currentTarget.files[0]);
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
-										<ChangeCircleRoundedIcon size="small"/>
+										{/* <ChangeCircleRoundedIcon size="small"/> */}
 									</IconButton>
 									</label>
 								}
-							>{/* A JSX comment */}
-								<Avatar id="avator" src={`data:image/gif;base64,${data.photo}`}
+							>
+								<Avatar id="user_avator" src={processPhoto(data.photo)}
 									sx={{ width: 70, height: 70}}>
 								</Avatar>
 							</Badge>
