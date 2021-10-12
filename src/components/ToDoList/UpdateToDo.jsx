@@ -85,6 +85,7 @@ export default function UpdateToDo(props) {
                         />
                     </LocalizationProvider>
                     <TextField
+                        sx={{width: '65%'}}
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}

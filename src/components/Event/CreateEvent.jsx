@@ -2,6 +2,9 @@ import { useState } from "react";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createEvent } from "../../api/Event";
 import DateFnsUtils from '@date-io/date-fns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Box,
 	Grid,
@@ -86,25 +89,25 @@ export default function CreateEvent(props) {
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Start Time</Box>
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<DateTimePicker
-					id="startTime"
-					value={startTime}
-					onChange={setStartTime}
-					renderInput={(params) => <TextField {...params} />}
+				<LocalizationProvider dateAdapter={AdapterDateFns}>
+					<DesktopDateTimePicker
+						id="startTime"
+						value={startTime}
+						onChange={setStartTime}
+						renderInput={(params) => <TextField {...params} />}
 					/>
-				</MuiPickersUtilsProvider>
+				</LocalizationProvider>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Finish Time</Box>
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<DateTimePicker
-					id="finishTime"
-					value={finishTime}
-					onChange={setFinishTime}
-					renderInput={(params) => <TextField {...params} />}
+				<LocalizationProvider dateAdapter={AdapterDateFns}>
+					<DesktopDateTimePicker
+						id="finishTime"
+						value={finishTime}
+						onChange={setFinishTime}
+						renderInput={(params) => <TextField {...params} />}
 					/>
-				</MuiPickersUtilsProvider>
+				</LocalizationProvider>
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Box >Description</Box>

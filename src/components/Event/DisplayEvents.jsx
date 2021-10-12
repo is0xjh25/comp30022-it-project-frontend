@@ -6,6 +6,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
+import CalendarPicker from '@mui/lab/CalendarPicker';
 import {
     Box,
 	Badge,
@@ -146,14 +147,17 @@ export default function DisplayEvents() {
 	useEffect(() => {
 		handleYearMonthChange(new Date());
 	}, []);
+
+	
+	const [thisDate, setThisDate] = useState(new Date());
 	
 	return(
 		<Fragment>
             <Box xs={12} sx={{width: '60%', mx: '20%'}}>
 				{/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-					<StaticDatePicker
+          			<CalendarPicker date={thisDate} onChange={(newDate) => setThisDate(newDate)} />
+					<CalendarPicker
 					id="Calendar"
-						orientation="landscape"
 						openTo="date"
 						value={date}
 					onMonthChange={(date) => {handleYearMonthChange(date)}}
@@ -167,7 +171,7 @@ export default function DisplayEvents() {
 					renderInput={(params) => <TextField {...params} />}
 					/>
 				</LocalizationProvider> */}
-                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker
 					id="Calendar"
                     autoOk
@@ -184,7 +188,7 @@ export default function DisplayEvents() {
 						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
 					}}
                     />
-                </MuiPickersUtilsProvider> */}
+                </MuiPickersUtilsProvider>
             </Box>
 			<Grid container rowSpacing={10} xs={12} sx={{pt:10}}>
 				<Grid container item xs={12} rowSpacing={5}>

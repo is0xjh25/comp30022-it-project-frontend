@@ -67,14 +67,13 @@ export default function AddToDo(props) {
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDateTimePicker
                             label="Select time"
-                            inputFormat="yyyy-MM-dd HH:mm"
                             value={time}
                             onChange={setTime}
                             renderInput={(params) => <TextField {...params} />}
-                            sx={{mt: 2}}
                         />
                     </LocalizationProvider>
                     <TextField
+                        sx={{width: '65%'}}
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}
