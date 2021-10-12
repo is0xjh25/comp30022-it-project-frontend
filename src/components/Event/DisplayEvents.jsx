@@ -1,19 +1,26 @@
 import { Fragment, useState, useEffect } from "react";
+
+// Import from MUI
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
-import { toLocalTime } from "../../api/Util";
 import DateFnsUtils from '@date-io/date-fns';
-import AlertDialog from "../Dialog/AlertDialog";
-import CreateEvent from "./CreateEvent";
-import DisplayOneEvent from "./DisplayOneEvent";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import {
     Box,
 	Badge,
 	Dialog,
 	Paper,
 	Grid,
-	Button
+	Button,
+	TextField
 } from '@mui/material'
+
+import AlertDialog from "../Dialog/AlertDialog";
+import CreateEvent from "./CreateEvent";
+import DisplayOneEvent from "./DisplayOneEvent";
+import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
+import { toAUSTime } from "../../api/Util";
 
 export default function DisplayEvents() {
 
@@ -142,8 +149,25 @@ export default function DisplayEvents() {
 	
 	return(
 		<Fragment>
-            <Box xs={12} sx={{width: '54%', mx: '23%'}}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Box xs={12} sx={{width: '60%', mx: '20%'}}>
+				{/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+					<StaticDatePicker
+					id="Calendar"
+						orientation="landscape"
+						openTo="date"
+						value={date}
+					onMonthChange={(date) => {handleYearMonthChange(date)}}
+					onYearChange={(date) => {handleYearMonthChange(date)}}
+					onChange={handleOnChange}
+					renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
+						const date = new Date(day);	
+						const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
+						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
+					}}
+					renderInput={(params) => <TextField {...params} />}
+					/>
+				</LocalizationProvider> */}
+                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker
 					id="Calendar"
                     autoOk
@@ -160,7 +184,7 @@ export default function DisplayEvents() {
 						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
 					}}
                     />
-                </MuiPickersUtilsProvider>
+                </MuiPickersUtilsProvider> */}
             </Box>
 			<Grid container rowSpacing={10} xs={12} sx={{pt:10}}>
 				<Grid container item xs={12} rowSpacing={5}>
@@ -183,7 +207,7 @@ export default function DisplayEvents() {
 									{e.status}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
-									{toLocalTime(e.start_time)}
+									{toAUSTime(e.start_time)}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
 									{e.description}

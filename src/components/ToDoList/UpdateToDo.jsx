@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 // Import from MUI
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     TextField,
     Stack,
@@ -22,7 +23,6 @@ export default function UpdateToDo(props) {
 
     // Attributes for updating to-do
     const [time, setTime] = useState(new Date());
-    // const [dateTime, setDateTime] = useState(new Date());
     const [description, setDescription] = useState(original.description);
 
     useEffect(() => {
@@ -30,9 +30,9 @@ export default function UpdateToDo(props) {
         setDescription("");
     }, [open])
 
-    const handleChangeTime = (e) => {
-        setTime(e);
-    }
+    // const handleChangeTime = (e) => {
+    //     setTime(e);
+    // }
 
     const handleOnChange = (e) => {
         if (e.target.id === "description") {
@@ -70,24 +70,29 @@ export default function UpdateToDo(props) {
 
     return (
         <Dialog fullWidth maxWidth='xs' open={open}>
-            <DialogTitle>Update your to-do event</DialogTitle>
+            <DialogTitle >Update your to-do event</DialogTitle>
             <DialogContent>
                 <Stack 
                     justifyContent="center" 
                     alignItems="center"
                     spacing={2}
                 >
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DateTimePicker
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDateTimePicker
+                            renderInput={(params) => <TextField {...params} />}
                             label="Select time"
                             value={time}
-                            onChange={handleChangeTime}
+                            onChange={(e) => {
+                                setTime(e)
+                            }}
+                            sx={{mt: 2}}
                         />
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                     <TextField
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}
+                        sx={{mt: 2}}
                     />
                 </Stack>
             </DialogContent>

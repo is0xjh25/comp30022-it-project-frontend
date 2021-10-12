@@ -28,7 +28,7 @@ import {
     updateToDo,
     deleteToDo
 } from '../../api/ToDoList';
-import { toLocalTime } from '../../api/Util';
+import { toAUSTime } from '../../api/Util';
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
@@ -216,7 +216,7 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '90%' }}
                                 >
-                                    Date and Time: {toLocalTime(row.date_time)}
+                                    Date and Time: {toAUSTime(row.date_time)}
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}

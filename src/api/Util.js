@@ -118,7 +118,7 @@ const formatTime = function(time, format) {
 }
 
 // Convert time to local time zone
-function toLocalTime(time) {
+function toAUSTime(time) {
     const localTime = new Date(time)
     return localTime.toLocaleString("en-AU");
 }
@@ -130,6 +130,6 @@ export {
     checkUnauthorized,
     getUserInfo,
     updateUserInfo,
-    toLocalTime,
+    toAUSTime,
     formatTime
 }

@@ -3,7 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
-import { toLocalTime } from "../../api/Util";
+import { toAUSTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
 import {
 	Box, 
@@ -251,11 +251,11 @@ export default function DisplayOneEvent(props) {
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Start Time</Box>
-				<Box>{toLocalTime(data.start_time)}</Box>
+				<Box>{toAUSTime(data.start_time)}</Box>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Finish Time</Box>
-				<Box>{toLocalTime(data.finish_time)}</Box>
+				<Box>{toAUSTime(data.finish_time)}</Box>
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Description</Box>
