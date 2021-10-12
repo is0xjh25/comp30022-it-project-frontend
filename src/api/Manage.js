@@ -381,6 +381,25 @@ function searchMemberInOrg(orgId, searchKey) {
     })
 }
 
+function transferOwnership(orgId, newOwner) {
+    const url = `${BASE_URL}/organization/transfer?organization_id=${orgId}&new_owner=${newOwner}`;
+
+    const requestInit = {
+        method: 'PUT',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 export {
     getAllUsers,
     searchMember,
@@ -398,5 +417,6 @@ export {
     getDepartment,
     deleteOrganization,
     deleteDepartment,
-    getMyPermissionLevel
+    getMyPermissionLevel,
+    transferOwnership
 }
