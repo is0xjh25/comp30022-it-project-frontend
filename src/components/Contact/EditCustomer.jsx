@@ -160,11 +160,11 @@ export default function EditCustomer(props) {
 										setPhoto(e);
 									}}/>
 								<IconButton color="primary" aria-label="upload picture" component="span">
-									<ChangeCircleRoundedIcon size="medium"/>
+									<ChangeCircleRoundedIcon size="small"/>
 								</IconButton>
 								</label>
 							}>
-							<Avatar src={processPhoto(photo)} sx={{ width: 1/2, height: 1}}>
+							<Avatar src={processPhoto(photo)} sx={{ width: 1, height: 1}}>
 							</Avatar>
 						</Badge>
 					</Grid>

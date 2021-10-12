@@ -7,6 +7,7 @@ import AlertDialog from '../Dialog/AlertDialog';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
+import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
 import {
 	Avatar,
 	Box,
@@ -237,7 +238,7 @@ export default function DisplayUser() {
 											uploadUserPhoto(e.currentTarget.files[0]);
 										}}/>
 									<IconButton color="primary" aria-label="upload picture" component="span">
-										{/* <ChangeCircleRoundedIcon size="small"/> */}
+										{<ChangeCircleRoundedIcon size="small"/> }
 									</IconButton>
 									</label>
 								}
