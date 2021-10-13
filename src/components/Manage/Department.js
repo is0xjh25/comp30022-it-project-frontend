@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 
 // Local import
-import {getDepartment, deleteDepartment, joinDep} from '../../api/Manage';
+import {getDepartment, deleteDepartment, joinDep, getOrgDetail} from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
 
@@ -38,7 +38,7 @@ function OwnedDepartment(props) {
 
     // Link the department to member management page
     return(
-        <Grid key={department.id} item xs={8}>
+        <Box key={department.id}>
             <Box 
                 sx={{
                     display: 'flex',
@@ -46,7 +46,8 @@ function OwnedDepartment(props) {
                     height: 60,
                     borderRadius: 2,
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                    bgcolor: 'success.light'
+                    bgcolor: 'success.light',
+                    my: '40px'
                 }} 
             >
                 <Button onClick={() => showMembers(department.id)} fullWidth>
@@ -63,7 +64,7 @@ function OwnedDepartment(props) {
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => { setAlertOpen(false) }}
             />
-        </Grid>
+        </Box>
     )
 }
 
@@ -87,7 +88,7 @@ function NotJoinedDepartment(props) {
     }
 
     return (
-        <Grid key={department.id} item xs={8}>
+        <Box key={department.id}>
             <Box
                 sx={{
                     diplay: 'flex',
@@ -97,7 +98,7 @@ function NotJoinedDepartment(props) {
                     borderRadius: 2,
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                     bgcolor: 'text.disabled',
-
+                    my: '40px'
                 }} 
             >
                 <Button onClick={handleJoinDepartment}>
@@ -111,18 +112,22 @@ function NotJoinedDepartment(props) {
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => { setAlertOpen(false) }}
             />
-        </Grid>
+        </Box>
     )
 }
 
 // Loop through all department in this organization, and display them according to 
 // the user's authority level
 export default function Department(props) {
+    const {currentUser} = props;
+
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
     const history = useHistory();
     let {url} = useRouteMatch();
     let {orgId} = useParams();
+
+    const [owned, setOwned] = useState(false);
 
     const [updateCount, setUpdateCount] = useState(0);
     const update = function() {
@@ -134,7 +139,9 @@ export default function Department(props) {
         const id = orgId;
         getDepartment(id).then(res => {
             if (res.ok) {
-                res.json().then(body => {setDepartments(body.data)});
+                res.json().then(body => {
+                    console.log(body);
+                    setDepartments(body.data)});
             } else {
                 res.json().then(body => {alert(body.msg)});
             }
@@ -144,6 +151,14 @@ export default function Department(props) {
                 return <div>You have not joined any department yet.</div>
             }
         })
+
+        getOrgDetail(orgId).then(res => {
+            if(res.code == 200) {
+                setOwned(res.data.owner === currentUser.id);
+            }
+        })
+
+
     }, [updateCount])
 
     // Display loading page if the request is not finished
@@ -168,7 +183,7 @@ export default function Department(props) {
             )
         } else if(department.status==="member") {
             member.push(
-                <Grid key={department.id} item xs={8}>
+                // <Grid key={department.id} item xs={8}>
                     <Box 
                         sx={{
                             display: 'flex',
@@ -176,14 +191,15 @@ export default function Department(props) {
                             height: 60,
                             borderRadius: 2,
                             boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                            bgcolor: 'info.main'
+                            bgcolor: 'info.main',
+                            my: '40px'
                         }} 
                     >
                         <Button onClick={() => showMembers(department.id)}>
                             <Typography color="text.primary">{department.name}</Typography>
                         </Button>
                     </Box>
-                </Grid>
+                // {/* </Grid> */}
             )
         } else {
             other.push(
@@ -193,43 +209,48 @@ export default function Department(props) {
     });
 
     return (
-        <div>
-            <Typography variant="h6">
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: '45px'}}>
+            <Typography variant="h6" sx={{alignSelf: 'flex-start', ml: '45px'}}>
                 Joined Departments
             </Typography>
+            <Box sx={{width: '75%', mb: '60px'}}>
+                <Box 
+                    sx={{
+                        diplay: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        m: 1,
+                        // alignSelf: 'center',
+                        textAlign: 'center',
+                        alignItems: 'center'
+                    }} 
+                    container 
+                    rowSpacing={5}
+                >
+                    {own}
+                    {member}
+                </Box>
+            </Box>
 
-            <Grid
-                sx={{
-                    diplay: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    m: 1,
-                }} 
-                container 
-                rowSpacing={5}
-            >
-                {own}
-                {member}
-            </Grid>
-
-            <Typography variant="h6">
+            
+            <Typography variant="h6" sx={{alignSelf: 'flex-start', ml: '45px'}}>
                 Not Joined Departments
             </Typography>
-
-            <Grid
-                sx={{
-                    diplay: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    m: 1,
-                }} 
-                container 
-                rowSpacing={5}
-            >
-                {other}
-                
-                <Grid key="createNew" item xs={8}>
-                    <Box
+            <Box sx={{width: '75%'}}>
+                <Box
+                    sx={{
+                        diplay: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        m: 1,
+                        textAlign: 'center',
+                        alignItems: 'center'
+                    }} 
+                    container 
+                    rowSpacing={5}
+                >
+                    {other}
+                    {owned && <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -238,15 +259,16 @@ export default function Department(props) {
                             borderRadius: 2,
                             boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                             bgcolor: 'text.disabled',
+                            my: '40px'
 
                         }} 
                     >
-                        <Button>
-                            <CreateDep organization_id={orgId} update={update}/>
-                        </Button>
-                    </Box>
-                </Grid>
-            </Grid>
-        </div>
+                        <CreateDep organization_id={orgId} update={update}/>
+                    </Box>}
+                    
+                </Box>
+            </Box>
+
+        </Box>
     )
 }

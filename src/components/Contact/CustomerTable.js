@@ -21,8 +21,7 @@ import {
     Button,
     Avatar,
     Dialog,
-    IconButton,
-    
+    IconButton
 } from '@mui/material'
 
 // Import from local
