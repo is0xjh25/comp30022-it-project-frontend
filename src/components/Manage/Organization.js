@@ -126,6 +126,7 @@ function OwnedOrganization(props) {
     const handleSubmitTransfer = () => {
         console.log(selectedMember);
         transferOwnership(org.id, selectedMember.user_id).then(res => {
+            console.log(res);
             if (res.code === 200) {
                 alert("Successfully transfered the owner!");
                 }else {
@@ -140,7 +141,7 @@ function OwnedOrganization(props) {
     }
     
     return (
-        <Box key={org.id} item xs={8}>
+        <Box key={org.id}>
             <Box 
                 sx={{
                     display: 'flex',
@@ -181,9 +182,7 @@ function OwnedOrganization(props) {
                         <DialogContentText>
                             Do you want to transfer the owner of the organization to this member?
                         </DialogContentText>
-                        <Box sx={{mt: 4, display: 'flex', flexDirection:'row'}}>
-                            <Avatar src={`data:image/gif;base64,${selectedMember.photo}`} sx={{height: '100px', width: '100px'}}>
-                            </Avatar>
+                        <Box sx={{mt: 4, display: 'flex', flexDirection:'row', justifyContent: 'center'}}>
                             <Grid container direction='column' sx={{ml: 3}}>
                                 <Grid item sx={{height: '50px', display: 'flex', alignItems: 'center'}}>
                                     <Typography variant="h5" sx={{fontWeight: 'bold', mr: 3}}>Name</Typography>
@@ -286,20 +285,18 @@ export default function Organization(props) {
                 My Orgnizations
             </Typography>
             <Box sx={{width: '75%'}}>
-                
-
                 <Box 
-                    sx={{
-                        diplay: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        m: 1,
-                        // alignSelf: 'center',
-                        textAlign: 'center',
-                        alignItems: 'center'
-                    }} 
-                    container 
-                    rowSpacing={5}
+                sx={{
+                    diplay: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    m: 1,
+                    // alignSelf: 'center',
+                    textAlign: 'center',
+                    alignItems: 'center'
+                }} 
+                container 
+                rowSpacing={5}
                 >
                     {organizations.map((org) => {
                         return (<EachOrganization key={org.id} org={org} update={update}/>)
@@ -314,11 +311,12 @@ export default function Organization(props) {
                             borderRadius: 2,
                             boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                             bgcolor: 'text.disabled',
-
+                            my: '40px'
                         }} 
                     >
                         <CreateOrg update={update} /> + <JoinOrg update={update}/>
                     </Box>
+
                 </Box>
             </Box>
         </Box>
