@@ -154,9 +154,10 @@ export default function DisplayEvents() {
 	return(
 		<Fragment>
             <Box xs={12} sx={{width: '60%', mx: '20%'}}>
-				{/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+				<LocalizationProvider dateAdapter={AdapterDateFns}>
           			<CalendarPicker date={thisDate} onChange={(newDate) => setThisDate(newDate)} />
-					<CalendarPicker
+					<StaticDatePicker
+    orientation="landscape"
 					id="Calendar"
 						openTo="date"
 						value={date}
@@ -170,8 +171,8 @@ export default function DisplayEvents() {
 					}}
 					renderInput={(params) => <TextField {...params} />}
 					/>
-				</LocalizationProvider> */}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+				</LocalizationProvider>
+                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker
 					id="Calendar"
                     autoOk
