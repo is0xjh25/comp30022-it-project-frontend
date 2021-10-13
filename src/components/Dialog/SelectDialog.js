@@ -23,7 +23,7 @@ export default function DialogSelect(props) {
         <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 1 }}>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel htmlFor="demo-dialog-native">{label}</InputLabel>
                     <Select
