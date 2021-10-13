@@ -188,7 +188,7 @@ export default function DisplayEvents() {
 						return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
 					}}
                     />
-                </MuiPickersUtilsProvider>
+                </MuiPickersUtilsProvider> */}
             </Box>
 			<Grid container rowSpacing={10} xs={12} sx={{pt:10}}>
 				<Grid container item xs={12} rowSpacing={5}>

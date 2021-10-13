@@ -400,6 +400,25 @@ function transferOwnership(orgId, newOwner) {
     })
 }
 
+function getOrgDetail(orgId) {
+    const url = `${BASE_URL}/organization?organization_id=${orgId}`;
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 export {
     getAllUsers,
     searchMember,
@@ -418,5 +437,6 @@ export {
     deleteOrganization,
     deleteDepartment,
     getMyPermissionLevel,
-    transferOwnership
+    transferOwnership,
+    getOrgDetail
 }

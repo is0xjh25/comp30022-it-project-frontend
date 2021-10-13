@@ -80,7 +80,7 @@ function Manage(props) {
         <Organization/>
       </Route>
       <Route exact path={`${path}/:orgId`}>
-        <Department/>
+        <Department currentUser={props.currentUser}/>
       </Route>
       <Route path={`${path}/:orgId/:depId`}>
         <Members/>
@@ -320,7 +320,7 @@ function Home(props) {
                 </Route>
 
                 <Route path={`${url}Manage`}>
-                    <Manage/>
+                    <Manage currentUser={currentUser}/>
                 </Route>
 
                 <Route path={`${url}Settings`}>
