@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 
 // Import from mui
-import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ImageIcon from '@material-ui/icons/Image';
@@ -22,6 +21,7 @@ import {
     Button,
     Avatar,
     Dialog,
+    IconButton,
     
 } from '@mui/material'
 

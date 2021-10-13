@@ -127,7 +127,7 @@ function Contacts(props) {
     const handleOrgChange = function(event) {
         const orgId = event.target.value;
         setCurrentOrganization(orgId);
-        // fetch departments in this organization
+        // Fetch departments in this organization
         getDepartment(orgId).then(res => {
             res.json().then(resBody => {
                 if(resBody.code === 200) {
@@ -155,7 +155,7 @@ function Contacts(props) {
     }
 
     useEffect(() => {
-        // fetch organization
+        // Fetch organization
         getOrganization().then(res => {
             res.json().then(resBody => {
                 if(resBody.code === 200) {
@@ -177,7 +177,7 @@ function Contacts(props) {
             <Dialog disableEscapeKeyDown open={dialogOpen} onClose={handleDialogClose}>
                 <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
                 <DialogContent>
-                    <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5 }}>
+                    <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5}}>
                         <FormControl sx={{ m: 1, minWidth: 200 }}>
                             <InputLabel>{"Organization"}</InputLabel>
                             <Select
