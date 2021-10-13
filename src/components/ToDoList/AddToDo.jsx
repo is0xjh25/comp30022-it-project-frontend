@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 // Import from MUI
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     TextField,
     Stack,
@@ -11,7 +12,8 @@ import {
     DialogContent,
     DialogActions,
     Dialog,
-    DialogTitle
+    DialogTitle,
+    Box
 } from '@mui/material';
 
 // Import from local
@@ -56,20 +58,22 @@ export default function AddToDo(props) {
         <Dialog fullWidth maxWidth='xs' open={open}>
             <DialogTitle>Create new to-do event</DialogTitle>
             <DialogContent>
-                <Stack 
+                <Stack
                     justifyContent="center" 
                     alignItems="center"
                     spacing={2}
+                    sx={{mt: 1}}
                 >
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DateTimePicker
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDateTimePicker
                             label="Select time"
-                            inputFormat="yyyy-MM-dd"
                             value={time}
                             onChange={setTime}
+                            renderInput={(params) => <TextField {...params} />}
                         />
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                     <TextField
+                        sx={{width: '65%'}}
                         id="description"
                         label="Enter description"
                         onChange={handleOnChange}

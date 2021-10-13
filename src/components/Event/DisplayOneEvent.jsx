@@ -16,7 +16,10 @@ import {
     TextField,
     DialogActions,
     ToggleButtonGroup,
-    ToggleButton
+    ToggleButton,
+	MenuItem,
+	FormControl,
+	Select
 } from '@mui/material'
 
 export default function DisplayOneEvent(props) {
@@ -175,6 +178,12 @@ export default function DisplayOneEvent(props) {
 		}
     };
 
+	const handleOnSelect = (e, id) => {
+		if (id === "status") {
+			setStatus(e.target.value);
+		}
+	}
+
 	const handleBack = () => {
 		handleClose();
 	}
@@ -309,7 +318,20 @@ export default function DisplayOneEvent(props) {
 		display =
 		<Grid container textAlign='center' rowSpacing={5} sx={{pt:10, px:20}}>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
-				<Grid>Progress: <TextField id="status" defaultValue= {data.status} onChange={handleOnChange}/></Grid>
+				<Grid>Progress: 
+					{/* <TextField id="status" defaultValue= {data.status} onChange={handleOnChange}/> */}
+					<FormControl fullWidth>
+						<Select
+							id="progress"
+							value={data.status}
+							onChange={(event) => handleOnSelect(event,"status")}
+						>
+							<MenuItem value={"to do"}>to do</MenuItem>
+							<MenuItem value={"in progress"}>in progress</MenuItem>
+							<MenuItem value={"done"}>done</MenuItem>
+						</Select>
+					</FormControl>
+				</Grid>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
 				<Box>Start Time</Box>
@@ -424,7 +446,6 @@ export default function DisplayOneEvent(props) {
 						autoFocus
 						margin="dense"
 						id="contact"
-						label="search"
 						type="contact"
 						fullWidth
 						onChange={handleOnChange}
