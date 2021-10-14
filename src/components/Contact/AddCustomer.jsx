@@ -66,28 +66,10 @@ export default function AddCustomer(props) {
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
-			if(e.target.value === ""){
-				setEmailError("Email cannot be empty!")
-			}
-			else{
-				setEmailError("")
-			}
 			setEmail(e.target.value);
 		} else if (e.target.id === "firstName") {
-			if(e.target.value === ""){
-				setFirstNameError("First name cannot be empty!")
-			}
-			else{
-				setFirstNameError("")
-			}
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
-			if(e.target.value === ""){
-				setLastNameError("Last name cannot be empty!")
-			}
-			else{
-				setLastNameError("")
-			}
 			setLastName(e.target.value);
 		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
@@ -126,6 +108,31 @@ export default function AddCustomer(props) {
 		}
     };
 
+	const handleOnBlur = (e) => {
+		if (e.target.id === "email") {
+			if(e.target.value === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			else{
+				setEmailError("")
+			}
+		} else if (e.target.id === "firstName") {
+			if(e.target.value === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			else{
+				setFirstNameError("")
+			}
+		} else if (e.target.id === "lastName") {
+			if(e.target.value === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			else{
+				setLastNameError("")
+			}
+		}
+	}
+
 	const handleCreateIconColor= () => {
 		if(isValidInput()){
 			return "primary"
@@ -145,6 +152,19 @@ export default function AddCustomer(props) {
 	}
 
 	const handleCreate = () => {
+
+		if(!isValidInput()){
+			if(email === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			if(firstName === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			if(lastName === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			return false;
+		}
 
 		const data = {
 			"first_name":firstName,
@@ -198,11 +218,11 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>First Name*</Box>
-						<TextField id="firstName" error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange}/>
+						<TextField id="firstName" error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Last Name*</Box>
-						<TextField id="lastName" error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange}/>
+						<TextField id="lastName" error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -252,7 +272,7 @@ export default function AddCustomer(props) {
 					<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Email*</Box>
-							<TextField id="email" error={emailError!==""} helperText={emailError} onChange={handleOnChange}/>
+							<TextField id="email" error={emailError!==""} helperText={emailError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
@@ -288,7 +308,7 @@ export default function AddCustomer(props) {
 					<Grid item xs={4} textAlign='center'>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
-						<IconButton disabled={!isValidInput()}>
+						<IconButton>
 							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large"  onClick={handleCreate} />
 						</IconButton>
 					</Grid>
