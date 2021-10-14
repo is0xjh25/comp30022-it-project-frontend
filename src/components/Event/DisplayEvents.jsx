@@ -41,7 +41,11 @@ const CustomPickersDay = styled(PickersDay, {
   {
     borderRadius: 0,
 	disableHighlightToday: true,
-    // backgroundColor: theme.palette.primary.main,
+    // backgroundColor: theme.palette.primary.light,
+	borderTopLeftRadius: '50%',
+    borderBottomLeftRadius: '50%',
+	borderTopRightRadius: '50%',
+    borderBottomRightRadius: '50%',
     color: theme.palette.common.black,
     '&:hover, &:focus': {
     //   backgroundColor: theme.palette.primary.dark,
@@ -68,6 +72,7 @@ export default function DisplayEvents() {
 
 	const [date, changeDate] = useState(new Date());
 	const [yearMonth, setYearMonth] = useState("");
+	const [month, setMonth] = useState("");
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
@@ -150,6 +155,7 @@ export default function DisplayEvents() {
 		let month = new Date(d).getMonth()+1;
 		let year = new Date(d).getFullYear();
 		setYearMonth(year+month);
+		setMonth(month);
 
 		getMonthlyEvents(year, month).then(res => {
 			if (res.code===200) {
@@ -208,9 +214,18 @@ export default function DisplayEvents() {
 	};
 
 
-	const renderWeekPickerDay2 = (date, selectedDates, pickersDayProps, isInCurrentMonth) => {
+	const renderWeekPickerDay2 = (date, selectedDate, pickersDayProps) => {
+
+		console.log(yearMonth)
+		console.log(month)
 		let dayIsBetween = false
-		if (monthEvent.includes(date.getDate())) {
+		// console.log(date);
+
+		const dateTemp = new Date(date)
+		const monthTemp = dateTemp.getMonth();
+		
+
+		if (month === monthTemp+1 && monthEvent.includes(date.getDate())) {
 			dayIsBetween = true;
 		}
 
@@ -219,30 +234,29 @@ export default function DisplayEvents() {
 			selected = true
 		}
 
-		// return (
-		// selected ?
-		// <Badge color="secondary" variant="dot">
-		// <CustomPickersDay
+		return (
+		selected ?
+		<Badge color="secondary" variant="dot" overlap="circular">
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge> : 
+
+		<Badge>
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge>); 
+
+		// return <CustomPickersDay
 		// 	{...pickersDayProps}
 		// 	disableMargin
 		// 	dayIsBetween={dayIsBetween}
 		// />
-		// </Badge> : 
-
-		// <Badge>
-		// <CustomPickersDay
-		// 	{...pickersDayProps}
-		// 	disableMargin
-		// 	dayIsBetween={dayIsBetween}
-		// />
-		// </Badge>); 
-
-		return <CustomPickersDayv2/>
-		// console.log(date);
-		// return (
-
-		// 	<Badge color="secondary" variant="dot"></Badge>
-		// );
 
 		
 	};
