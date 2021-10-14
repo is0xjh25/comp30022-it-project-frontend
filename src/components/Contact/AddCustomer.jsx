@@ -38,12 +38,13 @@ export default function AddCustomer(props) {
 
 	const classes = {
 		title: {
-		  	fontSize:30,
-			fontFamily:'Arial',
-			fontWeight:'bold',
-			bgcolor:'#ff5722',
-			borderRadius:15
-		},
+			fontSize:30,
+		  	position:'static',
+		  	fontFamily:'NTR',
+		  	fontWeight:'bold',
+		  	bgcolor:'#35baf6',
+		  	borderRadius:15
+	  	},
 		descriptionBody: {
 			fontSize:25,
 			fontFamily:'Arial',
@@ -138,7 +139,7 @@ export default function AddCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = 'Discard Confirm';
-	const alertMessage = `Do you want to leave without saving?`;
+	const alertMessage = `Do you really want to leave?`;
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}

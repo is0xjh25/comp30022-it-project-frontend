@@ -25,6 +25,7 @@ import {
     Select,
     OutlinedInput,
     Grid,
+    Divider
 } from '@mui/material'
 
 import {
@@ -48,11 +49,16 @@ require('dotenv').config();
 
 function Events(props) {
     return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={8}>
+        <Grid container sx={{mt: 10, minWidth:1200}}>
+            <Grid item xs={7}>
                 <DisplayEvents/>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={0.5}>
+            </Grid>
+            <Divider orientation="vertical" flexItem sx={{ background: 'purple' }}/>
+            <Grid item xs={0.5}>
+            </Grid>
+            <Grid item xs={3}>
                 <ToDoList/>
             </Grid>
         </Grid>

@@ -136,7 +136,7 @@ export default function EditCustomer(props) {
 	// Alart Dialog
 	const [alertOpen, setAlertOpen] = useState(false);
 	const alertTitle = "Discard Confirm";
-	const alertMessage = "Do you want to leave without saving?";
+	const alertMessage = "Do you really want to leave?";
 	const handleDiscard = function() {
 		setAlertOpen(true);
 	}
