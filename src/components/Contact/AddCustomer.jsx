@@ -127,19 +127,24 @@ export default function AddCustomer(props) {
     };
 
 	const handleCreateIconColor= () => {
-		if(firstName==="" || lastName==="" || email===""){
-			return "disable"
+		if(isValidInput()){
+			return "primary"
 		}
 		else{
-			return "primary"
+			return "disable"
+		}
+	}
+
+	const isValidInput = () => {
+		if(firstName==="" || lastName==="" || email===""){
+			return false
+		}
+		else{
+			return true
 		}
 	}
 
 	const handleCreate = () => {
-
-		if(firstName==="" || lastName==="" || email===""){
-			return false;
-		}
 
 		const data = {
 			"first_name":firstName,
@@ -283,7 +288,7 @@ export default function AddCustomer(props) {
 					<Grid item xs={4} textAlign='center'>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
-						<IconButton>
+						<IconButton disabled={!isValidInput()}>
 							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large"  onClick={handleCreate} />
 						</IconButton>
 					</Grid>

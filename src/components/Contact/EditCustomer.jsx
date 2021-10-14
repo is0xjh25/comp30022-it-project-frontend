@@ -127,19 +127,24 @@ export default function EditCustomer(props) {
     };
 
 	const handleCreateIconColor= () => {
-		if(firstName==="" || lastName==="" || email===""){
-			return "disable"
+		if(isValidInput()){
+			return "primary"
 		}
 		else{
-			return "primary"
+			return "disable"
+		}
+	}
+
+	const isValidInput = () => {
+		if(firstName==="" || lastName==="" || email===""){
+			return false
+		}
+		else{
+			return true
 		}
 	}
 
 	const handleUpdate = () => {
-		
-		if(firstName==="" || lastName==="" || email===""){
-			return false;
-		}
 
 		const data = {
 			"first_name":firstName,
@@ -293,7 +298,7 @@ export default function EditCustomer(props) {
 					<Grid item xs={4} textAlign='center'>
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
-						<IconButton>
+						<IconButton disabled={!isValidInput()}>
 							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large" onClick={handleUpdate}/>
 						</IconButton>
 					</Grid>
@@ -301,7 +306,7 @@ export default function EditCustomer(props) {
 				<AlertDialog alertTitle={alertTitle}
                 alertMessage={alertMessage}
                 open={alertOpen}
-                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog 
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => { setAlertOpen(false) }}
                 />
