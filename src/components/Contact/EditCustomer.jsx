@@ -126,7 +126,20 @@ export default function EditCustomer(props) {
 		}
     };
 
+	const handleCreateIconColor= () => {
+		if(firstName==="" || lastName==="" || email===""){
+			return "disable"
+		}
+		else{
+			return "primary"
+		}
+	}
+
 	const handleUpdate = () => {
+		
+		if(firstName==="" || lastName==="" || email===""){
+			return false;
+		}
 
 		const data = {
 			"first_name":firstName,
@@ -281,7 +294,7 @@ export default function EditCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
 						<IconButton>
-							<UpdateSharpIcon color="primary" fontSize="large" onClick={handleUpdate}/>
+							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large" onClick={handleUpdate}/>
 						</IconButton>
 					</Grid>
 				</Grid>

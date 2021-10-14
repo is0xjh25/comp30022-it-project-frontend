@@ -103,8 +103,9 @@ export default function AddCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} 
+		}
     };
+
 
 	const handleOnSelect = (e,id) => {
 		console.log(e)
@@ -125,8 +126,21 @@ export default function AddCustomer(props) {
 		}
     };
 
+	const handleCreateIconColor= () => {
+		if(firstName==="" || lastName==="" || email===""){
+			return "disable"
+		}
+		else{
+			return "primary"
+		}
+	}
+
 	const handleCreate = () => {
-		
+
+		if(firstName==="" || lastName==="" || email===""){
+			return false;
+		}
+
 		const data = {
 			"first_name":firstName,
 			"last_name":lastName,
@@ -270,7 +284,7 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
 						<IconButton>
-							<UpdateSharpIcon color="primary" fontSize="large" onClick={handleCreate}/>
+							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large"  onClick={handleCreate} />
 						</IconButton>
 					</Grid>
 				</Grid>
