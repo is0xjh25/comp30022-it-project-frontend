@@ -5,6 +5,13 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import CalendarPicker from '@mui/lab/CalendarPicker';
+import DatePicker from '@mui/lab/DatePicker';
+import TextField from '@mui/material/TextField';
+import endOfWeek from 'date-fns/endOfWeek';
+import isSameDay from 'date-fns/isSameDay';
+import isWithinInterval from 'date-fns/isWithinInterval';
+import startOfWeek from 'date-fns/startOfWeek';
+import PickersDay from '@mui/lab/PickersDay';
 import {
     Box,
 	Badge,
@@ -22,7 +29,40 @@ import { toLocalTime } from "../../api/Util";
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
+const CustomPickersDay = styled(PickersDay, {
+  shouldForwardProp: (prop) =>
+    prop !== 'dayIsBetween',
+})(({ theme, dayIsBetween}) => ({
+  ...(dayIsBetween && 
+  
+  {
+    borderRadius: 0,
+	disableHighlightToday: true,
+    // backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.black,
+    '&:hover, &:focus': {
+    //   backgroundColor: theme.palette.primary.dark,
+    },
+  }
+  
+  ),
+}));
+
+
+const CustomPickersDayv2 = (theme, dayIsBetween, day) => {
+	return (<PickersDay disableHighlightToday outsideCurrentMonth sx= {{
+		borderRadius: 0,
+		disableHighlightToday: true,
+		backgroundColor: "primary.main",
+		color: "primary.main",
+		'&:hover, &:focus': {
+      		backgroundColor: "primary.main",
+    		}}}>{day}</PickersDay>
+	)
+}
 
 export default function DisplayEvents() {
 
@@ -142,6 +182,72 @@ export default function DisplayEvents() {
 
 	
 	const [thisDate, setThisDate] = useState(new Date());
+	const [value, setValue] = React.useState(new Date());
+
+	const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
+		if (!value) {
+		return <PickersDay {...pickersDayProps} />;
+		}
+
+		const start = startOfWeek(value);
+		const end = endOfWeek(value);
+
+		const dayIsBetween = isWithinInterval(date, { start, end });
+		const isFirstDay = isSameDay(date, start);
+		const isLastDay = isSameDay(date, end);
+
+		return (
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+			isFirstDay={isFirstDay}
+			isLastDay={isLastDay}
+		/>
+		);
+	};
+
+
+	const renderWeekPickerDay2 = (date, selectedDates, pickersDayProps, isInCurrentMonth) => {
+		let dayIsBetween = false
+		if (monthEvent.includes(date.getDate())) {
+			dayIsBetween = true;
+		}
+
+		let selected = false
+		if (dayIsBetween === true) {
+			selected = true
+		}
+
+		// return (
+		// selected ?
+		// <Badge color="secondary" variant="dot">
+		// <CustomPickersDay
+		// 	{...pickersDayProps}
+		// 	disableMargin
+		// 	dayIsBetween={dayIsBetween}
+		// />
+		// </Badge> : 
+
+		// <Badge>
+		// <CustomPickersDay
+		// 	{...pickersDayProps}
+		// 	disableMargin
+		// 	dayIsBetween={dayIsBetween}
+		// />
+		// </Badge>); 
+
+		return <CustomPickersDayv2/>
+		// console.log(date);
+		// return (
+
+		// 	<Badge color="secondary" variant="dot"></Badge>
+		// );
+
+		
+	};
+
+
 	
 	return(
 		<Fragment sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
@@ -149,17 +255,18 @@ export default function DisplayEvents() {
 				<Typography sx={classes.title} textAlign="center"> Events </Typography>
 				<Box sx={{width: '60%', mx: '20%', pt:5}}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<CalendarPicker
+						<StaticDatePicker
 						orientation="landscape"
 						value={date}
+						displayStaticWrapperAs="desktop"
 						onMonthChange={(date) => {handleYearMonthChange(date)}}
 						onYearChange={(date) => {handleYearMonthChange(date)}}
 						onChange={handleOnChange}
-						renderInput={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-							const date = new Date(day);	
-							const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
-							return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
-						}}
+						renderDay={renderWeekPickerDay2}
+						// renderInput={(date) => {
+							
+						// 	return (isSelected ? <TextField color="secondary" variant="dot">{dayComponent}</TextField> : <TextField color="secondary" variant="dot">{dayComponent}</TextField> );
+						// }}  					
 						/>
 					</LocalizationProvider>
 				</Box>
