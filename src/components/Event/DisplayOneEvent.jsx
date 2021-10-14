@@ -8,6 +8,7 @@ import { searchAllCustomers } from "../../api/Contact";
 import {
 	Box, 
     Button,
+	IconButton,
     Dialog,
 	Grid,
     DialogTitle,
@@ -19,8 +20,14 @@ import {
     ToggleButton,
 	MenuItem,
 	FormControl,
-	Select
+	Select,
+	Typography
 } from '@mui/material'
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
+import EditSharpIcon from '@material-ui/icons/EditSharp';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { fontWeight } from "@mui/lab/node_modules/@mui/system";
 
 export default function DisplayOneEvent(props) {
 
@@ -38,42 +45,33 @@ export default function DisplayOneEvent(props) {
 
 	const classes = {
 		title: {
-		  	fontSize:30,
+			fontSize:30,
+		  	fontFamily:'NTR',
+		  	fontWeight:'bold',
+		  	bgcolor:'#35baf6',
+		  	borderRadius:100
+	  	},
+		subTitle: {
+			fontSize:25,
+		  	fontFamily:'NTR',
+		  	fontWeight:'bold'
+	  	},
+		contactText: {
+			fontSize:20,
 			fontFamily:'Arial',
-			fontWeight:'bold',
-			bgcolor:'coral',
-			borderRadius:15
-		},
+	  	},
 		grid: {
 			display:'flex', 
 			justifyContent:'center', 
 			alignItems:'center',
 			color:'black'
-		},
-		box: {
-			display:'flex', 
-			flexDirection:'column'
-		},
-		discardButton: {
-			borderRadius: 20,
-			backgroundColor: 'Crimson',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
-		},
-		createButton: {
-			borderRadius: 20,
-			backgroundColor: 'ForestGreen',
-			color: '#FFFFFF',
-			fontSize: '20px',
-			fontWeight: 'bold'	
 		}
 	};
 
 	//================ Discard Alart Popup ==================
 	const [discardAlertOpen, setDiscardAlertOpen] = useState(false);
 	const discardAlertTitle = 'Discard Confirm';
-	const discardAlertMessage = "Do you want to leave without saving?";
+	const discardAlertMessage = "Do you really want to leave?";
 	const handleDiscard = function() {
 		setDiscardAlertOpen(true);
 	}
@@ -253,35 +251,40 @@ export default function DisplayOneEvent(props) {
 	let display; 
 	if (pageStatus === "view") {
 		display =
-		<Grid container textAlign='center' rowSpacing={5} sx={{pt:10, px:20}}>
+		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:20, minWidth:1200}}>
+			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+				<Typography sx={classes.title}>Event Information</Typography>
+			</Grid>
 			<Grid item xs={12}>
-				<Grid>Progress</Grid>
+				<Typography sx={classes.subTitle}>Progress</Typography> 
 				<Box>{data.status}</Box>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
-				<Box>Start Time</Box>
+				<Typography sx={classes.subTitle}>Start Time</Typography> 
 				<Box>{toLocalTime(data.start_time)}</Box>
 			</Grid>
 			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
-				<Box>Finish Time</Box>
+				<Typography sx={classes.subTitle}>Finish Time</Typography> 
 				<Box>{toLocalTime(data.finish_time)}</Box>
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-				<Box>Description</Box>
+				<Typography sx={classes.subTitle}>Description</Typography> 
 				<Box>{data.description}</Box>
 			</Grid>
-			<Grid item xs={12} textAlign='center'>Current contact</Grid>
-			<Grid container item xs={12} textAlign='center'>
-				<Grid item xs={3} textAlign='center'>
+			<Grid item xs={12} textAlign='center'>
+				<Typography sx={classes.subTitle}>Invited Contacts</Typography> 
+			</Grid>
+			<Grid container item xs={12} rowSpacing={1} sx={classes.contactText} textAlign='center'>
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
 					First name
 				</Grid>
-				<Grid item xs={3} textAlign='center'>
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
 					Last name
 				</Grid>
-				<Grid item xs={2} textAlign='center'>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone number
 				</Grid>
-				<Grid item xs={4} textAlign='center'>
+				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
 				</Grid>
 				<Grid container item xs={12}>
@@ -303,22 +306,30 @@ export default function DisplayOneEvent(props) {
 								</Grid>
 							</Grid>)
 						})		
-					: <Grid item textAlign='center' xs={12}>There is no participant.</Grid>
+					: <Grid item textAlign='center' xs={12} sx={{pt:5}}>~There is no participant~</Grid>
 					}
 				</Grid>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
-				<Button variant="outlined" style={classes.discardButton} onClick={handleBack}>Back</Button>
+				<IconButton>
+					<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleBack}/>
+				</IconButton>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
-				<Button variant="outlined" style={classes.createButton} onClick={handleEdit}>Edit</Button>
+				<IconButton>
+					<EditSharpIcon color="primary" fontSize="large" onClick={handleEdit}/>
+				</IconButton>
 			</Grid>
 		</Grid> 
 	} else if (pageStatus==="edit") {
 		display =
-		<Grid container textAlign='center' rowSpacing={5} sx={{pt:10, px:20}}>
+		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:20, minWidth:1200}}>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
-				<Grid>Progress: 
+				<Typography sx={classes.title}>Edit Event</Typography>
+			</Grid>
+			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+				<Grid>
+					<Typography sx={classes.subTitle}>Progress</Typography> 
 					{/* <TextField id="status" defaultValue= {data.status} onChange={handleOnChange}/> */}
 					<FormControl fullWidth>
 						<Select
@@ -333,8 +344,8 @@ export default function DisplayOneEvent(props) {
 					</FormControl>
 				</Grid>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
-				<Box>Start Time</Box>
+			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+				<Typography sx={classes.subTitle}>Start Time</Typography> 
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<DateTimePicker
 					id="startTime"
@@ -344,8 +355,8 @@ export default function DisplayOneEvent(props) {
 					/>
 				</MuiPickersUtilsProvider>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
-				<Box>Finish Time</Box>
+			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+				<Typography sx={classes.subTitle}>Finish Time</Typography> 
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<DateTimePicker
 					id="finishTime"
@@ -355,35 +366,41 @@ export default function DisplayOneEvent(props) {
 					/>
 				</MuiPickersUtilsProvider>
 			</Grid>
-			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-				<Box >Description</Box>
+			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}} >
+				<Typography sx={classes.subTitle}>Description</Typography>
 				<TextField id="description" defaultValue= {data.description} multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
-					<Button variant="outlined" style={classes.discardButton} onClick={handleDiscard}>Discard</Button>
-				</Grid>
-				<Grid item xs={6} textAlign='center'>
-					<Button variant="outlined" style={classes.createButton} onClick={handleUpdate}>Update</Button>
-				</Grid>
-			<Grid item xs={12} textAlign='center'>Current contact</Grid>
-			<Grid container item xs={12} textAlign='center'>
-				<Grid item xs={2} textAlign='center'>
+				<IconButton>
+					<ArrowBackSharpIcon color="error" fontSize="large" onClick={handleDiscard}/>
+				</IconButton>
+			</Grid>
+			<Grid item xs={6} textAlign='center'>
+				<IconButton>
+					<UpdateSharpIcon color="primary" fontSize="large" onClick={handleUpdate}/>
+				</IconButton>
+			</Grid>
+			<Grid item xs={12} textAlign='center'>
+				<Typography sx={classes.subTitle}> Invited Contacts </Typography>
+			</Grid>
+			<Grid container item xs={12} rowSpacing={1} textAlign='center' sx={classes.contactText}>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					First name
 				</Grid>
-				<Grid item xs={2} textAlign='center'>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Last name
 				</Grid>
-				<Grid item xs={3} textAlign='center'>
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone number
 				</Grid>
-				<Grid item xs={4} textAlign='center'>
+				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
 				</Grid>
-				<Grid container item xs={12} rowSpacing={5}>
+				<Grid container item xs={12} rowSpacing={1} >
 					{typeof data.contact_list !== 'undefined' && data.contact_list.length > 0 ?
 						data.contact_list.map((e) => {						
 							return (
-							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}}>
+							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}} sx={{alignItems:'center', justifyContent:'center'}}>
 								<Grid item xs={2} textAlign='center'>
 									{e.first_name}
 								</Grid>
@@ -397,19 +414,19 @@ export default function DisplayOneEvent(props) {
 									{e.email}
 								</Grid>
 								<Grid item xs={1} textAlign='center'>
-									<Button style={classes.discardButton} onClick={()=>handleDelete(e.attend_id)}>
-										Delete
-									</Button>
+									<IconButton>
+										<DeleteIcon fontSize="medium" onClick={()=>handleDelete(e.attend_id)}/>
+									</IconButton>
 								</Grid>
 							</Grid>)
 						})		
-					: <Grid item textAlign='center' xs={12}>There is no participant.</Grid>
+					: <Grid item textAlign='center' xs={12} sx={{pt:5}}>~There is no participant.~</Grid>
 					}
+					<Grid item xs={12} textAlign='center' sx={{mt:5, mb:5}}>
+						<Button size="medium" variant="contained" onClick={handleAddContact}>Add contact</Button>
+					</Grid>
 				</Grid>
-			</Grid>
 
-			<Grid item xs={12} textAlign='center'>
-				<Button variant="outlined" onClick={handleAddContact}>Add contact</Button>
 			</Grid>
 			
 			<AlertDialog 
