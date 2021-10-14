@@ -37,9 +37,13 @@ export default function EditCustomer(props) {
 	const [gender, setGender] = useState(props.data.gender);
 	const [birthday, setBirthday] = useState(props.data.birthday);
 	const [description, setDescription] = useState(props.data.description);
-	const [organization, setorganization] = useState(props.data.organization);
+	const [organization, setOrganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
 	const [photo, setPhoto] = useState(props.data.photo);
+
+	const [firstNameError, setFirstNameError] = useState("");
+	const [lastNameError, setLastNameError] = useState("");
+	const [emailError, setEmailError] = useState("");
 	
 	const classes = {
 		title: {
@@ -60,17 +64,35 @@ export default function EditCustomer(props) {
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
+			if(e.target.value === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			else{
+				setEmailError("")
+			}
 			setEmail(e.target.value);
 		} else if (e.target.id === "firstName") {
+			if(e.target.value === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			else{
+				setFirstNameError("")
+			}
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
+			if(e.target.value === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			else{
+				setLastNameError("")
+			}
 			setLastName(e.target.value);
 		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
 		} else if (e.target.id === "organization") {
-			setorganization(e.target.value);
+			setOrganization(e.target.value);
 		} else if (e.target.id === "address") {
 			setAddress(e.target.value);
 		} else if (e.target.id === "description") {
@@ -79,9 +101,7 @@ export default function EditCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} else if (e.target.id === "birthday") {
-			setBirthday(e.target.value);
-		}
+		} 
     };
 
 	const confirmDiscard = () => {
@@ -89,7 +109,6 @@ export default function EditCustomer(props) {
 	}
 
 	const handleOnSelect = (e,id) => {
-		console.log(e)
 		if (id === "customerType") {
 			setCustomerType(e.target.value);
 		}else if (id === "gender") {
@@ -169,12 +188,12 @@ export default function EditCustomer(props) {
 						</Badge>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>First Name</Box>
-						<TextField id="firstName" defaultValue={firstName} onChange={handleOnChange}/>
+						<Box sx={classes.title}>First Name*</Box>
+						<TextField id="firstName" defaultValue={firstName} error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Last Name</Box>
-						<TextField id="LastName" defaultValue={lastName} onChange={handleOnChange}/>
+						<Box sx={classes.title}>Last Name*</Box>
+						<TextField id="lastName" defaultValue={lastName} error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -223,8 +242,8 @@ export default function EditCustomer(props) {
 				<Grid container item rowSpacing={5} columnSpacing={3}>
 					<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Email</Box>
-							<TextField id="email" defaultValue={email} onChange={handleOnChange}/>
+							<Box sx={classes.title}>Email*</Box>
+							<TextField id="email" defaultValue={email} error={emailError!==""} helperText={emailError} onChange={handleOnChange}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>

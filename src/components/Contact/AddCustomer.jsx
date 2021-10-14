@@ -36,6 +36,10 @@ export default function AddCustomer(props) {
 	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
 
+	const [firstNameError, setFirstNameError] = useState("");
+	const [lastNameError, setLastNameError] = useState("");
+	const [emailError, setEmailError] = useState("");
+
 	const classes = {
 		title: {
 			fontSize:30,
@@ -63,10 +67,28 @@ export default function AddCustomer(props) {
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
+			if(e.target.value === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			else{
+				setEmailError("")
+			}
 			setEmail(e.target.value);
 		} else if (e.target.id === "firstName") {
+			if(e.target.value === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			else{
+				setFirstNameError("")
+			}
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
+			if(e.target.value === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			else{
+				setLastNameError("")
+			}
 			setLastName(e.target.value);
 		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
@@ -158,11 +180,11 @@ export default function AddCustomer(props) {
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>First Name*</Box>
-						<TextField id="firstName" onChange={handleOnChange}/>
+						<TextField id="firstName" error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Last Name*</Box>
-						<TextField id="lastName" onChange={handleOnChange}/>
+						<TextField id="lastName" error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -195,7 +217,7 @@ export default function AddCustomer(props) {
 						<TextField id="address" onChange={handleOnChange}/>
 					</Grid>
 					<Grid item xs={4} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-						<Box sx={classes.title}>Customer Type*</Box>
+						<Box sx={classes.title}>Customer Type</Box>
 						<FormControl fullWidth>
 							<Select
 								id="customerType"
@@ -211,11 +233,11 @@ export default function AddCustomer(props) {
 				<Grid container item rowSpacing={5} columnSpacing={3}>
 					<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Email</Box>
-							<TextField id="email" onChange={handleOnChange}/>
+							<Box sx={classes.title}>Email*</Box>
+							<TextField id="email" error={emailError!==""} helperText={emailError} onChange={handleOnChange}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
-							<Box sx={classes.title}>Gender*</Box>
+							<Box sx={classes.title}>Gender</Box>
 							<FormControl fullWidth>
 								<Select
 									id="gender"
