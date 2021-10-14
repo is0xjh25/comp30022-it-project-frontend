@@ -157,10 +157,10 @@ export default function DisplayEvents() {
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
           			<CalendarPicker date={thisDate} onChange={(newDate) => setThisDate(newDate)} />
 					<StaticDatePicker
-    orientation="landscape"
+    				orientation="landscape"
 					id="Calendar"
-						openTo="date"
-						value={date}
+					openTo="date"
+					value={date}
 					onMonthChange={(date) => {handleYearMonthChange(date)}}
 					onYearChange={(date) => {handleYearMonthChange(date)}}
 					onChange={handleOnChange}
