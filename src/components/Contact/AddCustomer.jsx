@@ -19,7 +19,10 @@ import {
 } from '@mui/material';
 import {processPhoto} from '../../api/Photo';
 
-import {formatTime} from '../../api/Util';
+import {
+	formatTime,
+	checkEmail
+} from '../../api/Util';
 
 export default function AddCustomer(props) {
 
@@ -112,44 +115,47 @@ export default function AddCustomer(props) {
 	const handleOnBlur = (e) => {
 		if (e.target.id === "email") {
 			if(e.target.value === ""){
-				setEmailError("Email cannot be empty!")
+				setEmailError("Email cannot be empty!");
 			}
 			else{
-				setEmailError("")
+				if (!checkEmail(email)) {
+					setEmailError("Email format is invalid!");
+				}
+				else{
+					setEmailError("");
+				}
 			}
 		} else if (e.target.id === "firstName") {
 			if(e.target.value === ""){
-				setFirstNameError("First name cannot be empty!")
+				setFirstNameError("First name cannot be empty!");
 			}
 			else{
 				setFirstNameError("")
 			}
 		} else if (e.target.id === "lastName") {
 			if(e.target.value === ""){
-				setLastNameError("Last name cannot be empty!")
+				setLastNameError("Last name cannot be empty!");
 			}
 			else{
-				setLastNameError("")
+				setLastNameError("");
 			}
 		}
 	}
 
 	const handleCreateIconColor = () => {
 		if(isValidInput()){
-			return "primary"
+			return "primary";
 		}
 		else{
-			return "disable"
+			return "disable";
 		}
 	}
 
 	const isValidInput = () => {
 		if(firstName==="" || lastName==="" || email===""){
-			return false
+			return false;
 		}
-		else{
-			return true
-		}
+		return checkEmail(email);
 	}
 
 	const handleCreate = () => {
@@ -157,6 +163,11 @@ export default function AddCustomer(props) {
 		if(!isValidInput()){
 			if(email === ""){
 				setEmailError("Email cannot be empty!")
+			}
+			else{
+				if (!checkEmail(email)) {
+					setEmailError("Email format is invalid!")
+				}
 			}
 			if(firstName === ""){
 				setFirstNameError("First name cannot be empty!")

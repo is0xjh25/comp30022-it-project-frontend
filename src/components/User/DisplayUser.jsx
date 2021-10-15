@@ -300,7 +300,7 @@ export default function DisplayUser() {
                                 <Box sx={classes.title}>Password</Box>
                                 {status === "view" ?
                                 <Box sx={classes.body}>********</Box> :
-                                <TextField id="password" defaultValue="********" onChange={handleOnChange}/>
+                                <TextField id="password" type="password" defaultValue="********" onChange={handleOnChange}/>
                                 }
                             </Grid>
                         </Grid>
