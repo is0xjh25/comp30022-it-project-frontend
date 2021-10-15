@@ -128,11 +128,16 @@ export default function DisplayEvents() {
 
 	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
-		console.log(e);
-		const startTime = e.toISOString().substring(0,10) + "T00:00:00.000Z";
-		const finishTime = e.toISOString().substring(0,10) + "T23:59:00.000Z";
 
-		getMultipleEvents(startTime, finishTime).then(res => {
+		const startTime = new Date(e);
+		startTime.setHours(0);
+		startTime.setMinutes(0);
+		startTime.setSeconds(0);
+		startTime.setMilliseconds(0);
+		const finishTime = new Date(startTime);
+		finishTime.setHours(24);
+
+		getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
 			if (res.code===200) {
 				setDayEvent(res.data);
 				update();
