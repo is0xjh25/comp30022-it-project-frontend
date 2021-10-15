@@ -110,11 +110,11 @@ export default function DisplayEvents() {
 	const handleYearMonthChange = (d) => {
 
 		// Extract month and year
-		let month = new Date(d).getMonth()+1;
-		let year = new Date(d).getFullYear();
+		let month = d.toLocaleDateString().substring(3,5);
+		let year = d.toLocaleDateString().substring(6,10);
+		setMonth(new Date(d).getMonth()+1);
 		setYearMonth(year+month);
-		setMonth(month);
-
+		
 		getMonthlyEvents(year, month).then(res => {
 			if (res.code===200) {
 				setMonthEvent(res.data);
@@ -277,7 +277,7 @@ export default function DisplayEvents() {
 					</Grid>
 					<Dialog open={createEventOpen} fullWidth maxWidth>
 						<Paper fullWidth>
-							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
+							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
 					<Dialog open={displayEventOpen} fullWidth maxWidth>
