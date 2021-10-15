@@ -46,13 +46,14 @@ export default function CreateEvent(props) {
 
 	const handleCreate = () => {
 		
-		const transformStartTime = startTime.toISOString();
-		const transformFinishTime = finishTime.toISOString();
-		
-		let month = startTime.toLocaleDateString().substring(3,5);
-		let year = startTime.toLocaleDateString().substring(6,10);
+		// const transformStartTime = startTime.toISOString();
+		// const transformFinishTime = finishTime.toISOString();
+		let month = new Date(startTime).getMonth()+1;
+		let year = new Date(finishTime).getFullYear();
+		// let month = startTime.toLocaleDateString().substring(3,5);
+		// let year = startTime.toLocaleDateString().substring(6,10);
 
-		createEvent(transformStartTime, transformFinishTime, description).then(res => {
+		createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
 			if (res.code===200) {
 				alert("Create event successfully");
 				if ((year+month) === yearMonth) {
