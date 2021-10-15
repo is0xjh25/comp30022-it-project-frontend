@@ -219,44 +219,47 @@ function Contacts(props) {
                     <Customer handleDialogOpen={handleDialogOpen}/>
                 </Route>
                 <Route exact path={`${path}`} >
-                    <Box sx={{m:50, bgcolor:'white'}}>
-                        <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
-                        <DialogContent>
-                            <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5 }}>
-                                <FormControl sx={{ m: 1, minWidth: 200 }}>
-                                    <InputLabel>{"Organization"}</InputLabel>
-                                    <Select
-                                    native
-                                    value={currentOrganization}
-                                    onChange={handleOrgChange}
-                                    input={<OutlinedInput label={'Organization'}/>}
-                                    >
-                                    <option aria-label="None" value={-1} />
-                                    {organizations.map(item => {
-                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
-                                    })}
-                                    </Select>
-                                </FormControl>
-                                <FormControl disabled={departments.length <= 0} sx={{ m: 1, minWidth: 200 }}>
-                                    <InputLabel>{"Department"}</InputLabel>
-                                    <Select
-                                    native
-                                    value={currentDepartment}
-                                    onChange={handleDepChange}
-                                    input={<OutlinedInput label={'Department'}/>}
-                                    >
-                                    <option aria-label="None" value={-1} />
-                                    {departments.map(item => {
-                                        return (<option key={item.id} value={item.id}>{item.name}</option>)
-                                    })}
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleDialogClose}>Cancel</Button>
-                            <Button onClick={handleDialogConfirm}>Ok</Button>
-                        </DialogActions>
+                    <Box sx={{height: '100vh', width: '100%', minWidth: '600px',flexDirection: 'column', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Box>
+                            <DialogTitle>{'Choose an organization and department to display contacts'}</DialogTitle>
+                            {/* <DialogContent> */}
+                                <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5, maxHeight: 300 }}>
+                                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                                        <InputLabel>{"Organization"}</InputLabel>
+                                        <Select
+                                        native
+                                        value={currentOrganization}
+                                        onChange={handleOrgChange}
+                                        input={<OutlinedInput label={'Organization'}/>}
+                                        >
+                                        <option aria-label="None" value={-1} />
+                                        {organizations.map(item => {
+                                            return (<option key={item.id} value={item.id}>{item.name}</option>)
+                                        })}
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl disabled={departments.length <= 0} sx={{ m: 1, minWidth: 200 }}>
+                                        <InputLabel>{"Department"}</InputLabel>
+                                        <Select
+                                        native
+                                        value={currentDepartment}
+                                        onChange={handleDepChange}
+                                        input={<OutlinedInput label={'Department'}/>}
+                                        >
+                                        <option aria-label="None" value={-1} />
+                                        {departments.map(item => {
+                                            return (<option key={item.id} value={item.id}>{item.name}</option>)
+                                        })}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            {/* </DialogContent> */}
+                            <DialogActions>
+                                <Button onClick={handleDialogClose}>Cancel</Button>
+                                <Button onClick={handleDialogConfirm}>Ok</Button>
+                            </DialogActions>
+                        </Box>
+
                     </Box>
 
                 </Route>
