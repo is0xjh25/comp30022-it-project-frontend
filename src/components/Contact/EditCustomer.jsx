@@ -64,28 +64,10 @@ export default function EditCustomer(props) {
 
 	const handleOnChange = (e) => {
 		if (e.target.id === "email") {
-			if(e.target.value === ""){
-				setEmailError("Email cannot be empty!")
-			}
-			else{
-				setEmailError("")
-			}
 			setEmail(e.target.value);
 		} else if (e.target.id === "firstName") {
-			if(e.target.value === ""){
-				setFirstNameError("First name cannot be empty!")
-			}
-			else{
-				setFirstNameError("")
-			}
 			setFirstName(e.target.value);
 		} else if (e.target.id === "lastName") {
-			if(e.target.value === ""){
-				setLastNameError("Last name cannot be empty!")
-			}
-			else{
-				setLastNameError("")
-			}
 			setLastName(e.target.value);
 		} else if (e.target.id === "middleName") {
 			setMiddleName(e.target.value);
@@ -101,7 +83,7 @@ export default function EditCustomer(props) {
 			setGender(e.target.value);
 		} else if (e.target.id === "customerType") {
 			setCustomerType(e.target.value);
-		} 
+		}
     };
 
 	const confirmDiscard = () => {
@@ -126,7 +108,63 @@ export default function EditCustomer(props) {
 		}
     };
 
+	const handleOnBlur = (e) => {
+		if (e.target.id === "email") {
+			if(e.target.value === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			else{
+				setEmailError("")
+			}
+		} else if (e.target.id === "firstName") {
+			if(e.target.value === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			else{
+				setFirstNameError("")
+			}
+		} else if (e.target.id === "lastName") {
+			if(e.target.value === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			else{
+				setLastNameError("")
+			}
+		}
+	}
+
+	const handleCreateIconColor= () => {
+		if(isValidInput()){
+			return "primary"
+		}
+		else{
+			return "disable"
+		}
+	}
+
+	const isValidInput = () => {
+		if(firstName==="" || lastName==="" || email===""){
+			return false
+		}
+		else{
+			return true
+		}
+	}
+
 	const handleUpdate = () => {
+		
+		if(!isValidInput()){
+			if(email === ""){
+				setEmailError("Email cannot be empty!")
+			}
+			if(firstName === ""){
+				setFirstNameError("First name cannot be empty!")
+			}
+			if(lastName === ""){
+				setLastNameError("Last name cannot be empty!")
+			}
+			return false;
+		}
 
 		const data = {
 			"first_name":firstName,
@@ -189,11 +227,11 @@ export default function EditCustomer(props) {
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>First Name*</Box>
-						<TextField id="firstName" defaultValue={firstName} error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange}/>
+						<TextField id="firstName" defaultValue={firstName} error={firstNameError!==""} helperText={firstNameError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 					</Grid>
 					<Grid item xs={5}  textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 						<Box sx={classes.title}>Last Name*</Box>
-						<TextField id="lastName" defaultValue={lastName} error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange}/>
+						<TextField id="lastName" defaultValue={lastName} error={lastNameError!==""} helperText={lastNameError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 					</Grid>
 				</Grid>
 				<Grid container item rowSpacing={5} columnSpacing={3}>
@@ -243,7 +281,7 @@ export default function EditCustomer(props) {
 					<Grid container item xs={4} textAlign='center' rowSpacing={15}>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Email*</Box>
-							<TextField id="email" defaultValue={email} error={emailError!==""} helperText={emailError} onChange={handleOnChange}/>
+							<TextField id="email" defaultValue={email} error={emailError!==""} helperText={emailError} onChange={handleOnChange} onBlur={handleOnBlur}/>
 						</Grid>
 						<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 							<Box sx={classes.title}>Gender</Box>
@@ -281,14 +319,14 @@ export default function EditCustomer(props) {
 					</Grid>
 					<Grid item xs={4} textAlign='center'>
 						<IconButton>
-							<UpdateSharpIcon color="primary" fontSize="large" onClick={handleUpdate}/>
+							<UpdateSharpIcon color={handleCreateIconColor()} fontSize="large" onClick={handleUpdate}/>
 						</IconButton>
 					</Grid>
 				</Grid>
 				<AlertDialog alertTitle={alertTitle}
                 alertMessage={alertMessage}
                 open={alertOpen}
-                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog 
                 handleConfirm={handleAlertConfirm}
                 handleCancel={() => { setAlertOpen(false) }}
                 />
