@@ -52,6 +52,7 @@ export default function DisplayCustomer(props) {
 			fontFamily:'Arial',
 			borderColor: 'black',
 			textAlign:'center',
+			overflowWrap:"anywhere",
 			m: 1,
 			px:5
 		},

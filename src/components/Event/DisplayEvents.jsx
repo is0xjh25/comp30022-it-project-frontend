@@ -128,14 +128,18 @@ export default function DisplayEvents() {
 
 	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
-		
-		const startTime = e.toISOString().substring(0,10) + "T00:00:00.000Z";
-		const finishTime = e.toISOString().substring(0,10) + "T23:59:00.000Z";
 
-		getMultipleEvents(startTime, finishTime).then(res => {
+		const startTime = new Date(e);
+		startTime.setHours(0);
+		startTime.setMinutes(0);
+		startTime.setSeconds(0);
+		startTime.setMilliseconds(0);
+		const finishTime = new Date(startTime);
+		finishTime.setHours(24);
+
+		getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
 			if (res.code===200) {
 				setDayEvent(res.data);
-				update();
 			} else {
 				alert(res.msg);
 			}
@@ -218,7 +222,7 @@ export default function DisplayEvents() {
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
-		handleOnChange(date);
+		displayDayEvent(date);
 	}, [displayEventOpen, updateCount]);
 	
 	return(
@@ -283,13 +287,13 @@ export default function DisplayEvents() {
 							<AddIcon color="primary" fontSize="large" onClick={handleCreateEvent}/>
 						</IconButton>
 					</Grid>
-					<Dialog open={createEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
-							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth} update={update}/>
+					<Dialog open={createEventOpen} fullWidth PaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper >
+							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
-					<Dialog open={displayEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
+					<Dialog open={displayEventOpen} fullWidthPaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper fullWidth >
 							<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>

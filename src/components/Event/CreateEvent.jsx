@@ -47,7 +47,7 @@ export default function CreateEvent(props) {
 	const handleCreate = () => {
 		
 		let month = new Date(startTime).getMonth()+1;
-		let year = new Date(finishTime).getFullYear();
+		let year = new Date(startTime).getFullYear();
 
 		const eventStart = new Date(startTime);
 		const eventFinish = new Date(finishTime);
@@ -75,7 +75,7 @@ export default function CreateEvent(props) {
 	}
 
 	return (
-		<Grid container textAlign='center' rowSpacing={5} sx={{pt:10, px:20}}>
+		<Grid container textAlign='center' rowSpacing={5} sx={{py:"3%", px:"3%", minWidth:600}}>
 			<Grid item xs={12}>
 				<Typography sx={classes.title}>Create New Event</Typography>
 			</Grid>
