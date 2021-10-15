@@ -1,10 +1,9 @@
 import { Fragment, useState, useEffect } from "react";
 
 // Import from MUI
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
-import CalendarPicker from '@mui/lab/CalendarPicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Box,
 	Badge,
@@ -17,6 +16,8 @@ import {
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
+import { styled } from '@mui/material/styles';
+import PickersDay from '@mui/lab/PickersDay';
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
 import AddIcon from '@material-ui/icons/Add';
@@ -28,6 +29,7 @@ export default function DisplayEvents() {
 
 	const [date, changeDate] = useState(new Date());
 	const [yearMonth, setYearMonth] = useState("");
+	const [month, setMonth] = useState("");
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
@@ -110,6 +112,7 @@ export default function DisplayEvents() {
 		let month = new Date(d).getMonth()+1;
 		let year = new Date(d).getFullYear();
 		setYearMonth(year+month);
+		setMonth(month);
 
 		getMonthlyEvents(year, month).then(res => {
 			if (res.code===200) {
@@ -135,13 +138,70 @@ export default function DisplayEvents() {
 		})
 	}
 
+	const CustomPickersDay = styled(PickersDay, {
+		shouldForwardProp: (prop) =>
+		  prop !== 'dayIsBetween',
+	  })(({ theme, dayIsBetween}) => ({
+		...(dayIsBetween && 
+		
+		{
+		  borderRadius: 0,
+		  disableHighlightToday: true,
+		  // backgroundColor: theme.palette.primary.light,
+		  borderTopLeftRadius: '50%',
+		  borderBottomLeftRadius: '50%',
+		  borderTopRightRadius: '50%',
+		  borderBottomRightRadius: '50%',
+		  color: theme.palette.common.black,
+		  '&:hover, &:focus': {
+		  //   backgroundColor: theme.palette.primary.dark,
+		  },
+		}
+		
+		),
+	  }));
+
+	const renderWeekPickerDay2 = (date, selectedDate, pickersDayProps) => {
+
+		let dayIsBetween = false
+
+		const dateTemp = new Date(date)
+		const monthTemp = dateTemp.getMonth();
+		
+
+		if (month === monthTemp+1 && monthEvent.includes(date.getDate())) {
+			dayIsBetween = true;
+		}
+
+		let selected = false
+		if (dayIsBetween === true) {
+			selected = true
+		}
+
+		return (
+		selected ?
+		<Badge color="secondary" variant="dot" overlap="circular">
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge> : 
+		
+		<Badge>
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge>); 
+	};
+
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
+		handleOnChange(new Date());
 	}, []);
-
-	
-	const [thisDate, setThisDate] = useState(new Date());
 	
 	return(
 		<Fragment sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
@@ -149,17 +209,15 @@ export default function DisplayEvents() {
 				<Typography sx={classes.title} textAlign="center"> Events </Typography>
 				<Box sx={{width: '60%', mx: '20%', pt:5}}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<CalendarPicker
+						<StaticDatePicker
+						open
 						orientation="landscape"
 						value={date}
+						displayStaticWrapperAs="desktop"
 						onMonthChange={(date) => {handleYearMonthChange(date)}}
 						onYearChange={(date) => {handleYearMonthChange(date)}}
 						onChange={handleOnChange}
-						renderInput={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-							const date = new Date(day);	
-							const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
-							return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
-						}}
+						renderDay={renderWeekPickerDay2}			
 						/>
 					</LocalizationProvider>
 				</Box>
