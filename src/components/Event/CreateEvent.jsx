@@ -46,12 +46,8 @@ export default function CreateEvent(props) {
 
 	const handleCreate = () => {
 		
-		// const transformStartTime = startTime.toISOString();
-		// const transformFinishTime = finishTime.toISOString();
 		let month = new Date(startTime).getMonth()+1;
 		let year = new Date(finishTime).getFullYear();
-		// let month = startTime.toLocaleDateString().substring(3,5);
-		// let year = startTime.toLocaleDateString().substring(6,10);
 
 		createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
 			if (res.code===200) {
@@ -75,7 +71,7 @@ export default function CreateEvent(props) {
 			<Grid item xs={12}>
 				<Typography sx={classes.title}>Create New Event</Typography>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={5}  sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Start Time</Typography>
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<DesktopDateTimePicker
@@ -86,7 +82,8 @@ export default function CreateEvent(props) {
 					/>
 				</LocalizationProvider>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={2}></Grid>
+			<Grid item xs={5}  sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Finish Time</Typography>
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<DesktopDateTimePicker
@@ -99,7 +96,7 @@ export default function CreateEvent(props) {
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Description</Typography>
-				<TextField id="description" multiline rows={10} onChange={handleOnChange}/>
+				<TextField id="description" multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
 				<IconButton>

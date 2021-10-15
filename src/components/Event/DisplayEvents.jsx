@@ -135,6 +135,7 @@ export default function DisplayEvents() {
 		getMultipleEvents(startTime, finishTime).then(res => {
 			if (res.code===200) {
 				setDayEvent(res.data);
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -216,7 +217,7 @@ export default function DisplayEvents() {
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
-		handleOnChange(new Date());
+		handleOnChange(date);
 	}, [displayEventOpen, updateCount]);
 	
 	return(
