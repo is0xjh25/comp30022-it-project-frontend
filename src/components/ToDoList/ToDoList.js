@@ -19,6 +19,7 @@ import {
     Grid,
     Collapse,
     IconButton,
+    LinearProgress
     
 } from '@mui/material';
 
@@ -280,8 +281,13 @@ export default function ToDoList() {
         setLoading(false);
     }, [rows])
 
+    // Display loading page if the request is not finished
     if (loading) {
-        return <div>loading...</div>
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
     return (
