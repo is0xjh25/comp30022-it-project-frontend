@@ -1,10 +1,9 @@
 import { Fragment, useState, useEffect } from "react";
 
 // Import from MUI
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
-import CalendarPicker from '@mui/lab/CalendarPicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
     Box,
 	Badge,
@@ -12,11 +11,14 @@ import {
 	Paper,
 	Grid,
 	IconButton,
-	Typography
+	Typography,
+	Chip
 } from '@mui/material'
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
 import DisplayOneEvent from "./DisplayOneEvent";
+import { styled } from '@mui/material/styles';
+import PickersDay from '@mui/lab/PickersDay';
 import { getMultipleEvents, deleteEvent, getMonthlyEvents } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
 import AddIcon from '@material-ui/icons/Add';
@@ -28,6 +30,7 @@ export default function DisplayEvents() {
 
 	const [date, changeDate] = useState(new Date());
 	const [yearMonth, setYearMonth] = useState("");
+	const [month, setMonth] = useState("");
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
@@ -107,10 +110,11 @@ export default function DisplayEvents() {
 	const handleYearMonthChange = (d) => {
 
 		// Extract month and year
-		let month = new Date(d).getMonth()+1;
-		let year = new Date(d).getFullYear();
+		let month = d.toLocaleDateString().substring(3,5);
+		let year = d.toLocaleDateString().substring(6,10);
+		setMonth(new Date(d).getMonth()+1);
 		setYearMonth(year+month);
-
+		
 		getMonthlyEvents(year, month).then(res => {
 			if (res.code===200) {
 				setMonthEvent(res.data);
@@ -135,36 +139,100 @@ export default function DisplayEvents() {
 		})
 	}
 
+	const CustomPickersDay = styled(PickersDay, {
+		shouldForwardProp: (prop) =>
+		  prop !== 'dayIsBetween',
+	  })(({ theme, dayIsBetween}) => ({
+		...(dayIsBetween && 
+		
+		{
+		  borderRadius: 0,
+		  disableHighlightToday: true,
+		  // backgroundColor: theme.palette.primary.light,
+		  borderTopLeftRadius: '50%',
+		  borderBottomLeftRadius: '50%',
+		  borderTopRightRadius: '50%',
+		  borderBottomRightRadius: '50%',
+		  color: theme.palette.common.black,
+		  '&:hover, &:focus': {
+		  //   backgroundColor: theme.palette.primary.dark,
+		  },
+		}
+		),
+	  }));
+
+	const renderWeekPickerDay2 = (date, selectedDate, pickersDayProps) => {
+
+		let dayIsBetween = false
+
+		const dateTemp = new Date(date)
+		const monthTemp = dateTemp.getMonth();
+		
+
+		if (month === monthTemp+1 && monthEvent.includes(date.getDate())) {
+			dayIsBetween = true;
+		}
+
+		let selected = false
+		if (dayIsBetween === true) {
+			selected = true
+		}
+
+		return (
+		selected ?
+		<Badge color="secondary" variant="dot" overlap="circular">
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge> : 
+		
+		<Badge>
+		<CustomPickersDay
+			{...pickersDayProps}
+			disableMargin
+			dayIsBetween={dayIsBetween}
+		/>
+		</Badge>); 
+	};
+
+	const getRowLabel = (status) => {
+        if (status === "to do") {
+            return (<Chip label={status} color="primary" size="small"/>)
+        } else if (status === "in progress") {
+            return (<Chip label={status} color="warning" size="small"/>)
+        } else {
+            return (<Chip label={status} color="success" size="small"/>)
+        }
+    }
+
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
-	}, []);
-
-	
-	const [thisDate, setThisDate] = useState(new Date());
+		handleOnChange(new Date());
+	}, [displayEventOpen]);
 	
 	return(
-		<Fragment sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
-			<Grid sx={{ width: '100%', mx:'3%'}}>
-				<Typography sx={classes.title} textAlign="center"> Events </Typography>
-				<Box sx={{width: '60%', mx: '20%', pt:5}}>
+		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+			<Grid>
+				<Typography sx={classes.title} textAlign="center">Events</Typography>
+				<Box sx={{width: '60%', mx:'20%', pt:5}}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<CalendarPicker
+						<StaticDatePicker
+						open
 						orientation="landscape"
 						value={date}
+						displayStaticWrapperAs="desktop"
 						onMonthChange={(date) => {handleYearMonthChange(date)}}
 						onYearChange={(date) => {handleYearMonthChange(date)}}
 						onChange={handleOnChange}
-						renderInput={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-							const date = new Date(day);	
-							const isSelected = isInCurrentMonth && monthEvent.includes(date.getDate());
-							return (isSelected ? <Badge color="secondary" variant="dot">{dayComponent}</Badge> : <Badge color="secondary">{dayComponent}</Badge> );
-						}}
+						renderDay={renderWeekPickerDay2}			
 						/>
 					</LocalizationProvider>
 				</Box>
-				<Grid container rowSpacing={10} xs={12} sx={{pt:5}}>
-					<Grid container item xs={12} rowSpacing={5}>
+				<Grid container item rowSpacing={2} xs={12} sx={{pt:5}}>
+					<Grid container item xs={12} rowSpacing={2}>
 						<Grid container item xs={12} >
 							<Grid item xs={2} textAlign='center'>
 								<Typography sx={classes.subTitle}> Progress </Typography>
@@ -181,7 +249,7 @@ export default function DisplayEvents() {
 								return (
 								<Grid container item xs={12} key={e.id} value={e} arial-label={e.name} sx={{alignItems:'center', justifyContent:'center'}}>
 									<Grid item xs={2} textAlign='center'>
-										{e.status}
+										{getRowLabel(e.status)}
 									</Grid>
 									<Grid item xs={4} textAlign='center'>
 										{toLocalTime(e.start_time)}
@@ -206,9 +274,10 @@ export default function DisplayEvents() {
 						<IconButton >
 							<AddIcon color="primary" fontSize="large" onClick={handleCreateEvent}/>
 						</IconButton>
+					</Grid>
 					<Dialog open={createEventOpen} fullWidth maxWidth>
 						<Paper fullWidth>
-							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
+							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
 					<Dialog open={displayEventOpen} fullWidth maxWidth>
@@ -216,7 +285,6 @@ export default function DisplayEvents() {
 							<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
-					</Grid>
 				</Grid>
 				<AlertDialog 
 					alertTitle={alertTitle}
@@ -227,6 +295,6 @@ export default function DisplayEvents() {
 					handleCancel={() => { setAlertOpen(false) }}
 				/>
 			</Grid>
-		</Fragment>
+		</Grid>
 	);
 }

@@ -14,6 +14,9 @@ function getEventInfo(eventId) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -34,6 +37,9 @@ function createEvent(startTime, finishTime, description) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -54,6 +60,9 @@ function updateEvent(body) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -73,6 +82,9 @@ function deleteEvent(eventId) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -93,6 +105,9 @@ function addEventContact(eventId, contactId) {
     return new Promise((resolve, reject) => {
         fetch(BASE_URL + "/event/contact", info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -113,6 +128,9 @@ function deleteEventContact(attendId) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event/contact?attend_id=${attendId}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -132,6 +150,9 @@ function getMultipleEvents(startTime, finishTime) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event/between?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })
@@ -151,6 +172,9 @@ function getMonthlyEvents(year, month) {
     return new Promise((resolve, reject) => {
         fetch(`${BASE_URL}/event/amount?year=${year}&month=${month}`, info)
         .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
             res.json().then(resBody => {
                 resolve(resBody)
             })

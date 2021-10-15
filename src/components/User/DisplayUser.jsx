@@ -225,8 +225,8 @@ export default function DisplayUser() {
 	}
 
 	return (
-			<div>
-				<Grid container rowSpacing={8} sx={{pt:5, px:15, minWidth:700}}>
+			<Grid sx={{pt:"1%", px:"5%", minWidth:700}}>
+				<Grid container rowSpacing={8}>
 					<Grid container item columnSpacing={5}>
 						<Grid item xs={12} textAlign='center' sx={classes.grid}>
 							<Badge
@@ -336,6 +336,6 @@ export default function DisplayUser() {
 				handleConfirm={handleUpdateAlertConfirm}
 				handleCancel={() => { setUpdateAlertOpen(false) }}
 				/>
-				</div> 
+		</Grid> 
 	);
 }

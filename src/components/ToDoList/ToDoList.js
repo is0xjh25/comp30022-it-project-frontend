@@ -32,6 +32,16 @@ import { toLocalTime } from '../../api/Util';
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
+const classes = {
+    title: {
+        fontSize:30,
+        fontFamily:'NTR',
+        fontWeight:'bold',
+        bgcolor:'#35baf6',
+        borderRadius:100
+    }
+};
+
 // Implement a new toolbar to hold table title and add new to-do button
 function EnhancedToolbar(props) {
     const { update } = props;
@@ -52,18 +62,19 @@ function EnhancedToolbar(props) {
         sx={{
             pl: { sm: 2 },
             pr: { xs: 1, sm: 1 },
+            justifyContent: 'center'
         }}
         >
-            <Typography
+            {/* <Typography
                 sx={{ flex: '1 1 100%', mb: 2 }}
                 variant="h6"
                 id="ToDoTitle"
                 component="div"
             >
                 Your To-Do List
-            </Typography>
+            </Typography> */}
             <IconButton>
-                <AddIcon variant="contained" onClick={() => {handleOpen()}}/>
+                <AddIcon variant="contained" color="primary"  onClick={() => {handleOpen()}}/>
             </IconButton>
             <AddToDo open={createOpen} handleClose={handleClose} update={update}/>
         </Toolbar>
@@ -275,7 +286,8 @@ export default function ToDoList() {
 
     return (
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+            <Grid sx={{ width: '100%', mr:"6%" }}>
+            <Typography sx={classes.title} textAlign="center">ToDo List</Typography>
                 <EnhancedToolbar update={update}/>
                 <TableContainer>
                     <Table
@@ -289,9 +301,7 @@ export default function ToDoList() {
 
                     </Table>
                 </TableContainer>
-
-                
-            </Paper>
+            </Grid>
         </Grid>
     )
 }

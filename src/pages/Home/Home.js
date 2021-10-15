@@ -49,16 +49,13 @@ require('dotenv').config();
 
 function Events(props) {
     return (
-        <Grid container sx={{mt: 10, minWidth:1200}}>
-            <Grid item xs={7}>
+        <Grid container sx={{mt:3, mb:3, minWidth:1200}}>
+            <Grid item xs={7} sx={{ width: '100%', px:"3%"}}>
                 <DisplayEvents/>
-            </Grid>
-            <Grid item xs={0.5}>
+                
             </Grid>
             <Divider orientation="vertical" flexItem sx={{ background: 'purple' }}/>
-            <Grid item xs={0.5}>
-            </Grid>
-            <Grid item xs={3}>
+            <Grid item xs sx={{ width: '100%', px:"3%"}}>
                 <ToDoList/>
             </Grid>
         </Grid>

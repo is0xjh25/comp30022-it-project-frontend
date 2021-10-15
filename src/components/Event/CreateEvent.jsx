@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 
 export default function CreateEvent(props) {
-	const { handleClose, handleYearMonthChange, yearMonth } = props;
+	const { handleClose, handleYearMonthChange, yearMonth, setMonth} = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 

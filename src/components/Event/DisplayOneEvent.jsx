@@ -5,6 +5,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
+import { processPhoto } from '../../api/Photo';
 import {
 	Box, 
     Button,
@@ -21,13 +22,13 @@ import {
 	MenuItem,
 	FormControl,
 	Select,
-	Typography
+	Typography,
+	Avatar
 } from '@mui/material'
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { fontWeight } from "@mui/lab/node_modules/@mui/system";
 
 export default function DisplayOneEvent(props) {
 
@@ -55,10 +56,6 @@ export default function DisplayOneEvent(props) {
 			fontSize:25,
 		  	fontFamily:'NTR',
 		  	fontWeight:'bold'
-	  	},
-		contactText: {
-			fontSize:20,
-			fontFamily:'Arial',
 	  	},
 		grid: {
 			display:'flex', 
@@ -251,37 +248,39 @@ export default function DisplayOneEvent(props) {
 	let display; 
 	if (pageStatus === "view") {
 		display =
-		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:20, minWidth:1200}}>
-			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+		<Grid container textAlign='center' rowSpacing={4} sx={{pt:5, px:"5%", minWidth:1200}}>
+			<Grid item xs={12} >
 				<Typography sx={classes.title}>Event Information</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				<Typography sx={classes.subTitle}>Progress</Typography> 
 				<Box>{data.status}</Box>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={12}>
 				<Typography sx={classes.subTitle}>Start Time</Typography> 
 				<Box>{toLocalTime(data.start_time)}</Box>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={12}>
 				<Typography sx={classes.subTitle}>Finish Time</Typography> 
 				<Box>{toLocalTime(data.finish_time)}</Box>
 			</Grid>
-			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={12} textAlign='center'>
 				<Typography sx={classes.subTitle}>Description</Typography> 
 				<Box>{data.description}</Box>
 			</Grid>
 			<Grid item xs={12} textAlign='center'>
 				<Typography sx={classes.subTitle}>Invited Contacts</Typography> 
 			</Grid>
-			<Grid container item xs={12} rowSpacing={1} sx={classes.contactText} textAlign='center'>
-				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
-					First name
-				</Grid>
-				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
-					Last name
+			<Grid container item xs={12} rowSpacing={3} textAlign='center'>
+				<Grid item xs={1}>
 				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
+					First name
+				</Grid>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
+					Last name
+				</Grid>
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone number
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
@@ -291,14 +290,18 @@ export default function DisplayOneEvent(props) {
 					{typeof attendents !== 'undefined' && attendents.length > 0 ?
 						attendents.map((e) => {						
 							return (
-							<Grid container item xs={12} key={e.attend_id} value={e}>
-								<Grid item xs={3} textAlign='center'>
-									{e.first_name}
-								</Grid>
-								<Grid item xs={3} textAlign='center'>
-									{e.last_name}
+							<Grid container item xs={12} key={e.attend_id} value={e} sx={{alignItems:'center', justifyContent:'center'}}>
+								<Grid itme xs={1}>
+									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}>
+									</Avatar>
 								</Grid>
 								<Grid item xs={2} textAlign='center'>
+									{e.first_name}
+								</Grid>
+								<Grid item xs={2} textAlign='center'>
+									{e.last_name}
+								</Grid>
+								<Grid item xs={3} textAlign='center'>
 									{e.phone}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
@@ -323,7 +326,7 @@ export default function DisplayOneEvent(props) {
 		</Grid> 
 	} else if (pageStatus==="edit") {
 		display =
-		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:20, minWidth:1200}}>
+		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:"5%", minWidth:1200}}>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.title}>Edit Event</Typography>
 			</Grid>
@@ -334,7 +337,7 @@ export default function DisplayOneEvent(props) {
 					<FormControl fullWidth>
 						<Select
 							id="progress"
-							value={data.status}
+							value={status}
 							onChange={(event) => handleOnSelect(event,"status")}
 						>
 							<MenuItem value={"to do"}>to do</MenuItem>
@@ -383,14 +386,16 @@ export default function DisplayOneEvent(props) {
 			<Grid item xs={12} textAlign='center'>
 				<Typography sx={classes.subTitle}> Invited Contacts </Typography>
 			</Grid>
-			<Grid container item xs={12} rowSpacing={1} textAlign='center' sx={classes.contactText}>
+			<Grid container item xs={12} rowSpacing={1} textAlign='center'>
+				<Grid itme xs={1}>
+				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					First name
 				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Last name
 				</Grid>
-				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone number
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
@@ -401,13 +406,16 @@ export default function DisplayOneEvent(props) {
 						data.contact_list.map((e) => {						
 							return (
 							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}} sx={{alignItems:'center', justifyContent:'center'}}>
+								<Grid itme xs={1}>
+									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}/>
+								</Grid>
 								<Grid item xs={2} textAlign='center'>
 									{e.first_name}
 								</Grid>
 								<Grid item xs={2} textAlign='center'>
 									{e.last_name}
 								</Grid>
-								<Grid item xs={3} textAlign='center'>
+								<Grid item xs={2} textAlign='center'>
 									{e.phone}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
@@ -426,7 +434,6 @@ export default function DisplayOneEvent(props) {
 						<Button size="medium" variant="contained" onClick={handleAddContact}>Add contact</Button>
 					</Grid>
 				</Grid>
-
 			</Grid>
 			
 			<AlertDialog 

@@ -314,7 +314,7 @@ export default function Organization(props) {
                             my: '40px'
                         }} 
                     >
-                        <CreateOrg update={update} /> + <JoinOrg update={update}/>
+                        <CreateOrg update={update}/>or<JoinOrg update={update}/>
                     </Box>
 
                 </Box>
