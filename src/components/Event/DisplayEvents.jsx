@@ -157,7 +157,6 @@ export default function DisplayEvents() {
 		  //   backgroundColor: theme.palette.primary.dark,
 		  },
 		}
-		
 		),
 	  }));
 
@@ -204,10 +203,10 @@ export default function DisplayEvents() {
 	}, []);
 	
 	return(
-		<Fragment sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
-			<Grid sx={{ width: '100%', mx:'3%'}}>
-				<Typography sx={classes.title} textAlign="center"> Events </Typography>
-				<Box sx={{width: '60%', mx: '20%', pt:5}}>
+		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+			<Grid>
+				<Typography sx={classes.title} textAlign="center">Events</Typography>
+				<Box sx={{width: '60%', mx:'20%', pt:5}}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<StaticDatePicker
 						open
@@ -221,8 +220,8 @@ export default function DisplayEvents() {
 						/>
 					</LocalizationProvider>
 				</Box>
-				<Grid container rowSpacing={10} xs={12} sx={{pt:5}}>
-					<Grid container item xs={12} rowSpacing={5}>
+				<Grid container item rowSpacing={2} xs={12} sx={{pt:5}}>
+					<Grid container item xs={12} rowSpacing={2}>
 						<Grid container item xs={12} >
 							<Grid item xs={2} textAlign='center'>
 								<Typography sx={classes.subTitle}> Progress </Typography>
@@ -264,6 +263,7 @@ export default function DisplayEvents() {
 						<IconButton >
 							<AddIcon color="primary" fontSize="large" onClick={handleCreateEvent}/>
 						</IconButton>
+					</Grid>
 					<Dialog open={createEventOpen} fullWidth maxWidth>
 						<Paper fullWidth>
 							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
@@ -274,7 +274,6 @@ export default function DisplayEvents() {
 							<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
-					</Grid>
 				</Grid>
 				<AlertDialog 
 					alertTitle={alertTitle}
@@ -285,6 +284,6 @@ export default function DisplayEvents() {
 					handleCancel={() => { setAlertOpen(false) }}
 				/>
 			</Grid>
-		</Fragment>
+		</Grid>
 	);
 }

@@ -5,6 +5,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
+import { processPhoto } from '../../api/Photo';
 import {
 	Box, 
     Button,
@@ -21,13 +22,13 @@ import {
 	MenuItem,
 	FormControl,
 	Select,
-	Typography
+	Typography,
+	Avatar
 } from '@mui/material'
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { fontWeight } from "@mui/lab/node_modules/@mui/system";
 
 export default function DisplayOneEvent(props) {
 
@@ -274,14 +275,16 @@ export default function DisplayOneEvent(props) {
 			<Grid item xs={12} textAlign='center'>
 				<Typography sx={classes.subTitle}>Invited Contacts</Typography> 
 			</Grid>
-			<Grid container item xs={12} rowSpacing={1} sx={classes.contactText} textAlign='center'>
-				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
-					First name
-				</Grid>
-				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
-					Last name
+			<Grid container item xs={12} rowSpacing={3} textAlign='center'>
+				<Grid item xs={1}>
 				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
+					First name
+				</Grid>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
+					Last name
+				</Grid>
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone number
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
@@ -291,14 +294,18 @@ export default function DisplayOneEvent(props) {
 					{typeof attendents !== 'undefined' && attendents.length > 0 ?
 						attendents.map((e) => {						
 							return (
-							<Grid container item xs={12} key={e.attend_id} value={e}>
-								<Grid item xs={3} textAlign='center'>
-									{e.first_name}
-								</Grid>
-								<Grid item xs={3} textAlign='center'>
-									{e.last_name}
+							<Grid container item xs={12} key={e.attend_id} value={e} sx={{alignItems:'center', justifyContent:'center'}}>
+								<Grid itme xs={1}>
+									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}>
+									</Avatar>
 								</Grid>
 								<Grid item xs={2} textAlign='center'>
+									{e.first_name}
+								</Grid>
+								<Grid item xs={2} textAlign='center'>
+									{e.last_name}
+								</Grid>
+								<Grid item xs={3} textAlign='center'>
 									{e.phone}
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
