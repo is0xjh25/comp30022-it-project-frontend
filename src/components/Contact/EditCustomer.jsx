@@ -20,7 +20,10 @@ import {
 	Select
 } from '@mui/material';
 
-import { formatTime } from '../../api/Util';
+import { 
+	formatTime,
+	checkEmail
+} from '../../api/Util';
 import { Input, uploadContactPhoto, processPhoto } from '../../api/Photo';
 import { SettingsPhoneTwoTone } from '@material-ui/icons';
 
@@ -114,7 +117,12 @@ export default function EditCustomer(props) {
 				setEmailError("Email cannot be empty!")
 			}
 			else{
-				setEmailError("")
+				if (!checkEmail(email)) {
+					setEmailError("Email format is invalid!");
+				}
+				else{
+					setEmailError("");
+				}
 			}
 		} else if (e.target.id === "firstName") {
 			if(e.target.value === ""){
@@ -146,9 +154,7 @@ export default function EditCustomer(props) {
 		if(firstName==="" || lastName==="" || email===""){
 			return false
 		}
-		else{
-			return true
-		}
+		return checkEmail(email);
 	}
 
 	const handleUpdate = () => {
@@ -156,6 +162,11 @@ export default function EditCustomer(props) {
 		if(!isValidInput()){
 			if(email === ""){
 				setEmailError("Email cannot be empty!")
+			}
+			else{
+				if (!checkEmail(email)) {
+					setEmailError("Email format is invalid!")
+				}
 			}
 			if(firstName === ""){
 				setFirstNameError("First name cannot be empty!")
