@@ -36,7 +36,7 @@ import { processPhoto } from '../../api/Photo';
 
 // Columns are the labels of the table
 const columns = [
-    { id: 'avatar', label: 'avator', minWidth: 40, align: 'center'},
+    { id: 'avatar', label: 'Avator', minWidth: 40, align: 'center'},
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
