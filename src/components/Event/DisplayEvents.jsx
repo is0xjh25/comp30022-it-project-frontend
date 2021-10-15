@@ -140,7 +140,6 @@ export default function DisplayEvents() {
 		getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
 			if (res.code===200) {
 				setDayEvent(res.data);
-				update();
 			} else {
 				alert(res.msg);
 			}
@@ -223,7 +222,7 @@ export default function DisplayEvents() {
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
-		handleOnChange(date);
+		displayDayEvent(date);
 	}, [displayEventOpen, updateCount]);
 	
 	return(
