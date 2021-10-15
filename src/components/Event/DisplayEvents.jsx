@@ -183,21 +183,22 @@ export default function DisplayEvents() {
 
 		return (
 		selected ?
-		<Badge color="secondary" variant="dot" overlap="circular">
-		<CustomPickersDay
-			{...pickersDayProps}
-			disableMargin
-			dayIsBetween={dayIsBetween}
-		/>
-		</Badge> : 
-		
-		<Badge>
-		<CustomPickersDay
-			{...pickersDayProps}
-			disableMargin
-			dayIsBetween={dayIsBetween}
-		/>
-		</Badge>); 
+			<Badge color="warning" variant="dot" overlap="circular">
+			<CustomPickersDay
+				{...pickersDayProps}
+				disableMargin
+				dayIsBetween={dayIsBetween}
+			/>
+			</Badge> 
+		: 
+			<Badge>
+			<CustomPickersDay
+				{...pickersDayProps}
+				disableMargin
+				dayIsBetween={dayIsBetween}
+			/>
+			</Badge>
+		); 
 	};
 
 	const getRowLabel = (status) => {

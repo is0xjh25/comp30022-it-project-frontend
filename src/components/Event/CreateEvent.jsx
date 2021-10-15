@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 
 export default function CreateEvent(props) {
-	const { handleClose, handleYearMonthChange, yearMonth, setMonth} = props;
+	const { handleClose, handleYearMonthChange, yearMonth, setMonth, update } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
@@ -49,17 +49,25 @@ export default function CreateEvent(props) {
 		let month = new Date(startTime).getMonth()+1;
 		let year = new Date(startTime).getFullYear();
 
-		createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
-			if (res.code===200) {
-				alert("Create event successfully");
-				if ((year+month) === yearMonth) {
-					handleYearMonthChange(startTime);
+		const eventStart = new Date(startTime);
+		const eventFinish = new Date(finishTime);
+		
+		if (eventFinish.getTime() < eventStart.getTime()) {
+			alert("Finish time cannot be earlier than start time.")
+		} else {
+			createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
+				if (res.code===200) {
+					alert("Create event successfully");
+					if ((year+month) === yearMonth) {
+						handleYearMonthChange(startTime);
+					}
+					handleClose();
+					update();
+				} else {
+					alert(res.msg);
 				}
-				handleClose();	
-			} else {
-				alert(res.msg);
-			}
-		});
+			});
+		}
 	}
 
 	const confirmDiscard = () => {

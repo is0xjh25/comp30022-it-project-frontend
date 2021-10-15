@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 
 // Import from mui
+import Mail from '@material-ui/icons/MailOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ImageIcon from '@material-ui/icons/Image';
 import { height } from '@mui/system';
 import { 
+    Link,
     Paper,
     Table,
     TableBody,
@@ -36,7 +38,7 @@ import { processPhoto } from '../../api/Photo';
 
 // Columns are the labels of the table
 const columns = [
-    { id: 'avatar', label: 'avator', minWidth: 40, align: 'center'},
+    { id: 'avatar', label: 'Avator', minWidth: 40, align: 'center'},
     { id: 'name', label: 'Name', minWidth: 180, align: 'center'},
     { id: 'email', label: 'Email', minWidth: 240, align: 'center'},
     { id: 'gender', label: 'Gender', minWidth: 120, align: 'center'},
@@ -192,12 +194,24 @@ function EnhancedTableRow(props) {
     if (permissionLevel >= 3) {
         display = (
             <div>
+                <Link color="inherit" href = {`mailto:${row.email}`}>
+                    <IconButton>
+                        <Mail />
+                    </IconButton>
+                </Link>
                 <IconButton onClick={deleteCustomer}>
                     <DeleteIcon />
                 </IconButton>
             </div>)
     } else {
-        display = (<div></div>)
+        display = (
+        <div>
+            <Link color="inherit" href = {`mailto:${row.email}`}>
+                <IconButton>
+                    <Mail />
+                </IconButton>
+            </Link>
+        </div>)
     }
 
     return (
