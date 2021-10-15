@@ -5,7 +5,8 @@ import SignUp from './SignUp';
 import Resend from './Resend';
 import {
 	Box,
-	Grid
+	Grid,
+    CardMedia
 } from '@mui/material';
 
 class Login extends React.Component {
@@ -27,9 +28,9 @@ class Login extends React.Component {
 		let pageStatus = this.state.pageStatus;
 
 		return(
-			<Grid container sx={{minWidth:1920}}>
+			<Grid container sx={{minWidth: 1600}}>
 				<Grid item xs={9}>
-					<Box component="img" src={BackGroundImage} sx={{height: '100%', width: '100%'}} alt=""/>
+					<CardMedia component="img" src={BackGroundImage} sx={{height: '100vh', width: '100%'}} alt=""/>
 				</Grid>
 				<Grid item xs={3}>
 					{pageStatus === 'signIn' ? (
