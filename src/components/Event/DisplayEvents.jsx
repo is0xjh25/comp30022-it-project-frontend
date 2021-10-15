@@ -34,6 +34,7 @@ export default function DisplayEvents() {
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
+	const [updateCount, setUpdateCount] = useState(0);
 	const classes = {
 		title: {
 			fontSize:30,
@@ -95,6 +96,7 @@ export default function DisplayEvents() {
 		deleteEvent(selectedEvent).then(res => {
 			if (res.code===200) {
 				alert("Successfully deleted");
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -110,8 +112,8 @@ export default function DisplayEvents() {
 	const handleYearMonthChange = (d) => {
 
 		// Extract month and year
-		let month = d.toLocaleDateString().substring(3,5);
-		let year = d.toLocaleDateString().substring(6,10);
+		let month = new Date(d).getMonth()+1;
+		let year = new Date(d).getFullYear();
 		setMonth(new Date(d).getMonth()+1);
 		setYearMonth(year+month);
 		
@@ -207,11 +209,15 @@ export default function DisplayEvents() {
         }
     }
 
+	const update = function() {
+        setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+    }
+
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
 		handleOnChange(new Date());
-	}, [displayEventOpen]);
+	}, [displayEventOpen, updateCount]);
 	
 	return(
 		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
