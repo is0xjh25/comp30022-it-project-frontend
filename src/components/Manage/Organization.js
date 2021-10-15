@@ -22,7 +22,8 @@ import {
     Grid,
     Typography,
     Box,
-    Avatar
+    Avatar,
+    LinearProgress 
     
 } from '@mui/material'
 
@@ -276,7 +277,11 @@ export default function Organization(props) {
 
     // Display loading page if the request is not finished
     if (loading) {
-        return <div>loading...</div>
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
     return (

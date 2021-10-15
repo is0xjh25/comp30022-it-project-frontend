@@ -25,13 +25,11 @@ import {
     Select,
     OutlinedInput,
     Grid,
-    Divider
+    Divider,
+    LinearProgress,
+    Box,
 } from '@mui/material'
 
-import {
-    Box,
-    
-} from '@mui/system'; // Select box for contacts(need to select two params)
 
 
 import {
@@ -63,11 +61,9 @@ function Events(props) {
 
 function Settings(props) {
     return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={12}>
-                <DisplayUser/>
-            </Grid>
-        </Grid>
+
+        <DisplayUser/>
+
     )
 }
 
@@ -272,16 +268,17 @@ function Contacts(props) {
 
 // A home component is rendered when path '/' is matched
 function Home(props) {
-  let {url} = useRouteMatch();
-  const history = useHistory();
+    const [loading, setLoading] = useState(true);
+    let {url} = useRouteMatch();
+    const history = useHistory();
 
-  const [selectedPage, setSelectedPage] = useState('');
-  const [currentUser, setCurrentUser] = useState({});
+    const [selectedPage, setSelectedPage] = useState('');
+    const [currentUser, setCurrentUser] = useState({});
 
-  const changePage = function(toPage) {
-    setSelectedPage(toPage);
-    history.push(`/${toPage}`);
-}
+    const changePage = function(toPage) {
+        setSelectedPage(toPage);
+        history.push(`/${toPage}`);
+    }
 
 
 
@@ -291,11 +288,21 @@ function Home(props) {
         if(res.code === 200) {
             console.log('Currently logged in');
             setCurrentUser(res.data);
+            setLoading(false);
         }else {
             history.push('/Login');
         }
     })
   }, [])
+
+    // Display loading page if the request is not finished
+    if (loading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
 
 
   return(

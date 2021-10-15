@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Paper, TableContainer} from '@mui/material';
+import { Paper,
+    TableContainer,
+    LinearProgress,
+    Box,
+} from '@mui/material';
 
 import CustomerTable from './CustomerTable';
 import { getMyPermissionLevel } from '../../api/Manage';
@@ -10,7 +14,6 @@ import { getMyPermissionLevel } from '../../api/Manage';
 // and return a table of contacts
 export default function Customer(props) {
     let {orgId, depId} = useParams();
-    const [loading, setLoading] = useState(true);
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
 
     // Request current user's permission level from backend
@@ -22,14 +25,6 @@ export default function Customer(props) {
 
     }, [depId])
 
-    useEffect(() => {
-        setLoading(false);
-    }, [myPremissionLevel])
-
-    if (loading) {
-        return <div>loading...
-        </div>
-    }    
 
     // Refer to customer table for layout
     return (
