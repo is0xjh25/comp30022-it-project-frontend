@@ -134,7 +134,7 @@ export default function AddCustomer(props) {
 		}
 	}
 
-	const handleCreateIconColor= () => {
+	const handleCreateIconColor = () => {
 		if(isValidInput()){
 			return "primary"
 		}
