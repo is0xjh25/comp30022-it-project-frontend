@@ -23,8 +23,10 @@ import {
 	FormControl,
 	Select,
 	Typography,
-	Avatar
+	Avatar,
+	Link
 } from '@mui/material'
+import Mail from '@material-ui/icons/MailOutline';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
@@ -229,6 +231,28 @@ export default function DisplayOneEvent(props) {
 		})
 	}
 
+	//conbine of all email
+	const allEmail = () => {
+		let allEmailUrl = "";
+		attendents.forEach(function (contact) {
+			if(contact !== undefined && contact.email != null){
+				allEmailUrl = allEmailUrl + contact.email + ',';
+			}
+		});
+		if(allEmailUrl.length != 0){
+			allEmailUrl = allEmailUrl.substring(0, allEmailUrl.length - 1);
+			return (
+			<Link color="inherit" href = {`mailto:${allEmailUrl}`}>
+				<IconButton>
+					<Mail />
+				</IconButton>
+			</Link>);
+		}
+		else{
+			return ;
+		}
+	}
+
 	//================ Display Event ==================
 	useEffect(() => {
 		getEventInfo(eventId).then(res => {
@@ -285,6 +309,7 @@ export default function DisplayOneEvent(props) {
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
+					{allEmail()}
 				</Grid>
 				<Grid container item xs={12}>
 					{typeof attendents !== 'undefined' && attendents.length > 0 ?
@@ -306,6 +331,11 @@ export default function DisplayOneEvent(props) {
 								</Grid>
 								<Grid item xs={4} textAlign='center'>
 									{e.email}
+									<Link color="inherit" href = {`mailto:${e.email}`}>
+										<IconButton>
+											<Mail />
+										</IconButton>
+									</Link>
 								</Grid>
 							</Grid>)
 						})		
