@@ -131,7 +131,10 @@ export default function DisplayEvents() {
 
 		const startTime = new Date(e);
 		startTime.setHours(0);
-		const finishTime = new Date(e);
+		startTime.setMinutes(0);
+		startTime.setSeconds(0);
+		startTime.setMilliseconds(0);
+		const finishTime = new Date(startTime);
 		finishTime.setHours(24);
 
 		getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
