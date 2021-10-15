@@ -11,7 +11,8 @@ import {
 	Paper,
 	Grid,
 	IconButton,
-	Typography
+	Typography,
+	Chip
 } from '@mui/material'
 import AlertDialog from "../Dialog/AlertDialog";
 import CreateEvent from "./CreateEvent";
@@ -196,11 +197,21 @@ export default function DisplayEvents() {
 		</Badge>); 
 	};
 
+	const getRowLabel = (status) => {
+        if (status === "to do") {
+            return (<Chip label={status} color="primary" size="small"/>)
+        } else if (status === "in progress") {
+            return (<Chip label={status} color="warning" size="small"/>)
+        } else {
+            return (<Chip label={status} color="success" size="small"/>)
+        }
+    }
+
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
 		handleOnChange(new Date());
-	}, []);
+	}, [displayEventOpen]);
 	
 	return(
 		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
@@ -238,7 +249,7 @@ export default function DisplayEvents() {
 								return (
 								<Grid container item xs={12} key={e.id} value={e} arial-label={e.name} sx={{alignItems:'center', justifyContent:'center'}}>
 									<Grid item xs={2} textAlign='center'>
-										{e.status}
+										{getRowLabel(e.status)}
 									</Grid>
 									<Grid item xs={4} textAlign='center'>
 										{toLocalTime(e.start_time)}
