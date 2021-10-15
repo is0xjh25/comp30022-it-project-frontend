@@ -61,11 +61,9 @@ function Events(props) {
 
 function Settings(props) {
     return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={12}>
-                <DisplayUser/>
-            </Grid>
-        </Grid>
+
+        <DisplayUser/>
+
     )
 }
 
