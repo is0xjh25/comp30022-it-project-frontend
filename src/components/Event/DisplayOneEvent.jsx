@@ -295,20 +295,19 @@ export default function DisplayOneEvent(props) {
 			<Grid item xs={12} textAlign='center'>
 				<Typography sx={classes.subTitle}>Invited Contacts</Typography> 
 			</Grid>
-			<Grid container item xs={12} rowSpacing={3} textAlign='center'>
+			<Grid container item xs={12} rowSpacing={3} textAlign='center' sx={{alignItems:'center', justifyContent:'center'}}>
 				<Grid item xs={1}>
 				</Grid>
-				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
-					First name
-				</Grid>
-				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
-					Last name
-				</Grid>
 				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
+					Name
+				</Grid>
+				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone
 				</Grid>
-				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
-					Email
+				<Grid item xs={5} sx={{fontWeight:"bold"}} textAlign='center'>
+					Email	
+				</Grid>
+				<Grid item xs={1}>
 					{allEmail()}
 				</Grid>
 				<Grid container item xs={12}>
@@ -320,17 +319,16 @@ export default function DisplayOneEvent(props) {
 									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}>
 									</Avatar>
 								</Grid>
-								<Grid item xs={2} textAlign='center'>
-									{e.first_name}
-								</Grid>
-								<Grid item xs={2} textAlign='center'>
-									{e.last_name}
-								</Grid>
 								<Grid item xs={3} textAlign='center'>
+									{e.first_name} {e.last_name}
+								</Grid>
+								<Grid item xs={2} textAlign='center'>
 									{e.phone}
 								</Grid>
-								<Grid item xs={4} textAlign='center'>
+								<Grid item xs={5} textAlign='center' sx={{overflowWrap:"break-word"}}>
 									{e.email}
+								</Grid>
+								<Grid item xs={1}>
 									<Link color="inherit" href = {`mailto:${e.email}`}>
 										<IconButton>
 											<Mail />
@@ -419,19 +417,16 @@ export default function DisplayOneEvent(props) {
 			<Grid container item xs={12} rowSpacing={1} textAlign='center'>
 				<Grid itme xs={1}>
 				</Grid>
-				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
-					First name
-				</Grid>
-				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
-					Last name
+				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
+					Name
 				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
 					Phone
 				</Grid>
-				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
+				<Grid item xs={5} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
 				</Grid>
-				<Grid container item xs={12} rowSpacing={1} >
+				<Grid container columnSpacing={2} item xs={12} rowSpacing={1} >
 					{typeof data.contact_list !== 'undefined' && data.contact_list.length > 0 ?
 						data.contact_list.map((e) => {						
 							return (
@@ -439,16 +434,13 @@ export default function DisplayOneEvent(props) {
 								<Grid itme xs={1}>
 									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}/>
 								</Grid>
-								<Grid item xs={2} textAlign='center'>
-									{e.first_name}
-								</Grid>
-								<Grid item xs={2} textAlign='center'>
-									{e.last_name}
+								<Grid item xs={3} textAlign='center'>
+									{e.first_name} {e.last_name}
 								</Grid>
 								<Grid item xs={2} textAlign='center'>
 									{e.phone}
 								</Grid>
-								<Grid item xs={4} textAlign='center' sx={{overflowWrap:"anywhere"}}>
+								<Grid item xs={5} textAlign='center' sx={{overflowWrap:"anywhere"}}>
 									{e.email}
 								</Grid>
 								<Grid item xs={1} textAlign='center'>
