@@ -21,7 +21,9 @@ import {
     Button,
     Avatar,
     Dialog,
-    IconButton
+    IconButton,
+    LinearProgress,
+    Box
 } from '@mui/material'
 
 // Import from local
@@ -237,6 +239,8 @@ function EnhancedTableRow(props) {
 
 // The final table for contact
 export default function CustomerTable(props) {
+    const [loading, setLoading] = useState(true);
+
     //=============== Data from Parent ==================
     const permissionLevel = props.permissionLevel;
     const organizationId = props.organizationId;
@@ -263,9 +267,11 @@ export default function CustomerTable(props) {
                     row.name = row.first_name + ' ' + row.last_name
                 });
                 setRows(records);
+                setLoading(false);
             } else {
                 alert(res.msg);
             }
+
         })
     }, [departmentId, updateCount])
 
@@ -291,6 +297,15 @@ export default function CustomerTable(props) {
                 alert(res.msg);
             }
         })
+    }
+
+    // Display loading page if the request is not finished
+    if (loading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
     // Make use of enhanced table toolbar and enhanced table row, diplay the data accordingly
