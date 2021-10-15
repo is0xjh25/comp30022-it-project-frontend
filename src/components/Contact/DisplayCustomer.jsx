@@ -12,7 +12,8 @@ import {
     Avatar,
 	Box,
 	Grid,
-	IconButton
+	IconButton,
+    LinearProgress
 } from '@mui/material';
 import {processPhoto} from '../../api/Photo';
 
@@ -95,8 +96,13 @@ export default function DisplayCustomer(props) {
         }
     }, [loading])
 
-	if (loading) {
-        return <div>loading...</div>
+    // Display loading page if the request is not finished
+    if (loading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
 	const confirmDelete = () => {

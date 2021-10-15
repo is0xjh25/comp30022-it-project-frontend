@@ -25,12 +25,11 @@ import {
     Select,
     OutlinedInput,
     Grid,
+    Divider,
+    LinearProgress,
+    Box,
 } from '@mui/material'
 
-import {
-    Box,
-    
-} from '@mui/system'; // Select box for contacts(need to select two params)
 
 
 import {
@@ -40,7 +39,6 @@ import {
   Redirect,
   useHistory
 } from "react-router-dom";
-// import { Grid } from '@material-ui/core';
 
 
 
@@ -48,11 +46,12 @@ require('dotenv').config();
 
 function Events(props) {
     return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={8}>
+        <Grid container sx={{mt:"5%", mb:"5%", minWidth:1200}}>
+            <Grid item xs={7} sx={{ width: '100%', px:"3%"}}>
                 <DisplayEvents/>
             </Grid>
-            <Grid item xs={4}>
+            <Divider orientation="vertical" flexItem sx={{ background: 'purple' }}/>
+            <Grid item xs sx={{ width: '100%', px:"3%"}}>
                 <ToDoList/>
             </Grid>
         </Grid>
@@ -61,11 +60,9 @@ function Events(props) {
 
 function Settings(props) {
     return (
-        <Grid container sx={{mt: 10}}>
-            <Grid item xs={12}>
-                <DisplayUser/>
-            </Grid>
-        </Grid>
+
+        <DisplayUser/>
+
     )
 }
 
@@ -270,16 +267,17 @@ function Contacts(props) {
 
 // A home component is rendered when path '/' is matched
 function Home(props) {
-  let {url} = useRouteMatch();
-  const history = useHistory();
+    const [loading, setLoading] = useState(true);
+    let {url} = useRouteMatch();
+    const history = useHistory();
 
-  const [selectedPage, setSelectedPage] = useState('');
-  const [currentUser, setCurrentUser] = useState({});
+    const [selectedPage, setSelectedPage] = useState('');
+    const [currentUser, setCurrentUser] = useState({});
 
-  const changePage = function(toPage) {
-    setSelectedPage(toPage);
-    history.push(`/${toPage}`);
-}
+    const changePage = function(toPage) {
+        setSelectedPage(toPage);
+        history.push(`/${toPage}`);
+    }
 
 
 
@@ -289,11 +287,21 @@ function Home(props) {
         if(res.code === 200) {
             console.log('Currently logged in');
             setCurrentUser(res.data);
+            setLoading(false);
         }else {
             history.push('/Login');
         }
     })
   }, [])
+
+    // Display loading page if the request is not finished
+    if (loading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
 
 
   return(

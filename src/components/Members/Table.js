@@ -2,19 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableContainer from '@material-ui/core/TableContainer';
-// import TableHead from '@material-ui/core/TableHead';
-// import TablePagination from '@material-ui/core/TablePagination';
-// import TableRow from '@material-ui/core/TableRow';
-// import TableSortLabel from '@material-ui/core/TableSortLabel';
+
 import Paper from '@material-ui/core/Paper';
-// import IconButton from '@material-ui/core/IconButton';
-// import Avatar from '@material-ui/core/Avatar';
+
 import ImageIcon from '@material-ui/icons/Image';
-// import Button from '@material-ui/core/Button';
 import Delete from '@material-ui/icons/Delete';
 import Mail from '@material-ui/icons/MailOutline';
 import EditPermission from '@material-ui/icons/Person';

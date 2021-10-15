@@ -14,7 +14,8 @@ import {
 	IconButton,
 	Grid,
     TextField,
-	Badge 
+	Badge,
+    LinearProgress
 } from '@mui/material';
 import {processPhoto} from '../../api/Photo';
 
@@ -198,9 +199,14 @@ export default function DisplayUser() {
 		}
 	}, [loading])
 
-	if (loading) {
-		return <div>loading...</div>
-	}
+    // Display loading page if the request is not finished
+    if (loading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
 
 	let leftButton; 
 	let rightButton;
@@ -225,117 +231,122 @@ export default function DisplayUser() {
 	}
 
 	return (
-			<div>
-				<Grid container rowSpacing={8} sx={{pt:5, px:15, minWidth:700}}>
-					<Grid container item columnSpacing={5}>
-						<Grid item xs={12} textAlign='center' sx={classes.grid}>
-							<Badge
-								overlap="circular"
-								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-								badgeContent={
-									<label htmlFor="contained-button-file">
-									<Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
-											uploadUserPhoto(e.currentTarget.files[0]);
-										}}/>
-									<IconButton color="primary" aria-label="upload picture" component="span">
-										<ChangeCircleRoundedIcon size="small"/>
-									</IconButton>
-									</label>
-								}
-							>
-								<Avatar id="user_avator" src={processPhoto(data.photo)}
-									sx={{ width: 70, height: 70}}>
-								</Avatar>
-							</Badge>
-						</Grid>
-					</Grid>
-					
-					<Grid container item rowSpacing={5} columnSpacing={3}>
-						<Grid item xs={6} textAlign='center'sx={classes.box}>
-							<Box sx={classes.title}>First Name</Box> 
-							{status === "view" ?
-							<Box sx={classes.body}>{data.first_name}</Box> : 
-							<TextField id="firstName" defaultValue={data.first_name} onChange={handleOnChange}/>
-							}
-						</Grid>
-						<Grid item xs={6} textAlign='center' sx={classes.box}>
-							<Box sx={classes.title}>Email</Box>
-							<Box sx={classes.body}>{data.email}</Box>
-						</Grid>
-					</Grid>
-					<Grid container item rowSpacing={5} columnSpacing={3}>
-						<Grid item xs={6} textAlign='center'sx={classes.box}>
-							<Box sx={classes.title}>Last Name</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>{data.last_name}</Box> :
-							<TextField id="lastName" defaultValue={data.last_name} onChange={handleOnChange}/>
-							}
-						</Grid>
-						<Grid item xs={6} textAlign='center' sx={classes.box}>
-							<Box sx={classes.title}>Phone</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>{data.phone}</Box> :
-							<TextField id="phone" defaultValue={data.phone} onChange={handleOnChange}/>
-							}
-						</Grid>
-					</Grid>
-					<Grid container item rowSpacing={5} columnSpacing={3}>
-						<Grid item xs={6} textAlign='center'sx={classes.box}>
-							<Box sx={classes.title}>Middle Name</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>{data.middle_name}</Box> :
-							<TextField id="middleName" defaultValue={data.middle_name} onChange={handleOnChange}/>
-							}
-						</Grid>
-						<Grid item xs={6} textAlign='center' sx={classes.box}>
-							<Box sx={classes.title}>Password</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>********</Box> :
-							<TextField id="password" defaultValue="********" onChange={handleOnChange}/>
-							}
-						</Grid>
-					</Grid>
-					<Grid container item rowSpacing={5} columnSpacing={3}>
-						<Grid item xs={6} textAlign='center'sx={classes.box}>
-							<Box sx={classes.title}>Website</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>{data.website}</Box> :
-							<TextField id="website" defaultValue={data.website} onChange={handleOnChange}/>
-							}
-						</Grid>
-						<Grid item xs={6} textAlign='center' sx={classes.box}>
-							<Box sx={classes.title}>Description</Box>
-							{status === "view" ?
-							<Box sx={classes.body}>{data.description}</Box> :
-							<TextField id="description" defaultValue={data.description} onChange={handleOnChange}/>
-							}
-						</Grid>
-					</Grid>
-					<Grid container item>
-						<Grid item xs={6} textAlign='center'>
-							{leftButton}
-						</Grid>
-						<Grid item xs={6} textAlign='center'>
-							{rightButton}
-						</Grid>
-					</Grid>
-				</Grid>
-				<AlertDialog 
-				alertTitle={discardAlertTitle}
-				alertMessage={discardAlertMessage}
-				open={discardAlertOpen}
-				handleClose={() => { setDiscardAlertOpen(false) }} // Close the alert dialog
-				handleConfirm={handleDiscardAlertConfirm}
-				handleCancel={() => { setDiscardAlertOpen(false) }}
-				/>
-				<AlertDialog 
-				alertTitle={updateAlertTitle}
-				alertMessage={updateAlertMessage}
-				open={updateAlertOpen}
-				handleClose={() => { setUpdateAlertOpen(false) }} // Close the alert dialog
-				handleConfirm={handleUpdateAlertConfirm}
-				handleCancel={() => { setUpdateAlertOpen(false) }}
-				/>
-				</div> 
+
+        <Grid container sx={{mt: 10}}>
+            <Grid item xs={12}>
+                <Grid sx={{pt:"1%", px:"5%", minWidth:700}}>
+                    <Grid container rowSpacing={8}>
+                        <Grid container item columnSpacing={5}>
+                            <Grid item xs={12} textAlign='center' sx={classes.grid}>
+                                <Badge
+                                    overlap="circular"
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                    badgeContent={
+                                        <label htmlFor="contained-button-file">
+                                        <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={e => {
+                                                uploadUserPhoto(e.currentTarget.files[0]);
+                                            }}/>
+                                        <IconButton color="primary" aria-label="upload picture" component="span">
+                                            <ChangeCircleRoundedIcon size="small"/>
+                                        </IconButton>
+                                        </label>
+                                    }
+                                >
+                                    <Avatar id="user_avator" src={processPhoto(data.photo)}
+                                        sx={{ width: 70, height: 70}}>
+                                    </Avatar>
+                                </Badge>
+                            </Grid>
+                        </Grid>
+                        
+                        <Grid container item rowSpacing={5} columnSpacing={3}>
+                            <Grid item xs={6} textAlign='center'sx={classes.box}>
+                                <Box sx={classes.title}>First Name</Box> 
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.first_name}</Box> : 
+                                <TextField id="firstName" defaultValue={data.first_name} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                            <Grid item xs={6} textAlign='center' sx={classes.box}>
+                                <Box sx={classes.title}>Email</Box>
+                                <Box sx={classes.body}>{data.email}</Box>
+                            </Grid>
+                        </Grid>
+                        <Grid container item rowSpacing={5} columnSpacing={3}>
+                            <Grid item xs={6} textAlign='center'sx={classes.box}>
+                                <Box sx={classes.title}>Last Name</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.last_name}</Box> :
+                                <TextField id="lastName" defaultValue={data.last_name} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                            <Grid item xs={6} textAlign='center' sx={classes.box}>
+                                <Box sx={classes.title}>Phone</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.phone}</Box> :
+                                <TextField id="phone" defaultValue={data.phone} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                        </Grid>
+                        <Grid container item rowSpacing={5} columnSpacing={3}>
+                            <Grid item xs={6} textAlign='center'sx={classes.box}>
+                                <Box sx={classes.title}>Middle Name</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.middle_name}</Box> :
+                                <TextField id="middleName" defaultValue={data.middle_name} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                            <Grid item xs={6} textAlign='center' sx={classes.box}>
+                                <Box sx={classes.title}>Password</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>********</Box> :
+                                <TextField id="password" defaultValue="********" onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                        </Grid>
+                        <Grid container item rowSpacing={5} columnSpacing={3}>
+                            <Grid item xs={6} textAlign='center'sx={classes.box}>
+                                <Box sx={classes.title}>Website</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.website}</Box> :
+                                <TextField id="website" defaultValue={data.website} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                            <Grid item xs={6} textAlign='center' sx={classes.box}>
+                                <Box sx={classes.title}>Description</Box>
+                                {status === "view" ?
+                                <Box sx={classes.body}>{data.description}</Box> :
+                                <TextField id="description" defaultValue={data.description} onChange={handleOnChange}/>
+                                }
+                            </Grid>
+                        </Grid>
+                        <Grid container item>
+                            <Grid item xs={6} textAlign='center'>
+                                {leftButton}
+                            </Grid>
+                            <Grid item xs={6} textAlign='center'>
+                                {rightButton}
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <AlertDialog 
+                    alertTitle={discardAlertTitle}
+                    alertMessage={discardAlertMessage}
+                    open={discardAlertOpen}
+                    handleClose={() => { setDiscardAlertOpen(false) }} // Close the alert dialog
+                    handleConfirm={handleDiscardAlertConfirm}
+                    handleCancel={() => { setDiscardAlertOpen(false) }}
+                    />
+                    <AlertDialog 
+                    alertTitle={updateAlertTitle}
+                    alertMessage={updateAlertMessage}
+                    open={updateAlertOpen}
+                    handleClose={() => { setUpdateAlertOpen(false) }} // Close the alert dialog
+                    handleConfirm={handleUpdateAlertConfirm}
+                    handleCancel={() => { setUpdateAlertOpen(false) }}
+                    />
+                </Grid> 
+            </Grid>
+        </Grid>
 	);
 }

@@ -7,9 +7,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {
     Button,
     IconButton,
-    Grid,
     Typography,
     Box,
+    LinearProgress
     
 } from '@mui/material'
 
@@ -163,8 +163,11 @@ export default function Department(props) {
 
     // Display loading page if the request is not finished
     if (loading) {
-        return <div>loading...
-        </div>
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
     // Diaplay members in the department
