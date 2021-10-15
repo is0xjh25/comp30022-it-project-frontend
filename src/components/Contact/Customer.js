@@ -16,7 +16,7 @@ export default function Customer(props) {
     let {orgId, depId} = useParams();
     const [myPremissionLevel, setMyPermissionLevel] = useState(0);
 
-    // request current user's permission level from backend
+    // Request current user's permission level from backend
     // to determine whether some features are activated or not
     useEffect(() => {
         getMyPermissionLevel(depId).then(res => {
@@ -26,7 +26,7 @@ export default function Customer(props) {
     }, [depId])
 
 
-    // refer to customer table for layout
+    // Refer to customer table for layout
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 600 }}>
