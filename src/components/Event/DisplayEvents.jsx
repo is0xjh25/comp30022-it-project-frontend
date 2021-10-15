@@ -117,7 +117,7 @@ export default function DisplayEvents() {
 		setMonth(new Date(d).getMonth()+1);
 		setYearMonth(year+month);
 		
-		getMonthlyEvents(year, month).then(res => {
+		getMonthlyEvents(year, month, d.getTimezoneOffset()).then(res => {
 			if (res.code===200) {
 				setMonthEvent(res.data);
 			} else {
