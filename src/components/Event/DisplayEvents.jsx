@@ -128,7 +128,7 @@ export default function DisplayEvents() {
 
 	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
-		
+		console.log(e);
 		const startTime = e.toISOString().substring(0,10) + "T00:00:00.000Z";
 		const finishTime = e.toISOString().substring(0,10) + "T23:59:00.000Z";
 
@@ -282,13 +282,13 @@ export default function DisplayEvents() {
 							<AddIcon color="primary" fontSize="large" onClick={handleCreateEvent}/>
 						</IconButton>
 					</Grid>
-					<Dialog open={createEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
+					<Dialog open={createEventOpen} fullWidth PaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper >
 							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
-					<Dialog open={displayEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
+					<Dialog open={displayEventOpen} fullWidthPaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper fullWidth >
 							<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>

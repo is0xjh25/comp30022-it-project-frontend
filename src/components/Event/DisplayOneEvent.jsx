@@ -200,8 +200,8 @@ export default function DisplayOneEvent(props) {
 				if (res.code===200) {
 					alert("Successfully updated");
 					if (body["start_time"] !== undefined) {
-						let month = startTime.toLocaleDateString().substring(3,5);
-						let year = startTime.toLocaleDateString().substring(6,10);
+						let month = new Date(startTime).getMonth()+1;
+						let year = new Date(startTime).getFullYear();
 						if ((year+month) === yearMonth) {
 							handleYearMonthChange(startTime);
 						}
@@ -248,7 +248,7 @@ export default function DisplayOneEvent(props) {
 	let display; 
 	if (pageStatus === "view") {
 		display =
-		<Grid container textAlign='center' rowSpacing={4} sx={{pt:5, px:"5%", minWidth:1200}}>
+		<Grid container textAlign='center' rowSpacing={3} sx={{py:"3%", px:"3%", minWidth:"100%"}}>
 			<Grid item xs={12} >
 				<Typography sx={classes.title}>Event Information</Typography>
 			</Grid>
@@ -281,7 +281,7 @@ export default function DisplayOneEvent(props) {
 					Last name
 				</Grid>
 				<Grid item xs={3} sx={{fontWeight:"bold"}} textAlign='center'>
-					Phone number
+					Phone
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
@@ -309,7 +309,7 @@ export default function DisplayOneEvent(props) {
 								</Grid>
 							</Grid>)
 						})		
-					: <Grid item textAlign='center' xs={12} sx={{pt:5}}>~There is no participant~</Grid>
+					: <Grid item textAlign='center' xs={12}>~There is no participant~</Grid>
 					}
 				</Grid>
 			</Grid>
@@ -326,8 +326,8 @@ export default function DisplayOneEvent(props) {
 		</Grid> 
 	} else if (pageStatus==="edit") {
 		display =
-		<Grid container textAlign='center' rowSpacing={4} sx={{pt:10, px:"5%", minWidth:1200}}>
-			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
+		<Grid container textAlign='center' rowSpacing={3} sx={{py:"3%", px:"3%", minWidth:"100%"}}>
+			<Grid item xs={12} >
 				<Typography sx={classes.title}>Edit Event</Typography>
 			</Grid>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
@@ -396,7 +396,7 @@ export default function DisplayOneEvent(props) {
 					Last name
 				</Grid>
 				<Grid item xs={2} sx={{fontWeight:"bold"}} textAlign='center'>
-					Phone number
+					Phone
 				</Grid>
 				<Grid item xs={4} sx={{fontWeight:"bold"}} textAlign='center'>
 					Email
@@ -418,7 +418,7 @@ export default function DisplayOneEvent(props) {
 								<Grid item xs={2} textAlign='center'>
 									{e.phone}
 								</Grid>
-								<Grid item xs={4} textAlign='center'>
+								<Grid item xs={4} textAlign='center' sx={{overflowWrap:"anywhere"}}>
 									{e.email}
 								</Grid>
 								<Grid item xs={1} textAlign='center'>
@@ -430,7 +430,7 @@ export default function DisplayOneEvent(props) {
 						})		
 					: <Grid item textAlign='center' xs={12} sx={{pt:5}}>~There is no participant.~</Grid>
 					}
-					<Grid item xs={12} textAlign='center' sx={{mt:5, mb:5}}>
+					<Grid item xs={12} textAlign='center' sx={{my:5}}>
 						<Button size="medium" variant="contained" onClick={handleAddContact}>Add contact</Button>
 					</Grid>
 				</Grid>
