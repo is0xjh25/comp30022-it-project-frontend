@@ -183,7 +183,7 @@ export default function DisplayEvents() {
 
 		return (
 		selected ?
-			<Badge color="secondary" variant="dot" overlap="circular">
+			<Badge color="warning" variant="dot" overlap="circular">
 			<CustomPickersDay
 				{...pickersDayProps}
 				disableMargin
