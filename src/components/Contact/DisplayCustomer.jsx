@@ -76,7 +76,6 @@ export default function DisplayCustomer(props) {
 	useEffect(() => {
 		displayCustomer(customerId).then(res => {
 			if (res.code===200) {
-				console.log(res.data.birthday);
 				setData(res.data);
                 setLoading(false);
 			} else {
