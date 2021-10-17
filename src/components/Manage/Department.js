@@ -91,7 +91,7 @@ function NotJoinedDepartment(props) {
         <Box key={department.id}>
             <Box
                 sx={{
-                    diplay: 'flex',
+                    display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'center',
                     height: 60,
@@ -140,7 +140,6 @@ export default function Department(props) {
         getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {
-                    console.log(body);
                     setDepartments(body.data)});
             } else {
                 res.json().then(body => {alert(body.msg)});
@@ -175,7 +174,7 @@ export default function Department(props) {
         history.push(`${url}/${depId}`);
     }
 
-    // Diplay departments accordingly
+    // Display departments accordingly
     const own = [];
     const member = [];
     const other = [];
@@ -186,23 +185,21 @@ export default function Department(props) {
             )
         } else if(department.status==="member") {
             member.push(
-                // <Grid key={department.id} item xs={8}>
-                    <Box 
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            height: 60,
-                            borderRadius: 2,
-                            boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                            bgcolor: 'info.main',
-                            my: '40px'
-                        }} 
-                    >
-                        <Button onClick={() => showMembers(department.id)}>
-                            <Typography color="text.primary">{department.name}</Typography>
-                        </Button>
-                    </Box>
-                // {/* </Grid> */}
+                <Box 
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        height: 60,
+                        borderRadius: 2,
+                        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                        bgcolor: 'info.main',
+                        my: '40px'
+                    }} 
+                >
+                    <Button onClick={() => showMembers(department.id)}>
+                        <Typography color="text.primary">{department.name}</Typography>
+                    </Button>
+                </Box>
             )
         } else {
             other.push(
@@ -217,19 +214,7 @@ export default function Department(props) {
                 Joined Departments
             </Typography>
             <Box sx={{width: '75%', mb: '60px'}}>
-                <Box 
-                    sx={{
-                        diplay: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        m: 1,
-                        // alignSelf: 'center',
-                        textAlign: 'center',
-                        alignItems: 'center'
-                    }} 
-                    container 
-                    rowSpacing={5}
-                >
+                <Box container rowSpacing={5}>
                     {own}
                     {member}
                 </Box>
@@ -240,20 +225,10 @@ export default function Department(props) {
                 Not Joined Departments
             </Typography>
             <Box sx={{width: '75%'}}>
-                <Box
-                    sx={{
-                        diplay: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        m: 1,
-                        textAlign: 'center',
-                        alignItems: 'center'
-                    }} 
-                    container 
-                    rowSpacing={5}
-                >
+                <Box container rowSpacing={5}>
                     {other}
-                    {owned && <Box
+                    {owned && 
+                    <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
