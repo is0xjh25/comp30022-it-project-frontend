@@ -43,8 +43,12 @@ function Sidebar(props) {
     const [hasPending, setHasPending] = useState(false);
     const [updateCount, setUpdateCount] = useState(0);
 
+    const refreshPage = () => {
+        setUpdateCount(updateCount + 1);
+    }
 
-    setInterval(() => {setUpdateCount(updateCount+1);}, 20000);
+
+    // setInterval(() => {setUpdateCount(updateCount+1);}, 20000);
 
     const navItems = [
         {
@@ -74,10 +78,21 @@ function Sidebar(props) {
 
     useEffect(() => {
         getIfUserHasPendingRequest().then(res => {
-            if(res.code == 200 && res.msg === "Have pending") {
-                setHasPending(true);
+            if(res.code == 200) {
+                if(res.msg === "Have pending") {
+                    setHasPending(true);
+                }else if(res.msg === "No pending") {
+                    setHasPending(false);
+                }
+                
             }
         })
+
+        setTimeout(() => {
+            refreshPage();
+            console.log(updateCount);
+        }, 10000);
+
     }, [updateCount])
     
 
