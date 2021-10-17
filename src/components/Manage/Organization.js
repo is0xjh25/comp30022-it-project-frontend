@@ -23,9 +23,13 @@ import {
     Typography,
     Box,
     Avatar,
-    LinearProgress 
+    LinearProgress,
+    Badge
     
 } from '@mui/material'
+import {styled} from '@mui/system';
+import BadgeUnstyled from '@mui/core/BadgeUnstyled';
+import {getIfUserHasPaddingRequestBasedOnOrgId} from '../../api/Manage';
 
 // Local import
 import {getOrganization, deleteOrganization, searchMemberInOrg, transferOwnership} from '../../api/Manage';
@@ -33,10 +37,64 @@ import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
 import AlertDialog from '../Dialog/AlertDialog';
 
+
+const StyledBadge = styled(BadgeUnstyled)`
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+
+  & .MuiBadge-badge {
+    z-index: auto;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    text-align: center;
+    background: #ff4d4f;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px #fff;
+  }
+
+  & .MuiBadge-dot {
+    padding: 0;
+    z-index: auto;
+    min-width: 6px;
+    width: 6px;
+    height: 6px;
+    background: #ff4d4f;
+    border-radius: 100%;
+    box-shadow: 0 0 0 1px #fff;
+  }
+
+  & .MuiBadge-anchorOriginTopRightCircular {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    transform-origin: 100% 0;
+  }
+`;
+
 // Loop through all organizations of this user,
 // and display them according to the user's ownership
 function EachOrganization(props) {
     const {org, update} = props;
+    const [hasPending, setHasPending] = useState(false);
 
     const history = useHistory();
     let {url} = useRouteMatch();
@@ -45,9 +103,15 @@ function EachOrganization(props) {
 
     };
 
+    getIfUserHasPaddingRequestBasedOnOrgId(org.id).then(res => {
+        if(res.code == 200 && res.msg === "Have pending") {
+            setHasPending(true);
+        }
+    })
+
     return(
         org.owner === true ? 
-            <OwnedOrganization org={org} update={update} showDepartment={showDepartment}/>
+            <OwnedOrganization org={org} update={update} showDepartment={showDepartment} hasPending={hasPending}/>
         :
                 <Box 
                     sx={{
@@ -69,9 +133,25 @@ function EachOrganization(props) {
 
 }
 
-function OwnedOrganization(props) {
-    const {org, update, showDepartment} = props;
+function HasPendingNotation(props) {
+    const {hasPending} = props;
+    console.log(hasPending)
+    if (hasPending === true) {
+        return (            
+        <Badge color="secondary" badgeContent=" " sx={{
+                position: 'absolute',
+                right: '-1px',
+                top: '-1px'
+        }}>
+        </Badge>
+        )
+    }
+    return null;
+}
 
+function OwnedOrganization(props) {
+    const {org, update, showDepartment, hasPending} = props;
+    console.log(hasPending)
     //================ Delete Organization ==================
     // If the user owns the organization, delete button is displayed
     const [alertOpen, setAlertOpen] = useState(false);
@@ -142,6 +222,7 @@ function OwnedOrganization(props) {
     }
     
     return (
+        // <Badge variant="dot" color="secondary">
         <Box key={org.id}>
             <Box 
                 sx={{
@@ -151,11 +232,15 @@ function OwnedOrganization(props) {
                     borderRadius: 2,
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                     bgcolor: 'success.light',
-                    my: '40px'
+                    my: '40px',
+                    position: 'relative'
                 }} 
             >
-                <Button onClick={() => showDepartment(org.id)} fullWidth >
-                    <Typography sx={{ pl: '120px'}} color="text.primary">{org.name}</Typography>
+                <HasPendingNotation hasPending={hasPending}/>
+                <Button onClick={() => showDepartment(org.id)} fullWidth>
+                    <Typography sx={{ pl: '120px'}} color="text.primary">
+                        {org.name}
+                    </Typography> 
                 </Button>
 
                 <IconButton aria-label="personOutlined" onClick={handleTransfer} sx={{height: 60, width: 60}} >
@@ -164,8 +249,9 @@ function OwnedOrganization(props) {
                 
                 <IconButton aria-label="delete" onClick={handleDeleteOrg} sx={{height: 60, width: 60}} >
                     <DeleteIcon />
-                </IconButton>
+                </IconButton> 
             </Box>
+
             <AlertDialog alertTitle={alertTitle}
                 alertMessage={alertMessage}
                 open={alertOpen}
@@ -240,8 +326,8 @@ function OwnedOrganization(props) {
                     </DialogActions>
                 </Box>}
             </Dialog>
-
         </Box>
+        // </Badge>
     )
 
 }

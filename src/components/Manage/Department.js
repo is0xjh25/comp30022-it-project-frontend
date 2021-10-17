@@ -9,7 +9,8 @@ import {
     IconButton,
     Typography,
     Box,
-    LinearProgress
+    LinearProgress,
+    Badge
     
 } from '@mui/material'
 
@@ -17,10 +18,28 @@ import {
 import {getDepartment, deleteDepartment, joinDep, getOrgDetail} from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
+import {getIfUserHasPaddingRequestBasedOnDepartmentId} from '../../api/Manage';
+
+function HasPendingNotation(props) {
+    const {hasPending} = props;
+    if (hasPending === true) {
+        return (            
+        <Badge color="secondary" badgeContent=" " sx={{
+                position: 'absolute',
+                right: '-1px',
+                top: '-1px'
+        }}>
+        </Badge>
+        )
+    }
+    return null;
+}
+
 
 // If the user owns the department, delete button is diaplayed
 function OwnedDepartment(props) {
     const {department, update, showMembers} = props;
+    const [hasPending, setHasPending] = useState(false);
 
     //================ Delete Department ==================
 
@@ -36,6 +55,13 @@ function OwnedDepartment(props) {
         update();
     }
 
+    getIfUserHasPaddingRequestBasedOnDepartmentId(department.organization_id, department.id).then(res => {
+        if(res.code == 200 && res.msg === "Have pending") {
+            setHasPending(true);
+        }
+    })
+    console.log(hasPending)
+
     // Link the department to member management page
     return(
         <Box key={department.id}>
@@ -47,9 +73,11 @@ function OwnedDepartment(props) {
                     borderRadius: 2,
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                     bgcolor: 'success.light',
-                    my: '40px'
+                    my: '40px',
+                    position: 'relative'
                 }} 
             >
+                <HasPendingNotation hasPending={hasPending}/>
                 <Button onClick={() => showMembers(department.id)} fullWidth>
                     <Typography sx={{ pl: '60px'}} color="text.primary">{department.name}</Typography>
                 </Button>
@@ -174,6 +202,7 @@ export default function Department(props) {
     const showMembers = (depId) => {
         history.push(`${url}/${depId}`);
     }
+
 
     // Diplay departments accordingly
     const own = [];

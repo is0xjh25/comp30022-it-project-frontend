@@ -419,6 +419,71 @@ function getOrgDetail(orgId) {
     })
 }
 
+// Gets if an user has pending request 
+function getIfUserHasPaddingRequest() {
+    const url = BASE_URL + '/permission/pending';
+
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
+// Gets if an user has pending request in a organization
+function getIfUserHasPaddingRequestBasedOnOrgId(orgId) {
+    const url = `${BASE_URL}/permission/pending?organization_id=${orgId}`;
+    // const url = BASE_URL + '/permission/pending';
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
+// Gets if an user has pending request in a department
+function getIfUserHasPaddingRequestBasedOnDepartmentId(orgId, departmentId) {
+    const url = `${BASE_URL}/permission/pending?organization_id=${orgId}&department_id=${departmentId}`;
+    // const url = BASE_URL + '/permission/pending';
+    const requestInit = {
+        method: 'GET',
+        headers: {
+            Authorization: getCookie('token'),
+        }
+    }
+
+    return new Promise((resovle) => {
+        fetch(url, requestInit).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
+
+
 export {
     getAllUsers,
     searchMember,
@@ -438,5 +503,8 @@ export {
     deleteDepartment,
     getMyPermissionLevel,
     transferOwnership,
-    getOrgDetail
+    getOrgDetail,
+    getIfUserHasPaddingRequest,
+    getIfUserHasPaddingRequestBasedOnOrgId,
+    getIfUserHasPaddingRequestBasedOnDepartmentId
 }
