@@ -307,7 +307,9 @@ export default function Organization(props) {
                             my: '40px'
                         }} 
                     >
-                        <CreateOrg update={update}/>or<JoinOrg update={update}/>
+                        <CreateOrg update={update}/>
+                        <Typography sx={{ px: '20px'}} color="text.disabled.light">OR</Typography>
+                        <JoinOrg update={update}/>
                     </Box>
 
                 </Box>
