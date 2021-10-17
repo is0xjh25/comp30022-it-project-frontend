@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     Dashboard,
@@ -9,7 +9,7 @@ import {
     MoreHoriz as SettingsIcon,
     ExitToApp as LogOutIcon
 } from '@material-ui/icons';
-
+import Badge from '@mui/material/Badge';
 
 import {
     Drawer,
@@ -35,9 +35,20 @@ import {
 import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
 import {processPhoto} from '../../api/Photo';
+import {getIfUserHasPendingRequest} from '../../api/Manage';
+
 
 function Sidebar(props) {
     const {changePage, selectedPage, currentUser} = props;
+    const [hasPending, setHasPending] = useState(false);
+    const [updateCount, setUpdateCount] = useState(0);
+
+    const refreshPage = () => {
+        setUpdateCount(updateCount + 1);
+    }
+
+
+    // setInterval(() => {setUpdateCount(updateCount+1);}, 20000);
 
     const navItems = [
         {
@@ -64,6 +75,27 @@ function Sidebar(props) {
         </Grid>
     )
 
+
+    useEffect(() => {
+        getIfUserHasPendingRequest().then(res => {
+            if(res.code == 200) {
+                if(res.msg === "Have pending") {
+                    setHasPending(true);
+                }else if(res.msg === "No pending") {
+                    setHasPending(false);
+                }
+                
+            }
+        })
+
+        setTimeout(() => {
+            refreshPage();
+            console.log(updateCount);
+        }, 10000);
+
+    }, [updateCount])
+    
+
     const user = (
         <Grid container sx={{my: '10px'}}>
             <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
@@ -86,23 +118,45 @@ function Sidebar(props) {
         </Grid>
     )
 
+
+
     const navList = (
             <List>
                 <Grid container>
-                {navItems.map((item, index) => (
-                    <ListItem onClick={() => changePage(item.name)} button key={item.name} selected={item.name === selectedPage}>
-                        <Grid item container>
-                            <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
-                                <ListItemIcon>{item.icon}</ListItemIcon>
-                            </Grid>
-                            <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
-                                <ListItemText primary={item.name}></ListItemText>
-                            </Grid>
-                        </Grid>
-                        
-                        
-                    </ListItem>
-                ))}
+                {navItems.map((item, index) => {
+                    if (item.name === "Manage" && hasPending) {
+                        return (
+                            <ListItem onClick={() => changePage(item.name)} button key={item.name} selected={item.name === selectedPage}>
+                                <Grid item container>
+                                    <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                                        <ListItemIcon>
+                                            <Badge variant="dot" color="secondary">
+                                                {item.icon}
+                                            </Badge>
+                                        </ListItemIcon>
+                                    </Grid>
+                                    <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+                                        <ListItemText primary={item.name}></ListItemText>
+                                    </Grid> 
+                                </Grid>  
+                            </ListItem>
+                        )
+                    }
+                    else {
+                        return (
+                            <ListItem onClick={() => changePage(item.name)} button key={item.name} selected={item.name === selectedPage}>
+                                <Grid item container>
+                                    <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
+                                        <ListItemIcon>{item.icon}</ListItemIcon>
+                                    </Grid>
+                                    <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
+                                        <ListItemText primary={item.name}></ListItemText>
+                                    </Grid> 
+                                </Grid>  
+                            </ListItem>
+                        )
+                    }        
+                })}
                 </Grid>
             </List>
     )
