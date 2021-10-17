@@ -5,7 +5,7 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Verify from './Login/Verify';
 
-
+import RecentContact from '../components/Dashbord/RecentContact';
 import RecentActivity from '../components/RecentActivity/RecentActivity';
 
 function PageNavigator() {
@@ -21,7 +21,9 @@ function PageNavigator() {
             <Route path ='/verify'>
                 <Verify/>
             </Route>
-
+            <Route path='/rc'>
+                <RecentContact/>
+            </Route>
             <Route path='/ra'>
                 <RecentActivity/>
             </Route>
