@@ -140,7 +140,6 @@ export default function Department(props) {
         getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {
-                    console.log(body);
                     setDepartments(body.data)});
             } else {
                 res.json().then(body => {alert(body.msg)});
@@ -175,7 +174,7 @@ export default function Department(props) {
         history.push(`${url}/${depId}`);
     }
 
-    // Diplay departments accordingly
+    // Display departments accordingly
     const own = [];
     const member = [];
     const other = [];

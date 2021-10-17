@@ -290,19 +290,7 @@ export default function Organization(props) {
                 My Orgnizations
             </Typography>
             <Box sx={{width: '75%'}}>
-                <Box 
-                sx={{
-                    diplay: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    m: 1,
-                    // alignSelf: 'center',
-                    textAlign: 'center',
-                    alignItems: 'center'
-                }} 
-                container 
-                rowSpacing={5}
-                >
+                <Box container rowSpacing={5}>
                     {organizations.map((org) => {
                         return (<EachOrganization key={org.id} org={org} update={update}/>)
                     })}
