@@ -420,7 +420,7 @@ function getOrgDetail(orgId) {
 }
 
 // Gets if an user has pending request 
-function getIfUserHasPaddingRequest() {
+function getIfUserHasPendingRequest() {
     const url = BASE_URL + '/permission/pending';
 
     const requestInit = {
@@ -441,7 +441,7 @@ function getIfUserHasPaddingRequest() {
 }
 
 // Gets if an user has pending request in a organization
-function getIfUserHasPaddingRequestBasedOnOrgId(orgId) {
+function getIfUserHasPendingRequestBasedOnOrgId(orgId) {
     const url = `${BASE_URL}/permission/pending?organization_id=${orgId}`;
     // const url = BASE_URL + '/permission/pending';
     const requestInit = {
@@ -462,7 +462,7 @@ function getIfUserHasPaddingRequestBasedOnOrgId(orgId) {
 }
 
 // Gets if an user has pending request in a department
-function getIfUserHasPaddingRequestBasedOnDepartmentId(orgId, departmentId) {
+function getIfUserHasPendingRequestBasedOnDepartmentId(orgId, departmentId) {
     const url = `${BASE_URL}/permission/pending?organization_id=${orgId}&department_id=${departmentId}`;
     // const url = BASE_URL + '/permission/pending';
     const requestInit = {
@@ -504,7 +504,7 @@ export {
     getMyPermissionLevel,
     transferOwnership,
     getOrgDetail,
-    getIfUserHasPaddingRequest,
-    getIfUserHasPaddingRequestBasedOnOrgId,
-    getIfUserHasPaddingRequestBasedOnDepartmentId
+    getIfUserHasPendingRequest,
+    getIfUserHasPendingRequestBasedOnOrgId,
+    getIfUserHasPendingRequestBasedOnDepartmentId
 }

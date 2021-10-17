@@ -18,7 +18,7 @@ import {
 import {getDepartment, deleteDepartment, joinDep, getOrgDetail} from '../../api/Manage';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
-import {getIfUserHasPaddingRequestBasedOnDepartmentId} from '../../api/Manage';
+import {getIfUserHasPendingRequestBasedOnDepartmentId} from '../../api/Manage';
 
 function HasPendingNotation(props) {
     const {hasPending} = props;
@@ -55,12 +55,11 @@ function OwnedDepartment(props) {
         update();
     }
 
-    getIfUserHasPaddingRequestBasedOnDepartmentId(department.organization_id, department.id).then(res => {
+    getIfUserHasPendingRequestBasedOnDepartmentId(department.organization_id, department.id).then(res => {
         if(res.code == 200 && res.msg === "Have pending") {
             setHasPending(true);
         }
     })
-    console.log(hasPending)
 
     // Link the department to member management page
     return(
@@ -168,7 +167,6 @@ export default function Department(props) {
         getDepartment(id).then(res => {
             if (res.ok) {
                 res.json().then(body => {
-                    console.log(body);
                     setDepartments(body.data)});
             } else {
                 res.json().then(body => {alert(body.msg)});

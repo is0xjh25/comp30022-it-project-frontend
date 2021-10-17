@@ -29,7 +29,7 @@ import {
 } from '@mui/material'
 import {styled} from '@mui/system';
 import BadgeUnstyled from '@mui/core/BadgeUnstyled';
-import {getIfUserHasPaddingRequestBasedOnOrgId} from '../../api/Manage';
+import {getIfUserHasPendingRequestBasedOnOrgId} from '../../api/Manage';
 
 // Local import
 import {getOrganization, deleteOrganization, searchMemberInOrg, transferOwnership} from '../../api/Manage';
@@ -103,7 +103,7 @@ function EachOrganization(props) {
 
     };
 
-    getIfUserHasPaddingRequestBasedOnOrgId(org.id).then(res => {
+    getIfUserHasPendingRequestBasedOnOrgId(org.id).then(res => {
         if(res.code == 200 && res.msg === "Have pending") {
             setHasPending(true);
         }
@@ -135,7 +135,6 @@ function EachOrganization(props) {
 
 function HasPendingNotation(props) {
     const {hasPending} = props;
-    console.log(hasPending)
     if (hasPending === true) {
         return (            
         <Badge color="secondary" badgeContent=" " sx={{
@@ -151,7 +150,6 @@ function HasPendingNotation(props) {
 
 function OwnedOrganization(props) {
     const {org, update, showDepartment, hasPending} = props;
-    console.log(hasPending)
     //================ Delete Organization ==================
     // If the user owns the organization, delete button is displayed
     const [alertOpen, setAlertOpen] = useState(false);
@@ -205,9 +203,7 @@ function OwnedOrganization(props) {
 	}
 
     const handleSubmitTransfer = () => {
-        console.log(selectedMember);
         transferOwnership(org.id, selectedMember.user_id).then(res => {
-            console.log(res);
             if (res.code === 200) {
                 alert("Successfully transfered the owner!");
                 }else {

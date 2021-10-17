@@ -35,7 +35,7 @@ import {
 import { logout } from '../../api/Login';
 import { useHistory } from 'react-router';
 import {processPhoto} from '../../api/Photo';
-import {getIfUserHasPaddingRequest} from '../../api/Manage';
+import {getIfUserHasPendingRequest} from '../../api/Manage';
 
 
 function Sidebar(props) {
@@ -44,7 +44,7 @@ function Sidebar(props) {
     const [updateCount, setUpdateCount] = useState(0);
 
 
-    setInterval(() => {setUpdateCount(updateCount+1);}, 10000);
+    setInterval(() => {setUpdateCount(updateCount+1);}, 20000);
 
     const navItems = [
         {
@@ -73,7 +73,7 @@ function Sidebar(props) {
 
 
     useEffect(() => {
-        getIfUserHasPaddingRequest().then(res => {
+        getIfUserHasPendingRequest().then(res => {
             if(res.code == 200 && res.msg === "Have pending") {
                 setHasPending(true);
             }
