@@ -66,14 +66,6 @@ function EnhancedToolbar(props) {
             justifyContent: 'center'
         }}
         >
-            {/* <Typography
-                sx={{ flex: '1 1 100%', mb: 2 }}
-                variant="h6"
-                id="ToDoTitle"
-                component="div"
-            >
-                Your To-Do List
-            </Typography> */}
             <IconButton>
                 <AddIcon variant="contained" color="primary"  onClick={() => {handleOpen()}}/>
             </IconButton>
@@ -88,31 +80,6 @@ function EnhancedTableRow(props) {
     const [expand, setExpand] = useState(false);
 
     // For displaying to-do
-    const checkInProgress = (row) =>{
-        if (row.status === "to do") {
-            // Get the scheduled time of the to-do list
-            const scheduledTime = new Date(row.date_time.toString());
-
-            // Get the current time
-            const today = new Date();
-            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            const time = today.getHours() + ":" + today.getMinutes();
-            const dateTime = date+' '+time;
-
-            const currentTime = new Date(dateTime.toString());
-
-            // Compare the two time
-            if (scheduledTime.getTime() <= currentTime.getTime()) {
-                return "in progress";
-            } else {
-                return "to do";
-            }
-        } else {
-            return row.status;
-        }
-
-    }
-
     const getRowLabel = (status) => {
         if (status === "to do") {
             return (<Chip label={status} color="primary" size="small"/>)
@@ -124,7 +91,7 @@ function EnhancedTableRow(props) {
 
     }
 
-    const rowLabel = getRowLabel(checkInProgress(row));
+    const rowLabel = getRowLabel(row.status);
     
     // For deleting to-do
     const handleDelete = (id) => {
@@ -236,7 +203,7 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '90%' }}
                                 >
-                                    Date and Time: {displayTime(row.date_time)}
+                                    Due Date: {displayTime(row.date_time)}
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}
