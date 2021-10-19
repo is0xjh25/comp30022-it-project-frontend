@@ -51,8 +51,7 @@ export default function UpdateToDo(props) {
         const data = {
             "id": original.id,
             "date_time": dateTime,
-            "description": dataDescription,
-            "status": "to do"
+            "description": dataDescription
         }
 
         updateToDo(data).then(res => {
