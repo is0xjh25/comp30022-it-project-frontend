@@ -29,7 +29,7 @@ export default function Customer(props) {
     // Refer to customer table for layout
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 600 }}>
+            <TableContainer >
                 <CustomerTable
                     aria-label="contact" 
                     stickyHeader 
