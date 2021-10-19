@@ -165,7 +165,11 @@ export default function DisplayUser() {
 			updateUserInfo(body).then(res => {
 				if (res.code===200) {
 					alert("Successfully updated");
-					setPageStatus('view');
+					if (body["first_name"] !== undefined || body["last_name"] !== undefined) {
+						window.location.reload();
+					} else {
+						setPageStatus('view');
+					}
 				} else {
 					alert(res.msg);
 				}
@@ -192,6 +196,7 @@ export default function DisplayUser() {
 				alert(res.msg);
 			}
 		})
+		
 	}, [status])
 
 	useEffect(() => {

@@ -56,7 +56,6 @@ export default function SignUp(props) {
 	const [phone, setPhone] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [organization, setorganization] = useState("");
 
 	let history = useHistory();
 
@@ -71,8 +70,6 @@ export default function SignUp(props) {
 			setLastName(e.target.value);
 		} else if (e.target.id === "phone") {
 			setPhone(e.target.value);
-		} else if (e.target.id === "organization") {
-			setorganization(e.target.value);
 		}
     };
 
@@ -146,7 +143,7 @@ export default function SignUp(props) {
 		e.preventDefault();
 
 		if (handleValidation()) {
-			signUp (email, password, firstName, lastName, phone, organization).then(res => {
+			signUp (email, password, firstName, lastName, phone).then(res => {
 			if (res.ok) {
 				setCookie('token', res.headers.get("Authorization"), 1)
                 res.json().then(resBody => {
@@ -229,15 +226,6 @@ export default function SignUp(props) {
 				type="password"
 				id="password"
 				autoComplete="current-password"
-				onChange={handleOnChange}
-			/>
-			<TextField
-				variant="outlined"
-				margin="normal"
-				fullWidth
-				id="organization"
-				label="Join organization (optional)"
-				name="organization"
 				onChange={handleOnChange}
 			/>
 			<Button
