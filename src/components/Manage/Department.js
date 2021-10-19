@@ -105,17 +105,27 @@ function OwnedDepartment(props) {
 // If the user is a member of the department, delete button is used to leave the department
 function MemberDepartment(props) {
     const {department, update, showMembers} = props;
+    const [userId, setUserId] = useState("");
 
     //================ Leave Department ==================
+    // Get current user's id
+    const getUserId = () => {
+        getUserInfo().then(res => {
+            if (res.code === 200) {
+                setUserId(res.data.id)
+            }
+        })
+    }
 
     const [alertOpen, setAlertOpen] = useState(false);
     const alertTitle = 'Leave department Confirm';
     const alertMessage = `Do you want to leave ${department.name}?`;
     const handleLeaveDep = function() {
+        getUserId();
         setAlertOpen(true);
     }
     const handleAlertConfirm = function() {
-        deleteDepartment(department.id);
+        deleteUser(userId, department.id);
         setAlertOpen(false);
         update();
     }
