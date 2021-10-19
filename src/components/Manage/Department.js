@@ -15,10 +15,17 @@ import {
 } from '@mui/material'
 
 // Local import
-import {getDepartment, deleteDepartment, joinDep, getOrgDetail} from '../../api/Manage';
+import {
+    getDepartment, 
+    deleteDepartment, 
+    joinDep, 
+    getOrgDetail,
+    deleteUser,
+    getIfUserHasPendingRequestBasedOnDepartmentId
+} from '../../api/Manage';
+import { getUserInfo } from '../../api/Util';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
-import {getIfUserHasPendingRequestBasedOnDepartmentId} from '../../api/Manage';
 
 function HasPendingNotation(props) {
     const {hasPending} = props;
