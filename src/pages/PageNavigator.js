@@ -11,7 +11,6 @@ import RecentActivity from '../components/Dashbord/RecentActivity';
 function PageNavigator() {
     return (
         <Switch>
-
             <Route path='/swagger'>
                 <Swagger/>
             </Route>
@@ -20,12 +19,6 @@ function PageNavigator() {
             </Route>
             <Route path ='/verify'>
                 <Verify/>
-            </Route>
-            <Route path='/rc'>
-                <RecentContact/>
-            </Route>
-            <Route path='/ra'>
-                <RecentActivity/>
             </Route>
             <Route path='/'>
                 <Home/>
