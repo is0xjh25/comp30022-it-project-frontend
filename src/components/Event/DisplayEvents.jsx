@@ -206,7 +206,7 @@ export default function DisplayEvents() {
 	};
 
 	const getRowLabel = (status) => {
-        if (status === "to do") {
+        if (status === "upcoming") {
             return (<Chip label={status} color="primary" size="small"/>)
         } else if (status === "in progress") {
             return (<Chip label={status} color="warning" size="small"/>)
