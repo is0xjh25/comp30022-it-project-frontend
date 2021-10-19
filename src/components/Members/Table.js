@@ -341,17 +341,23 @@ export default function EnhancedTable(props) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('manage');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [updateCount, setUpdateCount] = useState(0);
+  const [totalSize, setTotalSize] = useState(0);
 
   const update = function() {
     setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
   }
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
   // Fetch the initial data of the table
   useEffect(function fetchTableData() {
     if (departmentId) {
-      getAllUsers(departmentId, 1).then(res => {
+      getAllUsers(departmentId, 9999, 1).then(res => {
         if (res.code === 200) {
             const data = res.data
             const records = data.records
@@ -359,6 +365,7 @@ export default function EnhancedTable(props) {
                 row.name = row.first_name + ' ' + row.last_name
             });
             setRows(records);
+            setTotalSize(res.data.total)
             }else {
             alert(res.msg);
         }
@@ -377,7 +384,6 @@ export default function EnhancedTable(props) {
     setPage(newPage);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
         <TableContainer sx={{maxHeight: '100%'}}>
@@ -411,11 +417,13 @@ export default function EnhancedTable(props) {
             </TableBody>
           </Table>
           <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={totalSize}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
         </TableContainer>
 
