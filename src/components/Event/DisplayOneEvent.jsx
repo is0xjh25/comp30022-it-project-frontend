@@ -193,29 +193,52 @@ export default function DisplayOneEvent(props) {
 		setPageStatus("view");
 	}
 
+	// Check if a time update is valid - finish should be later than start
+	const checkValidTime = (start, finish) => {
+		let eventStart = new Date(data.start_time);
+		let eventFinish = new Date(data.finish_time);
+
+		if (start !== undefined) {
+			eventStart = new Date(start);
+		}
+
+		if (finish !== undefined) {
+			eventFinish = new Date(finish);
+		}
+		
+		if (eventFinish.getTime() < eventStart.getTime()) {
+			alert("Finish time cannot be earlier than start time.")
+			return false;
+		}
+		return true;
+	}
+
 	// Update event
 	const confirmUpdate = () => {
 		const body = checkChange();
-		if (Object.keys(body).length !== 0) { 
-			body["id"] = eventId;
-			updateEvent(body).then(res => {
-				if (res.code===200) {
-					alert("Successfully updated");
-					if (body["start_time"] !== undefined) {
-						let month = new Date(startTime).getMonth()+1;
-						let year = new Date(startTime).getFullYear();
-						if ((year+month) === yearMonth) {
-							handleYearMonthChange(startTime);
+		if (checkValidTime(body["start_time"], body["finish_time"])){
+			
+			if (Object.keys(body).length !== 0) { 
+				body["id"] = eventId;
+				updateEvent(body).then(res => {
+					if (res.code===200) {
+						alert("Successfully updated");
+						if (body["start_time"] !== undefined) {
+							let month = new Date(startTime).getMonth()+1;
+							let year = new Date(startTime).getFullYear();
+							if ((year+month) === yearMonth) {
+								handleYearMonthChange(startTime);
+							}
 						}
+						update();
+						setPageStatus("view");
+					} else {
+						alert(res.msg);
 					}
-					update();
-					setPageStatus("view");
-				} else {
-					alert(res.msg);
-				}
-			})
-		} else {
-			alert("Nothing has been changed");
+				})
+			} else {
+				alert("Nothing has been changed");
+			}
 		}
 	}
 

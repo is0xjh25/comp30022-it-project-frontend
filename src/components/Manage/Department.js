@@ -15,10 +15,17 @@ import {
 } from '@mui/material'
 
 // Local import
-import {getDepartment, deleteDepartment, joinDep, getOrgDetail} from '../../api/Manage';
+import {
+    getDepartment, 
+    deleteDepartment, 
+    joinDep, 
+    getOrgDetail,
+    deleteUser,
+    getIfUserHasPendingRequestBasedOnDepartmentId
+} from '../../api/Manage';
+import { getUserInfo } from '../../api/Util';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
-import {getIfUserHasPendingRequestBasedOnDepartmentId} from '../../api/Manage';
 
 function HasPendingNotation(props) {
     const {hasPending} = props;
@@ -36,7 +43,7 @@ function HasPendingNotation(props) {
 }
 
 
-// If the user owns the department, delete button is diaplayed
+// If the user owns the department, delete button is displayed
 function OwnedDepartment(props) {
     const {department, update, showMembers} = props;
     const [hasPending, setHasPending] = useState(false);
@@ -81,6 +88,70 @@ function OwnedDepartment(props) {
                     <Typography sx={{ pl: '60px'}} color="text.primary">{department.name}</Typography>
                 </Button>
                 <IconButton onClick={handleDeleteDep} aria-label="delete" sx={{height: 60, width: 60}} >
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
+            <AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+            />
+        </Box>
+    )
+}
+
+// If the user is a member of the department, delete button is used to leave the department
+function MemberDepartment(props) {
+    const {department, update, showMembers} = props;
+    const [userId, setUserId] = useState("");
+
+    //================ Leave Department ==================
+    // Get current user's id
+    const getUserId = () => {
+        getUserInfo().then(res => {
+            if (res.code === 200) {
+                setUserId(res.data.id)
+            }
+        })
+    }
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Leave Department Confirm';
+    const alertMessage = `Do you want to leave ${department.name}?`;
+    const handleLeaveDep = function() {
+        getUserId();
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        deleteUser(userId, department.id);
+        setAlertOpen(false);
+        update();
+    }
+
+    // Link the department to member management page
+    return(
+        <Box key={department.id}>
+            <Box 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: 60,
+                    borderRadius: 2,
+                    boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                    bgcolor: 'info.main',
+                    my: '40px',
+                    position: 'relative'
+                }} 
+            >
+                <Button onClick={() => showMembers(department.id)} fullWidth>
+                    <Typography sx={{ pl: '60px'}} color="text.primary">
+                        {department.name}
+                    </Typography> 
+                </Button>
+                
+                <IconButton onClick={handleLeaveDep} aria-label="delete" sx={{height: 60, width: 60}} >
                     <DeleteIcon />
                 </IconButton>
             </Box>
@@ -212,21 +283,7 @@ export default function Department(props) {
             )
         } else if(department.status==="member") {
             member.push(
-                <Box 
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        height: 60,
-                        borderRadius: 2,
-                        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                        bgcolor: 'info.main',
-                        my: '40px'
-                    }} 
-                >
-                    <Button onClick={() => showMembers(department.id)}>
-                        <Typography color="text.primary">{department.name}</Typography>
-                    </Button>
-                </Box>
+                <MemberDepartment department={department} update={update} showMembers={showMembers}/>
             )
         } else {
             other.push(

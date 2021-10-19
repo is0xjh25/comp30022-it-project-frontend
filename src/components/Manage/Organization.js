@@ -32,63 +32,17 @@ import BadgeUnstyled from '@mui/core/BadgeUnstyled';
 import {getIfUserHasPendingRequestBasedOnOrgId} from '../../api/Manage';
 
 // Local import
-import {getOrganization, deleteOrganization, searchMemberInOrg, transferOwnership} from '../../api/Manage';
+import {
+    getOrganization, 
+    deleteOrganization, 
+    searchMemberInOrg, 
+    transferOwnership,
+    leaveOrganization
+} from '../../api/Manage';
 import CreateOrg from '../../components/Popup/CreateOrg';
 import JoinOrg from '../../components/Popup/JoinOrg';
 import AlertDialog from '../Dialog/AlertDialog';
 
-
-const StyledBadge = styled(BadgeUnstyled)`
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  color: rgba(0, 0, 0, 0.85);
-  font-size: 14px;
-  font-variant: tabular-nums;
-  list-style: none;
-  font-feature-settings: 'tnum';
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol';
-  position: relative;
-  display: inline-block;
-  line-height: 1;
-
-  & .MuiBadge-badge {
-    z-index: auto;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-    color: #fff;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 20px;
-    white-space: nowrap;
-    text-align: center;
-    background: #ff4d4f;
-    border-radius: 10px;
-    box-shadow: 0 0 0 1px #fff;
-  }
-
-  & .MuiBadge-dot {
-    padding: 0;
-    z-index: auto;
-    min-width: 6px;
-    width: 6px;
-    height: 6px;
-    background: #ff4d4f;
-    border-radius: 100%;
-    box-shadow: 0 0 0 1px #fff;
-  }
-
-  & .MuiBadge-anchorOriginTopRightCircular {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(50%, -50%);
-    transform-origin: 100% 0;
-  }
-`;
 
 // Loop through all organizations of this user,
 // and display them according to the user's ownership
@@ -113,23 +67,76 @@ function EachOrganization(props) {
         org.owner === true ? 
             <OwnedOrganization org={org} update={update} showDepartment={showDepartment} hasPending={hasPending}/>
         :
-                <Box 
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        height: 60,
-                        borderRadius: 2,
-                        boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                        bgcolor: 'info.main',
-                        my: '40px'
-                    }} 
-                >
-                    <Button onClick={() => showDepartment(org.id)}>
-                        <Typography color="text.primary">{org.name}</Typography>
-                    </Button>
-                </Box>
-    )
+            <MemberOrganization org={org} update={update} showDepartment={showDepartment}/>
 
+                // <Box 
+                //     sx={{
+                //         display: 'flex',
+                //         justifyContent: 'center',
+                //         height: 60,
+                //         borderRadius: 2,
+                //         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                //         bgcolor: 'info.main',
+                //         my: '40px'
+                //     }} 
+                // >
+                //     <Button onClick={() => showDepartment(org.id)}>
+                //         <Typography color="text.primary">{org.name}</Typography>
+                //     </Button>
+                // </Box>
+    )
+}
+
+function MemberOrganization(props) {
+    const {org, update, showDepartment} = props;
+
+    //================ Leave Organization ==================
+    const [alertOpen, setAlertOpen] = useState(false);
+    const alertTitle = 'Leave Confirm';
+    const alertMessage = `Do you want to leave ${org.name}?`;
+    const handleLeaveOrg = function() {
+        setAlertOpen(true);
+    }
+    const handleAlertConfirm = function() {
+        leaveOrganization(org.id);
+        setAlertOpen(false);
+        update();
+    }
+
+    return (
+        <Box key={org.id}>
+            <Box 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: 60,
+                    borderRadius: 2,
+                    boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
+                    bgcolor: 'info.main',
+                    my: '40px',
+                    position: 'relative'
+                }} 
+            >
+                <Button onClick={() => showDepartment(org.id)} fullWidth>
+                    <Typography sx={{ pl: '60px'}} color="text.primary">
+                        {org.name}
+                    </Typography> 
+                </Button>
+                
+                <IconButton aria-label="delete" onClick={handleLeaveOrg} sx={{height: 60, width: 60}} >
+                    <DeleteIcon />
+                </IconButton> 
+            </Box>
+
+            <AlertDialog alertTitle={alertTitle}
+                alertMessage={alertMessage}
+                open={alertOpen}
+                handleClose={() => { setAlertOpen(false) }} // Close the alert dialog
+                handleConfirm={handleAlertConfirm}
+                handleCancel={() => { setAlertOpen(false) }}
+            />
+        </Box>
+    )
 
 }
 
@@ -218,7 +225,6 @@ function OwnedOrganization(props) {
     }
     
     return (
-        // <Badge variant="dot" color="secondary">
         <Box key={org.id}>
             <Box 
                 sx={{
@@ -300,8 +306,6 @@ function OwnedOrganization(props) {
                             type="organization"
                             fullWidth
                             onChange={handleOnChange}
-                            // error={!available && !firstTry ? true : false}
-                            // helperText={available || firstTry ? "Ready to join" : "organization does not exist"}
                         />
                         <ToggleButtonGroup orientation="vertical" value={selectedMember} exclusive onChange={handleSelecteMember} sx={{display:"flex", justifyContent: 'center'}}>
                             {members.map( (member) => {
@@ -323,7 +327,6 @@ function OwnedOrganization(props) {
                 </Box>}
             </Dialog>
         </Box>
-        // </Badge>
     )
 
 }
