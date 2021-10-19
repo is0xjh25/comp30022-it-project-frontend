@@ -289,7 +289,7 @@ export default function DisplayEvents() {
 					</Grid>
 					<Dialog open={createEventOpen} fullWidth PaperProps={{sx:{width:"80%", height:"70%"}}}>
 						<Paper >
-							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
+							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth} update={update}/>
 						</Paper>
 					</Dialog>
 					<Dialog open={displayEventOpen} fullWidthPaperProps={{sx:{width:"80%", height:"70%"}}}>
