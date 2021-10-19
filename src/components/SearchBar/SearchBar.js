@@ -27,7 +27,9 @@ export default function(props) {
         }}
         onChange={onChange}
         sx={{
-            bgcolor: 'rgba(136,90,248,0.2)'
+            bgcolor: 'rgba(136,90,248,0.2)',
+            position: 'fixed',
+            top: 0
         }}
         />
     );

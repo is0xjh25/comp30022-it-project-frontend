@@ -38,7 +38,6 @@ import {processPhoto} from '../../api/Photo';
 
 function Sidebar(props) {
     const {changePage, selectedPage, currentUser} = props;
-
     const navItems = [
         {
             icon: <Dashboard />,
@@ -143,7 +142,7 @@ function Sidebar(props) {
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 				history.push("/Login");
 			} else {
-				console.log("!!!");
+				console.log("Log out");
 				res.json().then(bodyRes=>{alert(bodyRes.msg);});
 			}
 		})	
