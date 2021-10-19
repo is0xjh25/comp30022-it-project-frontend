@@ -312,6 +312,28 @@ function deleteOrganization(origanizationId) {
     })
 }
 
+// Leave an organization
+function leaveOrganization(orgId) {
+    const url = `${BASE_URL}/organization/leave?organization_id=${orgId}`;
+    const info = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': getCookie('token'),
+        }
+    }
+    return new Promise((resolve, reject) => {
+        fetch(url, info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(resBody => {
+                resolve(resBody);
+            })
+        })
+    })
+}
+
 // Delete an organization
 function deleteDepartment(departmentId) {
     const url = `${BASE_URL}/department?department_id=${departmentId}`;
@@ -500,6 +522,7 @@ export {
     getOrganization,
     getDepartment,
     deleteOrganization,
+    leaveOrganization,
     deleteDepartment,
     getMyPermissionLevel,
     transferOwnership,

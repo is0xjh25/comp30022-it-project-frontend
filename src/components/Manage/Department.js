@@ -118,7 +118,7 @@ function MemberDepartment(props) {
     }
 
     const [alertOpen, setAlertOpen] = useState(false);
-    const alertTitle = 'Leave department Confirm';
+    const alertTitle = 'Leave Department Confirm';
     const alertMessage = `Do you want to leave ${department.name}?`;
     const handleLeaveDep = function() {
         getUserId();
@@ -142,11 +142,15 @@ function MemberDepartment(props) {
                     boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
                     bgcolor: 'info.main',
                     my: '40px',
+                    position: 'relative'
                 }} 
             >
-                <Button onClick={() => showMembers(department.id)}>
-                    <Typography color="text.primary">{department.name}</Typography>
+                <Button onClick={() => showMembers(department.id)} fullWidth>
+                    <Typography sx={{ pl: '60px'}} color="text.primary">
+                        {department.name}
+                    </Typography> 
                 </Button>
+                
                 <IconButton onClick={handleLeaveDep} aria-label="delete" sx={{height: 60, width: 60}} >
                     <DeleteIcon />
                 </IconButton>
