@@ -3,8 +3,8 @@ import { getCookie, checkUnauthorized } from "./Util";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Gets all users from a department
-function getAllUsers(departmentId, currentPage) {
-    const url = BASE_URL + '/department/member?department_id=' + departmentId + '&size=10&current=' + currentPage;
+function getAllUsers(departmentId, pageSize, currentPage) {
+    const url = BASE_URL + `/department/member?department_id=${departmentId}&size=${pageSize}&current=${currentPage}`;
 
     const requestInit = {
         method: 'GET',

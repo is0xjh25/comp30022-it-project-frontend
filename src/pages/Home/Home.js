@@ -48,7 +48,7 @@ require('dotenv').config();
 
 function Dashboard(props) {
     return(
-        <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100vh'}}>
+        <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', minHeight: '100vh', bgcolor: '#DBDFE4'}}>
             <Box sx={{width: '60%', minWidth:500}}>
                 <RecentActivity/>
             </Box>

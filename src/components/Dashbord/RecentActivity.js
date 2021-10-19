@@ -12,10 +12,14 @@ import {
     CardContent,
     Divider,
     Avatar,
-    Chip
+    Chip,
+    TextField
 
 
 } from '@mui/material';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useHistory } from 'react-router';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -23,7 +27,7 @@ import { processPhoto } from '../../api/Photo';
 import { getMultipleEvents } from '../../api/Event';
 import { getMultipleTodos, getAllToDo } from '../../api/ToDoList';
 
-
+import {formatTime} from '../../api/Util';
 
 const theme = createTheme({
     palette: {
@@ -40,6 +44,7 @@ const theme = createTheme({
 export default function RecentActivity() {
 
     const history = useHistory();
+    const [startTime, setStartTime] = useState(new Date());
     const [eventData, setEventData] = useState([]);
     const [todoData, setTodoData] = useState([]);
     const [data, setData] = useState([]);
@@ -50,15 +55,16 @@ export default function RecentActivity() {
 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-    const startTime = new Date();
-    startTime.setHours(0);
-    startTime.setMinutes(0);
-    startTime.setSeconds(0);
-    startTime.setMilliseconds(0);
-    const finishTime = new Date(startTime);
-    finishTime.setHours(24);
+
 
     useEffect(() => {
+        // const startTime = showDate == null ? new Date() : showDate(showDate);
+        startTime.setHours(0);
+        startTime.setMinutes(0);
+        startTime.setSeconds(0);
+        startTime.setMilliseconds(0);
+        const finishTime = new Date(startTime);
+        finishTime.setHours(24);
         getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
             console.log(res);
             setEventData(res.data);
@@ -74,7 +80,7 @@ export default function RecentActivity() {
             console.log(filtered);
         })
 
-    }, [])
+    }, [startTime])
 
     useEffect(() => {
         const result = [];
@@ -85,13 +91,19 @@ export default function RecentActivity() {
         })
         todoData.forEach(elem => {
             elem['type'] = 'todo';
-            if(elem['status'] === 'to do' && (new Date(elem['date_time'])) < (new Date())) {
-                elem['status'] = 'in progress'
-            }
+
             result.push(elem);
         })
 
         result.sort((ele1,ele2) => {
+            if(ele1.status !== ele2.status) {
+                if(ele1.status === 'done') {
+                    return 1;
+                }
+                if(ele2.status === 'done') {
+                    return 1;
+                }
+            }
             const date1 = new Date(ele1['date_time']);
             const date2 = new Date(ele2['date_time']);
             return date1 < date2 ? -1 : 1;
@@ -112,7 +124,7 @@ export default function RecentActivity() {
 
 
     const getRowLabel = (status) => {
-        if (status === "to do") {
+        if (status === "to do" || status === "upcoming") {
             return (<Chip label={status} color="primary" size="small"/>)
         } else if (status === "in progress") {
             return (<Chip label={status} color="warning" size="small"/>)
@@ -130,6 +142,10 @@ export default function RecentActivity() {
         history.push(`/Events`);
     }
 
+    // const handleOnSelect = (e) => {
+    //     console.log(e);
+    // }
+
     return (
         <ThemeProvider theme={theme}>
             <Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
@@ -146,10 +162,23 @@ export default function RecentActivity() {
                 <LinearProgress variant="determinate" color='RecentActivity' value={stat.done * 100.0 /stat.total} sx={{my: 2, color: 'red'}}/>
 
 
-                <Box sx={{display: 'flex', }}>
-                    <Box sx={{width: '100%', textAlign: 'left', fontWeight: 'bold', fontSize: 'large'}}>
-                        {(new Date()).toLocaleDateString(undefined, options)}
+                <Box sx={{display: 'flex', flexDirection: 'row' }}>
+                    <Box sx={{textAlign: 'left', fontWeight: 'bold', fontSize: 'large'}}>
+                        {startTime.toLocaleDateString(undefined, options)}
                     </Box>
+                    <LocalizationProvider dateAdapter={AdapterDateFns} >
+                        <DesktopDatePicker
+                                id="dashboardDate"
+                                inputFormat="yyyy-MM-dd"
+                                value={new Date(startTime)}
+                                onChange={(time) => setStartTime(time)}
+                                renderInput={({ inputRef, inputProps, InputProps }) => (
+                                    <Box ref={inputRef} sx={{ display: "flex", alignItems: "center" }}>
+                                      {InputProps?.endAdornment}
+                                    </Box>
+                                  )}
+                        />
+                    </LocalizationProvider>
                 </Box>
 
                 <Divider fullWidth sx={{mt: 1}}/>
@@ -157,7 +186,6 @@ export default function RecentActivity() {
                 <Box sx={{flexGrow: 1, overflow: 'auto'}}>
                     {
                         data.map(elem => {
-                            const eventTime = new Date(elem['date_time']);
                             
 
                             return (
@@ -174,15 +202,29 @@ export default function RecentActivity() {
                                                     {elem.type}
                                                 </Typography>
                                         </Box>
-        
-                                        <Box sx={{display:'flex', flexDirection:'row'}}>
-                                            <Typography>
-                                                {'Start Time: '}
-                                            </Typography>
-                                            <Typography>
-                                                {eventTime.toTimeString().slice(0, 5)}
-                                            </Typography>
-                                        </Box>
+                                        {elem.type === 'todo' && 
+                                            <Box sx={{display:'flex', flexDirection:'row'}}>
+                                                <Typography>
+                                                    {'Due Time: '}
+                                                </Typography>
+                                                <Typography>
+                                                    {(new Date(elem['date_time'])).toTimeString().slice(0, 5)}
+                                                </Typography>
+                                            </Box>
+                                        }
+
+                                        {
+                                            elem.type === 'event' &&
+                                            <Box sx={{display:'flex', flexDirection:'row'}}>
+                                                <Typography>
+                                                    {'Time period: '}
+                                                </Typography>
+                                                <Typography>
+                                                    {`${formatTime(elem['start_time'], 'MM-dd HH:mm')} ~ ${formatTime(elem['finish_time'], 'MM-dd HH:mm')}`}
+                                                </Typography>
+                                            </Box>
+                                        }
+
         
                                         <Box sx={{display: 'flex', flexDirection: 'row', mt: 2, mb: 1 }}>
                                             <Box sx={{width: '100%', textAlign: 'right'}}>
