@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import Table from './Table';
 import {
-    Box,
+    Box, Typography,
 } from '@mui/material';
 
 import './Members.css'
@@ -45,10 +45,8 @@ function Members() {
     return(
         <Box sx={{height: '100vh'}}>
             <SearchBar handleSearch={handleSearch} sx={{position: 'fixed', top: 0}}/>
-            
+            <Typography variant="h5" sx={{m: 3}}> Manage Members </Typography>
             <Table className='table' myPremissionLevel={myPremissionLevel}  departmentId={depId} rows={rows} setRows={setRows}></Table>
-            
-            
         </Box>
     )
 }
