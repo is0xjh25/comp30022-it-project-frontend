@@ -68,22 +68,6 @@ function EachOrganization(props) {
             <OwnedOrganization org={org} update={update} showDepartment={showDepartment} hasPending={hasPending}/>
         :
             <MemberOrganization org={org} update={update} showDepartment={showDepartment}/>
-
-                // <Box 
-                //     sx={{
-                //         display: 'flex',
-                //         justifyContent: 'center',
-                //         height: 60,
-                //         borderRadius: 2,
-                //         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                //         bgcolor: 'info.main',
-                //         my: '40px'
-                //     }} 
-                // >
-                //     <Button onClick={() => showDepartment(org.id)}>
-                //         <Typography color="text.primary">{org.name}</Typography>
-                //     </Button>
-                // </Box>
     )
 }
 
