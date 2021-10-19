@@ -51,13 +51,18 @@ function resend(email) {
 
 
 // Sign up as a new member
-function signUp (email, password, firstName, lastName, phone, organization) {
+function signUp (email, password, firstName, lastName, phone) {
 
     const info = {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Origin': process.env.ORIGIN_URL},
-        body: JSON.stringify({"email": email, "password": password, 
-            "first_name": firstName, "last_name": lastName, "phone": phone, "organization": organization})
+        body: JSON.stringify({
+            "email": email, 
+            "password": password, 
+            "first_name": firstName, 
+            "last_name": lastName, 
+            "phone": phone
+        })
     };
 
     return new Promise((resolve, reject) => {
