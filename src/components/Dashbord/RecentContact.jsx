@@ -4,6 +4,7 @@ import Mail from '@material-ui/icons/MailOutline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getRecentCustomer } from '../../api/Contact';
 import { toLocalTime } from '../../api/Util';
+import { useHistory, useRouteMatch } from 'react-router';
 import {
 	Paper,
     Box,
@@ -12,7 +13,7 @@ import {
 	IconButton,
 	Link,
 	Grid,
-	Avatar
+	Avatar,
 } from '@mui/material';
 
 const theme = createTheme({
@@ -27,9 +28,9 @@ const theme = createTheme({
 })
 
 export default function RecentContact() {
-
+	const history = useHistory();
+	const {url} = useRouteMatch();
 	const [recentContact, setRecentContact] = useState([]);
-
 	const classes = {
 		title: {
 			fontSize:30,
@@ -50,13 +51,17 @@ export default function RecentContact() {
 		})
 	};
 
+	const handleSingleContact = (e) => {
+		history.push(`/Contacts/${e.organization_id}/${e.department_id}/${e.id}`);
+	}
+
 	useEffect(() => {
 		getContact();
 	}, []);
 
 	return(
 		<ThemeProvider theme={theme}>
-		<Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
+		<Paper boarderRadius={'10px'} elevation={10} sx={{ m: '10vh', height:'80vh', width:'30vw',
 		borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
 
 			<Typography sx={classes.title}>
@@ -73,7 +78,7 @@ export default function RecentContact() {
 							height: "10%",
 							borderRadius: 10,
 							boxShadow: '0 5px 5px 5px rgba(105, 105, 105, .3)',
-							bgcolor:"#EE82EE",
+							bgcolor:"#00e676",
 							my: '5%'
 						}}
 					>
@@ -84,7 +89,7 @@ export default function RecentContact() {
 								height: "100%",
 							}} 
 						>	
-							<Button sx={{minHeight:"100%", minWidth:"100%"}}>
+							<Button sx={{minHeight:"100%", minWidth:"100%"}} onClick={()=>handleSingleContact(c)}>
 								<Grid container sx={{alignItems:'center', justifyContent:'center'}} >
 									<Grid item xs={2} sx={{alignItems:'center', justifyContent:'center'}}>
 										<Avatar src={processPhoto(c.photo)}>
@@ -113,7 +118,7 @@ export default function RecentContact() {
 								height: "100%",
 								borderTopRightRadius:10,
 								borderBottomRightRadius:10,
-								bgcolor: "#FFB6C1",
+								bgcolor: "#33eb91",
 							}} 
 						>
 							<Link href = {`mailto:${c.email}`}>
@@ -129,57 +134,3 @@ export default function RecentContact() {
 		</ThemeProvider>
 	)
 }
-
-// return(
-// 	<ThemeProvider theme={theme}>
-// 	<Paper boarderRadius={'10px'} elevation={10} sx={{ m: '10vh', height:'80vh', width:'30vw',
-// 	borderRadius:'20px', px: 4, py: 2, textAlign:"center"}}>
-// 		<Grid container rowSpacing="15">
-// 			<Grid item xs={12}>
-// 				<Typography sx={{}}>
-// 					Recent Contact
-// 				</Typography>
-// 			</Grid>
-
-// 			<Grid container item xs={10} sx={{alignItems:'center', justifyContent:'center'}}>
-// 			<Box
-// 				sx={{
-// 					display: 'flex',
-// 					justifyContent: 'center',
-// 					height: 10,
-// 					borderRadius: 2,
-// 					boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-// 					bgcolor: 'info.main',
-// 					my: '40px'
-// 				}} 
-// 			>
-// 				<Grid item xs={2} sx={{alignItems: 'center', justifyContent:'center', bgcolor:"purple"}}>
-// 					<Avatar src={processPhoto("xxx")}>
-// 					</Avatar>
-// 				</Grid>
-// 				<Grid item xs={8}>
-// 					<Grid sx={{bgcolor:"red"}}>
-// 						111
-// 					</Grid>
-// 					<Grid sx={{bgcolor:"orange"}}>
-// 						222
-// 					</Grid>
-// 				</Grid>
-// 				<Grid item xs={2}>
-// 					???
-// 				</Grid>
-// 				</Box>
-// 			</Grid>
-// 			<Grid item xs={2} sx={{bgcolor:"pink"}}>
-// 				<Link color="inherit" href = {`mailto:$email`}>
-// 					<IconButton>
-// 						<Mail />
-// 					</IconButton>
-// 				</Link>
-// 			</Grid>
-// 		</Grid>
-		
-// 	</Paper>
-// 	</ThemeProvider>
-// )
-// }

@@ -50,10 +50,10 @@ function Dashboard(props) {
 
     return(
     <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100vh'}}>
-        <Box sx={{width: '60%'}}>
+        <Box sx={{width: '60%', minWidth:600}}>
             <RecentActivity/>
         </Box>
-        <Box sx={{width: '40%'}}>
+        <Box sx={{width: '40%', minWidth:800}}>
         <RecentContact />
         </Box>
         
