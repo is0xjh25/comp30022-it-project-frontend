@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
@@ -26,6 +25,9 @@ import {
 	Avatar,
 	Link
 } from '@mui/material'
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Mail from '@material-ui/icons/MailOutline';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
@@ -384,7 +386,6 @@ export default function DisplayOneEvent(props) {
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
 				<Grid>
 					<Typography sx={classes.subTitle}>Progress</Typography> 
-					{/* <TextField id="status" defaultValue= {data.status} onChange={handleOnChange}/> */}
 					<FormControl fullWidth>
 						<Select
 							id="progress"
@@ -400,25 +401,25 @@ export default function DisplayOneEvent(props) {
 			</Grid>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Start Time</Typography> 
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<DateTimePicker
-					id="startTime"
-					value={startTime}
-					onChange={setStartTime}
-					renderInput={(params) => <TextField {...params} />}
+				<LocalizationProvider dateAdapter={AdapterDateFns} >
+					<DesktopDateTimePicker
+						renderInput={(params) => <TextField {...params} />}
+						id="startTime"
+						value={startTime}
+						onChange={setStartTime}
 					/>
-				</MuiPickersUtilsProvider>
+				</LocalizationProvider>
 			</Grid>
 			<Grid item xs={12} sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Finish Time</Typography> 
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<DateTimePicker
-					id="finishTime"
-					value={finishTime}
-					onChange={setFinishTime}
-					renderInput={(params) => <TextField {...params} />}
+				<LocalizationProvider dateAdapter={AdapterDateFns} >
+					<DesktopDateTimePicker
+						id="finishTime"
+						value={finishTime}
+						onChange={setFinishTime}
+						renderInput={(params) => <TextField {...params} />}
 					/>
-				</MuiPickersUtilsProvider>
+				</LocalizationProvider>
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}} >
 				<Typography sx={classes.subTitle}>Description</Typography>
