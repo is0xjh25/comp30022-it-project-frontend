@@ -184,6 +184,13 @@ export default function RecentActivity() {
                 <Divider fullWidth sx={{mt: 1}}/>
 
                 <Box sx={{flexGrow: 1, overflow: 'auto'}}>
+                    { data.length === 0 && 
+                        <Typography variant='h5' sx={{my: 3,width: '100%', fontWeight: 'bold'}}>
+                            Nothing happening today~
+                        </Typography>
+
+                    }
+                    
                     {
                         data.map(elem => {
                             

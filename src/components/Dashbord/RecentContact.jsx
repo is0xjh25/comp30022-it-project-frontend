@@ -68,6 +68,13 @@ export default function RecentContact() {
 				Recent Contact
 			</Typography>
             <Box sx={{flexGrow: 1, overflow: 'auto'}}>
+
+                { recentContact.length === 0 && 
+                    <Typography variant='h5' sx={{my: 3,width: '100%', fontWeight: 'bold'}}>
+                        Check out some contact first~
+                    </Typography>
+
+                }
                 {recentContact.map((c) => {						
 				return (
 					<Box 
