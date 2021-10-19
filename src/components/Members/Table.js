@@ -380,7 +380,7 @@ export default function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-        <TableContainer sx={{maxHeight: '100%', mt: 10}}>
+        <TableContainer sx={{maxHeight: '100%'}}>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
