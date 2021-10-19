@@ -7,6 +7,7 @@ import {
 
 // MUI import
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import {
     Button,
@@ -22,13 +23,10 @@ import {
     Grid,
     Typography,
     Box,
-    Avatar,
     LinearProgress,
     Badge
     
 } from '@mui/material'
-import {styled} from '@mui/system';
-import BadgeUnstyled from '@mui/core/BadgeUnstyled';
 import {getIfUserHasPendingRequestBasedOnOrgId} from '../../api/Manage';
 
 // Local import
@@ -108,7 +106,7 @@ function MemberOrganization(props) {
                 </Button>
                 
                 <IconButton aria-label="delete" onClick={handleLeaveOrg} sx={{height: 60, width: 60}} >
-                    <DeleteIcon />
+                    <DeleteOutlineOutlinedIcon />
                 </IconButton> 
             </Box>
 

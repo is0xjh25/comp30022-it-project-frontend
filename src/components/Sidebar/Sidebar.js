@@ -172,7 +172,7 @@ function Sidebar(props) {
                 </Grid>
                 <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
 
-                <ListItemText primary="Settings"></ListItemText>
+                <ListItemText primary="Profile"></ListItemText>
                 </Grid>
             </Grid>
         </ListItem>
