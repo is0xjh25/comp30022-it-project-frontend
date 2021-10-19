@@ -13,6 +13,8 @@ import { getDepartment, getOrganization } from '../../api/Manage';
 import { getUserInfo } from '../../api/Util';
 import DisplayEvents from '../../components/Event/DisplayEvents';
 import ToDoList from '../../components/ToDoList/ToDoList';
+import RecentContact from '../../components/Dashbord/RecentContact'
+import RecentActivity from '../../components/Dashbord/RecentActivity';
 
 import {
     Button,
@@ -43,6 +45,20 @@ import {
 
 
 require('dotenv').config();
+
+function Dashboard(props) {
+
+    return(
+    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100vh'}}>
+        <Box sx={{width: '60%'}}>
+            <RecentActivity/>
+        </Box>
+        <Box sx={{width: '40%'}}>
+        <RecentContact />
+        </Box>
+        
+    </Box>)
+}
 
 function Events(props) {
     return (
@@ -320,6 +336,7 @@ function Home(props) {
                 </Route>
 
                 <Route path={`${url}Dashboard`}>
+                    <Dashboard/>
                 </Route>
 
                 <Route path={`${url}Contacts`}>

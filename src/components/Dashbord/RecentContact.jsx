@@ -56,7 +56,7 @@ export default function RecentContact() {
 
 	return(
 		<ThemeProvider theme={theme}>
-		<Paper boarderRadius={'10px'} elevation={10} sx={{ m: '10vh', height:'80vh', width:'30vw',
+		<Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
 		borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
 
 			<Typography sx={classes.title}>

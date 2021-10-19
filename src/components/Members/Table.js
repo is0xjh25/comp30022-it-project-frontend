@@ -380,13 +380,14 @@ export default function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
-        <TableContainer>
+        <TableContainer sx={{maxHeight: '100%', mt: 10}}>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
             size='medium'
             aria-label="enhanced table"
+            stickyHeader
+            sx={{}}
           >
             <EnhancedTableHead
               classes={classes}
@@ -409,14 +410,14 @@ export default function EnhancedTable(props) {
               )} */}
             </TableBody>
           </Table>
-        </TableContainer>
-        <TablePagination
+          <TablePagination
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
         />
-    </div>
+        </TableContainer>
+
   );
 }

@@ -4,6 +4,9 @@ import SearchBar from '../SearchBar/SearchBar';
 import { useParams } from 'react-router-dom';
 
 import Table from './Table';
+import {
+    Box,
+} from '@mui/material';
 
 import './Members.css'
 import { getMyPermissionLevel, searchMember } from '../../api/Manage';
@@ -40,13 +43,13 @@ function Members() {
         })
     }
     return(
-        <div>
-            <SearchBar handleSearch={handleSearch}/>
-            <div className='table-container'>
-                <Table className='table' myPremissionLevel={myPremissionLevel}  departmentId={depId} rows={rows} setRows={setRows}></Table>
-            </div>
+        <Box sx={{height: '100vh'}}>
+            <SearchBar handleSearch={handleSearch} sx={{position: 'fixed', top: 0}}/>
             
-        </div>
+            <Table className='table' myPremissionLevel={myPremissionLevel}  departmentId={depId} rows={rows} setRows={setRows}></Table>
+            
+            
+        </Box>
     )
 }
 
