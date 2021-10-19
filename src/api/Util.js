@@ -123,6 +123,19 @@ function toLocalTime(time) {
     return localTime.toLocaleString("en-AU");
 }
 
+// Check whether the email is valid
+function checkEmail(email) {
+    //check email
+    let lastAtPos = email.lastIndexOf('@');
+    let lastDotPos = email.lastIndexOf('.');
+    if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
 export {
     getCookie,
     setCookie,
@@ -131,5 +144,6 @@ export {
     getUserInfo,
     updateUserInfo,
     toLocalTime,
-    formatTime
+    formatTime,
+    checkEmail
 }

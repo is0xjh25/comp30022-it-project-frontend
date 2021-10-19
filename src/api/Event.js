@@ -162,7 +162,7 @@ function getMultipleEvents(startTime, finishTime) {
 }
 
 // Search amount of events per day in one month
-function getMonthlyEvents(year, month) {
+function getMonthlyEvents(year, month, TimeZoneOffset) {
     
     const info = {
         method: 'GET',
@@ -170,7 +170,7 @@ function getMonthlyEvents(year, month) {
     };
 
     return new Promise((resolve, reject) => {
-        fetch(`${BASE_URL}/event/amount?year=${year}&month=${month}`, info)
+        fetch(`${BASE_URL}/event/amount?year=${year}&month=${month}&time_zone_offset=${TimeZoneOffset}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;

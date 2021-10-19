@@ -52,6 +52,7 @@ export default function DisplayCustomer(props) {
 			fontFamily:'Arial',
 			borderColor: 'black',
 			textAlign:'center',
+			overflowWrap:"anywhere",
 			m: 1,
 			px:5
 		},
@@ -75,7 +76,6 @@ export default function DisplayCustomer(props) {
 	useEffect(() => {
 		displayCustomer(customerId).then(res => {
 			if (res.code===200) {
-				console.log(res.data.birthday);
 				setData(res.data);
                 setLoading(false);
 			} else {

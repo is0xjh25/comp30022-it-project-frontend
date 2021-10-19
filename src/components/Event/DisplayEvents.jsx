@@ -34,6 +34,7 @@ export default function DisplayEvents() {
 	const [dayEvent, setDayEvent] = useState([]);
 	const [monthEvent, setMonthEvent] = useState([]);
 	const [selectedEvent, setSelectedEvent] = useState(0);
+	const [updateCount, setUpdateCount] = useState(0);
 	const classes = {
 		title: {
 			fontSize:30,
@@ -95,6 +96,7 @@ export default function DisplayEvents() {
 		deleteEvent(selectedEvent).then(res => {
 			if (res.code===200) {
 				alert("Successfully deleted");
+				update();
 			} else {
 				alert(res.msg);
 			}
@@ -110,12 +112,12 @@ export default function DisplayEvents() {
 	const handleYearMonthChange = (d) => {
 
 		// Extract month and year
-		let month = d.toLocaleDateString().substring(3,5);
-		let year = d.toLocaleDateString().substring(6,10);
+		let month = new Date(d).getMonth()+1;
+		let year = new Date(d).getFullYear();
 		setMonth(new Date(d).getMonth()+1);
 		setYearMonth(year+month);
 		
-		getMonthlyEvents(year, month).then(res => {
+		getMonthlyEvents(year, month, d.getTimezoneOffset()).then(res => {
 			if (res.code===200) {
 				setMonthEvent(res.data);
 			} else {
@@ -126,11 +128,16 @@ export default function DisplayEvents() {
 
 	//================ List events in one day ==================
 	const displayDayEvent = (e) => {
-		
-		const startTime = e.toISOString().substring(0,10) + "T00:00:00.000Z";
-		const finishTime = e.toISOString().substring(0,10) + "T23:59:00.000Z";
 
-		getMultipleEvents(startTime, finishTime).then(res => {
+		const startTime = new Date(e);
+		startTime.setHours(0);
+		startTime.setMinutes(0);
+		startTime.setSeconds(0);
+		startTime.setMilliseconds(0);
+		const finishTime = new Date(startTime);
+		finishTime.setHours(24);
+
+		getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
 			if (res.code===200) {
 				setDayEvent(res.data);
 			} else {
@@ -180,21 +187,22 @@ export default function DisplayEvents() {
 
 		return (
 		selected ?
-		<Badge color="secondary" variant="dot" overlap="circular">
-		<CustomPickersDay
-			{...pickersDayProps}
-			disableMargin
-			dayIsBetween={dayIsBetween}
-		/>
-		</Badge> : 
-		
-		<Badge>
-		<CustomPickersDay
-			{...pickersDayProps}
-			disableMargin
-			dayIsBetween={dayIsBetween}
-		/>
-		</Badge>); 
+			<Badge color="warning" variant="dot" overlap="circular">
+			<CustomPickersDay
+				{...pickersDayProps}
+				disableMargin
+				dayIsBetween={dayIsBetween}
+			/>
+			</Badge> 
+		: 
+			<Badge>
+			<CustomPickersDay
+				{...pickersDayProps}
+				disableMargin
+				dayIsBetween={dayIsBetween}
+			/>
+			</Badge>
+		); 
 	};
 
 	const getRowLabel = (status) => {
@@ -207,11 +215,15 @@ export default function DisplayEvents() {
         }
     }
 
+	const update = function() {
+        setTimeout(() => {setUpdateCount(updateCount+1);}, 1000);
+    }
+
 	// Initial calendar
 	useEffect(() => {
 		handleYearMonthChange(new Date());
-		handleOnChange(new Date());
-	}, [displayEventOpen]);
+		displayDayEvent(date);
+	}, [displayEventOpen, updateCount]);
 	
 	return(
 		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
@@ -275,13 +287,13 @@ export default function DisplayEvents() {
 							<AddIcon color="primary" fontSize="large" onClick={handleCreateEvent}/>
 						</IconButton>
 					</Grid>
-					<Dialog open={createEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
+					<Dialog open={createEventOpen} fullWidth PaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper >
 							<CreateEvent handleClose={handleCreateClose} handleYearMonthChange={handleYearMonthChange} setMonth={setMonth} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>
-					<Dialog open={displayEventOpen} fullWidth maxWidth>
-						<Paper fullWidth>
+					<Dialog open={displayEventOpen} fullWidthPaperProps={{sx:{width:"80%", height:"70%"}}}>
+						<Paper fullWidth >
 							<DisplayOneEvent eventId={selectedEvent} handleClose={handleDisplayClose} handleYearMonthChange={handleYearMonthChange} yearMonth={yearMonth}/>
 						</Paper>
 					</Dialog>

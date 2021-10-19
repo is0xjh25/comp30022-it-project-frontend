@@ -16,6 +16,7 @@ import {processPhoto} from '../../api/Photo';
 import {formatTime} from '../../api/Util';
 
 import {
+    Link,
     Table,
     TableBody,
     TableCell,
@@ -233,9 +234,11 @@ function EnhancedTableRow(props) {
         <IconButton onClick={handleChangeRole}>
           <EditPermission />
         </IconButton>
-        <IconButton>
-          <Mail />
-        </IconButton>
+        <Link color="inherit" href = {`mailto:${row.email}`}>
+          <IconButton>
+            <Mail />
+          </IconButton>
+        </Link>
         <IconButton onClick={handleDeleteMember}>
           <Delete />
         </IconButton>
@@ -244,9 +247,11 @@ function EnhancedTableRow(props) {
   } else {
     manage = (
       <div>
-        <IconButton>
-          <Mail />
-        </IconButton>
+        <Link color="inherit" href = {`mailto:${row.email}`}>
+          <IconButton>
+            <Mail />
+          </IconButton>
+        </Link>
       </div>
     )
   }

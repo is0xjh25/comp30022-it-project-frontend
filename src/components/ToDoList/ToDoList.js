@@ -29,7 +29,7 @@ import {
     updateToDo,
     deleteToDo
 } from '../../api/ToDoList';
-import { toLocalTime } from '../../api/Util';
+import { formatTime, toLocalTime } from '../../api/Util';
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
@@ -183,6 +183,17 @@ function EnhancedTableRow(props) {
         setSelected(isSelected(row.status))
     }, [row])
 
+    // Format the time display of todos
+    const displayTime = (time) => {
+        const localTime = new Date(time);
+        
+        const dateMonth = formatTime(localTime, 'MM-dd');
+        const year = localTime.getFullYear();
+        const hourMinite = formatTime(localTime, 'HH:mm')
+
+        return (year+'-'+dateMonth+' '+hourMinite);
+    }
+
     return (
         <React.Fragment>
             <TableRow
@@ -197,9 +208,6 @@ function EnhancedTableRow(props) {
                         color="primary"
                         checked={selected}
                         onClick={(event) => handleClickCheckBox(event, row.status)}
-                        // inputProps={{
-                        //     'aria-labelledby': labelId,
-                        // }}
                     />
                 </TableCell>
                 <TableCell 
@@ -228,7 +236,7 @@ function EnhancedTableRow(props) {
                                     style={{borderBottom:"none"}}
                                     sx={{ width: '90%' }}
                                 >
-                                    Date and Time: {toLocalTime(row.date_time)}
+                                    Date and Time: {displayTime(row.date_time)}
                                 </TableCell>
                                 <TableCell 
                                     style={{borderBottom:"none"}}

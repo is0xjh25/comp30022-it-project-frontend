@@ -147,7 +147,7 @@ function updateCustomer(data, customerId) {
     })
 }
 
-// Delete one customer's information
+// Search all customers
 function searchAllCustomers(searchkey) {
 
     const info = {
@@ -165,6 +165,24 @@ function searchAllCustomers(searchkey) {
     })
 }
 
+// Search recent contacted customers
+function getRecentCustomer(limit) {
+
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getCookie('token')},
+    };
+    
+    return new Promise((resovle) => {
+        fetch(BASE_URL + `/recentContact?limit=${limit}`, info).then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(value => resovle(value));    
+        })
+    })
+}
+
 export {
     getAllCustomer,
     searchCustomer,
@@ -172,5 +190,6 @@ export {
     displayCustomer,
     deleteCustomer,
     updateCustomer,
-    searchAllCustomers
+    searchAllCustomers,
+    getRecentCustomer
 }

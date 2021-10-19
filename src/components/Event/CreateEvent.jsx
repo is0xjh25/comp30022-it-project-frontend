@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 
 export default function CreateEvent(props) {
-	const { handleClose, handleYearMonthChange, yearMonth, setMonth} = props;
+	const { handleClose, handleYearMonthChange, yearMonth, setMonth, update } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
@@ -46,23 +46,28 @@ export default function CreateEvent(props) {
 
 	const handleCreate = () => {
 		
-		const transformStartTime = startTime.toISOString();
-		const transformFinishTime = finishTime.toISOString();
-		
-		let month = startTime.toLocaleDateString().substring(3,5);
-		let year = startTime.toLocaleDateString().substring(6,10);
+		let month = new Date(startTime).getMonth()+1;
+		let year = new Date(startTime).getFullYear();
 
-		createEvent(transformStartTime, transformFinishTime, description).then(res => {
-			if (res.code===200) {
-				alert("Create event successfully");
-				if ((year+month) === yearMonth) {
-					handleYearMonthChange(startTime);
+		const eventStart = new Date(startTime);
+		const eventFinish = new Date(finishTime);
+		
+		if (eventFinish.getTime() < eventStart.getTime()) {
+			alert("Finish time cannot be earlier than start time.")
+		} else {
+			createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
+				if (res.code===200) {
+					alert("Create event successfully");
+					if ((year+month) === yearMonth) {
+						handleYearMonthChange(startTime);
+					}
+					handleClose();
+					update();
+				} else {
+					alert(res.msg);
 				}
-				handleClose();	
-			} else {
-				alert(res.msg);
-			}
-		});
+			});
+		}
 	}
 
 	const confirmDiscard = () => {
@@ -70,11 +75,11 @@ export default function CreateEvent(props) {
 	}
 
 	return (
-		<Grid container textAlign='center' rowSpacing={5} sx={{pt:10, px:20}}>
+		<Grid container textAlign='center' rowSpacing={5} sx={{py:"3%", px:"3%", minWidth:600}}>
 			<Grid item xs={12}>
 				<Typography sx={classes.title}>Create New Event</Typography>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={5}  sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Start Time</Typography>
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<DesktopDateTimePicker
@@ -85,7 +90,8 @@ export default function CreateEvent(props) {
 					/>
 				</LocalizationProvider>
 			</Grid>
-			<Grid item xs={12}  sx={{display:"flex", flexDirection:"column"}}>
+			<Grid item xs={2}></Grid>
+			<Grid item xs={5}  sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Finish Time</Typography>
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<DesktopDateTimePicker
@@ -98,7 +104,7 @@ export default function CreateEvent(props) {
 			</Grid>
 			<Grid item xs={12} textAlign='center' sx={{display:"flex", flexDirection:"column"}}>
 				<Typography sx={classes.subTitle}>Description</Typography>
-				<TextField id="description" multiline rows={10} onChange={handleOnChange}/>
+				<TextField id="description" multiline rows={5} onChange={handleOnChange}/>
 			</Grid>
 			<Grid item xs={6} textAlign='center'>
 				<IconButton>
