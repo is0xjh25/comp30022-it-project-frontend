@@ -15,6 +15,9 @@ import SelectDialog from '../Dialog/SelectDialog';
 import {processPhoto} from '../../api/Photo';
 import {formatTime} from '../../api/Util';
 
+import { useSnackbar } from 'notistack';
+
+
 import {
     Link,
     Table,
@@ -134,6 +137,8 @@ const permissionLevelMap = {
 // Each row of the table, containing states about popups
 function EnhancedTableRow(props) {
   const {row, myPremissionLevel, departmentId, update} = props;
+  const { enqueueSnackbar } = useSnackbar();
+
   //================ Delete Member ==================
 
   const [alertOpen, setAlertOpen] = useState(false);
@@ -145,11 +150,15 @@ function EnhancedTableRow(props) {
   const handleAlertConfirm = function() {
     deleteUser(row.user_id, departmentId).then(res => {
         if(res.code === 200) {
-            alert(`${row.name} is deleted`);
+            enqueueSnackbar(`${row.name} is deleted`,{
+                variant: 'success',
+            });
             setAlertOpen(false);
             update();
         }else {
-            alert(res.msg);
+            enqueueSnackbar(res.msg,{
+                variant: 'error',
+            });
         }
     });
 
@@ -183,12 +192,16 @@ function EnhancedTableRow(props) {
   // When assign role is confirmed
   const handleSelectConfirm = function() {
     if(currentSelected && currentSelected > 0) { // -1 and 0 are not valid
-      alert(`${row.name} is now assigned to ${permissionLevelMap[currentSelected]}`);
+        enqueueSnackbar(`${row.name} is now assigned to ${permissionLevelMap[currentSelected]}`,{
+            variant: 'success',
+        });
       changePermission(row.user_id, currentSelected, departmentId);
       setSelectOpen(false);
       setCurrentSelected(-1);
     } else {
-      alert('Select a valid role!');
+        enqueueSnackbar('Select a valid role!',{
+            variant: 'error',
+        });
     }
     update();
   }
@@ -196,10 +209,11 @@ function EnhancedTableRow(props) {
   const handleAccept = function() {
     acceptUser(row.user_id, departmentId).then(res => {
         if(res.code === 200) {
-            console.log('successfully accepted the user');
             update();
         }else {
-            alert(res.msg);
+            enqueueSnackbar(res.msg,{
+                variant: 'error',
+            });
         }
     });
     
@@ -208,10 +222,11 @@ function EnhancedTableRow(props) {
   const handleDecline = function() {
     declineUser(row.user_id, departmentId).then(res => {
         if(res.code === 200) {
-            console.log('successfully declined the user');
             update();
         }else {
-            alert(res.msg);
+            enqueueSnackbar(res.msg,{
+                variant: 'error',
+            });
         }
     });
 
@@ -332,6 +347,8 @@ const useStyles = makeStyles((theme) => ({
 
 // Table to display members
 export default function EnhancedTable(props) {
+    const { enqueueSnackbar } = useSnackbar();
+
   //================ Data from parent ==================
   const { rows, setRows, departmentId, myPremissionLevel } = props;
 
@@ -367,7 +384,9 @@ export default function EnhancedTable(props) {
             setRows(records);
             setTotalSize(res.data.total)
             }else {
-            alert(res.msg);
+                enqueueSnackbar(res.msg,{
+                    variant: 'error',
+                });
         }
 
       });
