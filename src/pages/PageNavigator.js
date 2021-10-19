@@ -6,7 +6,7 @@ import Login from './Login/Login';
 import Verify from './Login/Verify';
 
 import RecentContact from '../components/Dashbord/RecentContact';
-import RecentActivity from '../components/RecentActivity/RecentActivity';
+import RecentActivity from '../components/Dashbord/RecentActivity';
 
 function PageNavigator() {
     return (

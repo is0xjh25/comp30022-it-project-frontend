@@ -38,7 +38,7 @@ export default function RecentActivity() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Paper boarderRadius={'10px'} elevation={10} sx={{ m: '10vh', height:'80vh', width:'38vw',
+            <Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
             borderRadius: '20px', px: 5, py: 2, display: 'flex', flexDirection:'column'
 
             }}>
