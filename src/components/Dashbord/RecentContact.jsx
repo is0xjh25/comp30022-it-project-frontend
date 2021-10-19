@@ -62,12 +62,13 @@ export default function RecentContact() {
 	return(
 		<ThemeProvider theme={theme}>
 		<Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
-			borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
+			borderRadius:'20px', px: 2, py: 2, textAlign:"center", display: 'flex', flexDirection: 'column'}}>
 
 			<Typography sx={classes.title}>
 				Recent Contact
 			</Typography>
-			{recentContact.map((c) => {						
+            <Box sx={{flexGrow: 1, overflow: 'auto'}}>
+                {recentContact.map((c) => {						
 				return (
 					<Box 
 						key={c.id}
@@ -75,10 +76,11 @@ export default function RecentContact() {
 						sx={{
 							display: 'flex',
 							justifyContent: 'center',
-							height: "10%",
+							height: 80,
 							borderRadius: 2,
 							boxShadow: '0 5px 5px 5px rgba(105, 105, 105, .3)',
-							my: '5%'
+							my: '5%',
+                            mx: 1
 						}}
 					>
 						<Box
@@ -128,6 +130,8 @@ export default function RecentContact() {
 					</Box>
 				)})
 			}
+            </Box>
+			
 		</Paper>
 		</ThemeProvider>
 	)
