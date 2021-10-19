@@ -47,17 +47,15 @@ import {
 require('dotenv').config();
 
 function Dashboard(props) {
-
     return(
-    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100vh'}}>
-        <Box sx={{width: '60%'}}>
-            <RecentActivity/>
-        </Box>
-        <Box sx={{width:'40%'}}>
-        <RecentContact />
-        </Box>
-        
-    </Box>)
+        <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100vh'}}>
+            <Box sx={{width: '60%', minWidth:500}}>
+                <RecentActivity/>
+            </Box>
+            <Box sx={{width: '40%', minWidth:500}}>
+            <RecentContact />
+            </Box>        
+        </Box>)
 }
 
 function Events(props) {

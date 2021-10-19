@@ -4,7 +4,7 @@ import Mail from '@material-ui/icons/MailOutline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getRecentCustomer } from '../../api/Contact';
 import { toLocalTime } from '../../api/Util';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory } from 'react-router';
 import {
 	Paper,
     Box,
@@ -61,8 +61,8 @@ export default function RecentContact() {
 
 	return(
 		<ThemeProvider theme={theme}>
-		<Paper boarderRadius={'10px'} elevation={10} sx={{ m:'10vh', height:'80vh',
-		borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
+		<Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
+			borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
 
 			<Typography sx={classes.title}>
 				Recent Contact
@@ -76,9 +76,8 @@ export default function RecentContact() {
 							display: 'flex',
 							justifyContent: 'center',
 							height: "10%",
-							borderRadius: 10,
+							borderRadius: 2,
 							boxShadow: '0 5px 5px 5px rgba(105, 105, 105, .3)',
-							bgcolor:"#00e676",
 							my: '5%'
 						}}
 					>
@@ -116,13 +115,12 @@ export default function RecentContact() {
 								display: 'flex', 
 								width: "10%",
 								height: "100%",
-								borderTopRightRadius:10,
-								borderBottomRightRadius:10,
-								bgcolor: "#33eb91",
+								borderTopRightRadius:2,
+								borderBottomRightRadius:2,
 							}} 
 						>
 							<Link href = {`mailto:${c.email}`}>
-								<IconButton sx={{minHeight:"100%", minWidth:"100%"}}>
+								<IconButton sx={{minHeight:"100%", minWidth:"100%", align:"left"}}>
 									<Mail/>
 								</IconButton>
 							</Link>

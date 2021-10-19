@@ -16,7 +16,7 @@ import {
 
 
 } from '@mui/material';
-
+import { useHistory } from 'react-router';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { processPhoto } from '../../api/Photo';
@@ -38,6 +38,8 @@ const theme = createTheme({
 
 
 export default function RecentActivity() {
+
+    const history = useHistory();
     const [eventData, setEventData] = useState([]);
     const [todoData, setTodoData] = useState([]);
     const [data, setData] = useState([]);
@@ -119,6 +121,15 @@ export default function RecentActivity() {
         }
     }
 
+    const handleOnClick = (e) => {
+        // if (e.type === "todo") {
+        //     history.push(`/Events`);
+        // } else if (e.type === "event") {
+            
+        // }
+        history.push(`/Events`);
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Paper boarderRadius={'10px'} elevation={10} sx={{ mx: 4, height:'80vh',
@@ -151,7 +162,7 @@ export default function RecentActivity() {
 
                             return (
                                 <Card raised sx={{my: 2, mx: '5%', width: '90%'}} >
-                                <CardActionArea>
+                                <CardActionArea onClick = {() => handleOnClick(elem)}>
                                     <CardContent sx={{display: 'flex', flexDirection: 'column'}}>
                                         <Box sx={{display: 'flex', flexDirection: 'row'}}>
                                                 <Typography variant='h5' sx={{width: '50%', fontWeight: 'bold'}}>
