@@ -106,9 +106,31 @@ function updateToDo(data) {
     })
 }
 
+// Get all todos in a period
+function getMultipleTodos(startTime, finishTime) {
+    const info = {
+        method: 'GET',
+        headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
+    };
+
+    return new Promise((resolve, reject) => {
+        fetch(`${BASE_URL}/event/statistic?start_time=${startTime}&finish_time=${finishTime}`, info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
+        })
+        .catch(error => {reject(error);})
+    })
+}
+
 export {
     getAllToDo,
     createNewToDo,
     deleteToDo,
-    updateToDo
+    updateToDo,
+    getMultipleTodos
 }
