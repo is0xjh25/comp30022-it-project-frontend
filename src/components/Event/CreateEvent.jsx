@@ -75,7 +75,7 @@ export default function CreateEvent(props) {
 	}
 
 	return (
-		<Grid container textAlign='center' rowSpacing={5} sx={{py:"3%", px:"3%", minWidth:600}}>
+		<Grid container textAlign='center' rowSpacing={5} sx={{py:"3%", px:"3%", minWidth:"100%"}}>
 			<Grid item xs={12}>
 				<Typography sx={classes.title}>Create New Event</Typography>
 			</Grid>
