@@ -28,8 +28,8 @@ const theme = createTheme({
 })
 
 export default function RecentContact() {
+	
 	const history = useHistory();
-	const {url} = useRouteMatch();
 	const [recentContact, setRecentContact] = useState([]);
 	const classes = {
 		title: {
@@ -51,7 +51,7 @@ export default function RecentContact() {
 		})
 	};
 
-	const handleSingleContact = (e) => {
+	const handleSingleContact = (e) => { 
 		history.push(`/Contacts/${e.organization_id}/${e.department_id}/${e.id}`);
 	}
 
@@ -61,7 +61,7 @@ export default function RecentContact() {
 
 	return(
 		<ThemeProvider theme={theme}>
-		<Paper boarderRadius={'10px'} elevation={10} sx={{ m: '10vh', height:'80vh', width:'30vw',
+		<Paper boarderRadius={'10px'} elevation={10} sx={{ m:'10vh', height:'80vh',
 		borderRadius:'20px', px: 2, py: 2, textAlign:"center"}}>
 
 			<Typography sx={classes.title}>
