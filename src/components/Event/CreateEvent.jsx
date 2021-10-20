@@ -56,7 +56,7 @@ export default function CreateEvent(props) {
 		const eventFinish = new Date(finishTime);
 		
 		if (eventFinish.getTime() < eventStart.getTime()) {
-			enqueueSnackbar("Finish time cannot be earlier than start time!",{variant:'success'});
+			enqueueSnackbar("Finish time cannot be earlier than start time!",{variant:'warning'});
 		} else {
 			createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
 				if (res.code===200) {

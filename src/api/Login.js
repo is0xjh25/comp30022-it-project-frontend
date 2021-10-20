@@ -11,7 +11,7 @@ function signIn(email, password) {
         body: JSON.stringify({"email": email, "password": password})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/user/login", info)
         .then(res => {
             if(checkUnauthorized(res)) {

@@ -113,15 +113,14 @@ function searchOrg(organisation) {
         headers: {'Authorization': getCookie('token')},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
     fetch(BASE_URL + `/organization/name?organization_name=${organisation}`, info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -137,15 +136,14 @@ function joinOrg(organisationId) {
         body: body
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/organization/join", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + "/organization/join", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -160,15 +158,14 @@ function joinDep(departmentId) {
         body: body
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/department/join", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + "/department/join", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -184,15 +181,14 @@ function createOrg(organisation) {
         body: body
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/organization", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + "/organization", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -210,15 +206,14 @@ function createDep(organisationId, department) {
         body: body
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/organization/department", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + "/organization/department", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -231,7 +226,7 @@ function getOrganization() {
             'Origin': process.env.ORIGIN_URL
         },
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + '/organization/myOrganization', info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -239,7 +234,6 @@ function getOrganization() {
             }
             res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -252,7 +246,7 @@ function getDepartment(organizationId) {
             'Origin': process.env.ORIGIN_URL
         },
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/organization/departments?organization_id=${organizationId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -260,7 +254,6 @@ function getDepartment(organizationId) {
             }
             res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -273,7 +266,7 @@ function deleteOrganization(origanizationId) {
             'Authorization': getCookie('token'),
         }
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(url, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -293,7 +286,7 @@ function leaveOrganization(orgId) {
             'Authorization': getCookie('token'),
         }
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(url, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -313,7 +306,7 @@ function deleteDepartment(departmentId) {
             'Authorization': getCookie('token'),
         }
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(url, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -335,7 +328,7 @@ function getMyPermissionLevel(departmentId) {
             'Authorization': getCookie('token'),
         }
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(url, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -343,7 +336,6 @@ function getMyPermissionLevel(departmentId) {
             }
             res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch((error) => {reject(error)})
     })
 }
 

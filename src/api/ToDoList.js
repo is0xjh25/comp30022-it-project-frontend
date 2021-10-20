@@ -10,7 +10,7 @@ function getAllToDo() {
         headers: {'Authorization': getCookie('token')},
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList?topNTodoListData=10`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -27,7 +27,6 @@ function getAllToDo() {
                 });
             }
         })
-        .catch(error => {reject(error)})
     })
 
 }
@@ -40,7 +39,7 @@ function createNewToDo(data) {
         body: JSON.stringify(data)
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -57,7 +56,6 @@ function createNewToDo(data) {
                 })
             }
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -68,7 +66,7 @@ function deleteToDo(toDoListId) {
         headers: {'Authorization': getCookie('token')}
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList?todoList_id=${toDoListId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -89,7 +87,7 @@ function updateToDo(data) {
         body: JSON.stringify(data)
     }
     
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -107,7 +105,7 @@ function getMultipleTodos(startTime, finishTime) {
         headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event/statistic?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -117,7 +115,6 @@ function getMultipleTodos(startTime, finishTime) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 

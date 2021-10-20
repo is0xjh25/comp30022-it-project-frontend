@@ -10,7 +10,7 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
         headers: {'Authorization': getCookie('token')},
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/contact?organization_id=${orgId}&department_id=${departId}&size=${pageSize}&current=${currentPage}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -58,15 +58,14 @@ function createCustomer(data, departmentId) {
         body: JSON.stringify(data)
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
     fetch(BASE_URL + `/contact`, info)
     .then(res => {
         if(checkUnauthorized(res)) {
             return;
         }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -78,15 +77,14 @@ function displayCustomer(customerId) {
         headers: {'Authorization': getCookie('token')},
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + `/contact/detail?contact_id=${customerId}`, info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -98,15 +96,14 @@ function deleteCustomer(customerId) {
         headers: {'Authorization': getCookie('token')},
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + `/contact?contact_id=${customerId}`, info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -121,15 +118,14 @@ function updateCustomer(data, customerId) {
         body: JSON.stringify(data)
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + `/contact`, info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        res.json().then(bodyRes=>{resolve(bodyRes);});
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + `/contact`, info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 

@@ -393,7 +393,7 @@ export default function DisplayOneEvent(props) {
 							value={status}
 							onChange={(event) => handleOnSelect(event,"status")}
 						>
-							<MenuItem value={"to do"}>to do</MenuItem>
+							<MenuItem value={"up coming"}>to do</MenuItem>
 							<MenuItem value={"in progress"}>in progress</MenuItem>
 							<MenuItem value={"done"}>done</MenuItem>
 						</Select>
