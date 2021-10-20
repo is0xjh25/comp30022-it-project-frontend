@@ -20,7 +20,7 @@ function uploadUserPhoto(photo){
         body:formdata
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/user/uploadPhoto`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -32,11 +32,11 @@ function uploadUserPhoto(photo){
                 })
                 window.location.reload();
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
-        })
-        .catch(error => {reject(error)})
-        
+        })   
     })
     
 }
@@ -54,7 +54,7 @@ function uploadContactPhoto(contactId, photo){
         body:formdata
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/contact/uploadPhoto`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -66,11 +66,12 @@ function uploadContactPhoto(contactId, photo){
                 })
                 window.location.reload();
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
             
         })
-        .catch(error => {reject(error)})
     })
     
 }

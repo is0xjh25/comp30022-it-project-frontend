@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from "react";
-
 // Import from MUI
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
@@ -24,10 +23,12 @@ import { toLocalTime } from "../../api/Util";
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useSnackbar } from 'notistack';
 
 
 export default function DisplayEvents() {
 
+	const { enqueueSnackbar } = useSnackbar();
 	const [date, changeDate] = useState(new Date());
 	const [yearMonth, setYearMonth] = useState("");
 	const [month, setMonth] = useState("");
@@ -95,10 +96,10 @@ export default function DisplayEvents() {
 	const confirmDelete = function() {
 		deleteEvent(selectedEvent).then(res => {
 			if (res.code===200) {
-				alert("Successfully deleted");
+				enqueueSnackbar("Successfully deleted!",{variant:'success'});
 				update();
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}
@@ -110,7 +111,6 @@ export default function DisplayEvents() {
 
 	// Display event in one month
 	const handleYearMonthChange = (d) => {
-
 		// Extract month and year
 		let month = new Date(d).getMonth()+1;
 		let year = new Date(d).getFullYear();
@@ -121,7 +121,7 @@ export default function DisplayEvents() {
 			if (res.code===200) {
 				setMonthEvent(res.data);
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}
@@ -141,7 +141,7 @@ export default function DisplayEvents() {
 			if (res.code===200) {
 				setDayEvent(res.data);
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}
@@ -221,9 +221,9 @@ export default function DisplayEvents() {
 
 	// Initial calendar
 	useEffect(() => {
-		handleYearMonthChange(new Date());
+		handleYearMonthChange(date);
 		displayDayEvent(date);
-	}, [displayEventOpen, updateCount]);
+	}, [updateCount]);
 	
 	return(
 		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>

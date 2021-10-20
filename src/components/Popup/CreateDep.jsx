@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {createDep} from '../../api/Manage';
+import { useSnackbar } from 'notistack';
 import {
     Button,
     TextField,
@@ -12,6 +13,7 @@ import {
 
 export default function CreateDep(props) {
 	
+	const { enqueueSnackbar } = useSnackbar();
 	const update = props.update;
 	const [open, setOpen] = useState(false);
 	const [available, setAvailable] = useState(false);
@@ -40,25 +42,25 @@ export default function CreateDep(props) {
 		
 		if (department !== "") {
 			createDep(props.organization_id, department).then(res => {
-			if (res.ok) {
+			if (res.code === 200) {
 				update();
-				alert("Successfully created");
+				enqueueSnackbar("Successfully created!",{variant:'success'});
 				setAvailable(true);
 				handleClickClose();
             } else {
 				setAvailable(false);
 				setFirstTry(false);
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+                enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 			})
 		} else {
-			alert("Typing box cannot be empty");
+			enqueueSnackbar("Typing box cannot be empty",{variant: 'warning'});
 		}
 	}
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button variant="contained" color="primary" onClick={handleClickOpen}>
 				Create a new department
 			</Button>
 			<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">

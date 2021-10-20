@@ -44,7 +44,7 @@ function checkUnauthorized(res) {
 
 // Get the current user's information
 function getUserInfo() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const token = getCookie('token');
         const url = BASE_URL + '/user'
         fetch(url, {
@@ -57,19 +57,16 @@ function getUserInfo() {
             if(checkUnauthorized(res)) {
                 return;
             }
-            console.log("here");
             res.json().then(resBody => {
                 resolve(resBody)
             })
-        }).catch(err => {
-            reject(err);
         })
     })
 }
 
 // Update the current user's information
 function updateUserInfo(body) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const token = getCookie('token');
         const url = BASE_URL + '/user'
         fetch(url, {
@@ -84,8 +81,6 @@ function updateUserInfo(body) {
             res.json().then(resBody => {
                 resolve(resBody)
             })
-        }).catch(err => {
-            reject(err);
         })
     })
 }

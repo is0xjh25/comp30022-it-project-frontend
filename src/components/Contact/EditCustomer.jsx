@@ -19,17 +19,17 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
-
 import { 
 	formatTime,
 	checkEmail
 } from '../../api/Util';
 import { Input, uploadContactPhoto, processPhoto } from '../../api/Photo';
-import { SettingsPhoneTwoTone } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
 
 
 export default function EditCustomer(props) {
 
+	const { enqueueSnackbar } = useSnackbar();
 	const customerId = props.customerId;
 	const [firstName, setFirstName] = useState(props.data.first_name);
 	const [lastName, setLastName] = useState(props.data.last_name);
@@ -193,10 +193,10 @@ export default function EditCustomer(props) {
 
 		updateCustomer(data, customerId).then(res => {
 			if (res.code===200) {
-				alert("Successfully updated");
+				enqueueSnackbar("Successfully updated!",{variant:'success'});
 				props.setPageStatus('view');
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}

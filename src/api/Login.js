@@ -1,5 +1,4 @@
-import { getCookie, checkUnauthorized } from "./Util";
-
+import { getCookie, setCookie, checkUnauthorized } from "./Util";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
@@ -12,15 +11,17 @@ function signIn(email, password) {
         body: JSON.stringify({"email": email, "password": password})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/user/login", info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-            resolve(res)
+            if (res.ok) {
+                setCookie('token', res.headers.get("Authorization"), 1)
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -34,18 +35,14 @@ function resend(email) {
         body: JSON.stringify({"email": email})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
     fetch(BASE_URL + "/user/resetPassword", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        if (res.ok) {
-            resolve(res);
-        } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
-    .catch(error => {reject(error);})
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -65,19 +62,14 @@ function signUp (email, password, firstName, lastName, phone) {
         })
     };
 
-    return new Promise((resolve, reject) => {
-    fetch(BASE_URL + "/user", info)
-    .then(res => {
-        if(checkUnauthorized(res)) {
-            return;
-        }
-        if (res.ok) {
-            resolve(res);
-        } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }
-    })
-    .catch(error => {reject(error);})
+    return new Promise((resolve) => {
+        fetch(BASE_URL + "/user", info)
+        .then(res => {
+            if(checkUnauthorized(res)) {
+                return;
+            }
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -89,15 +81,14 @@ function logout() {
         headers: {'Authorization': getCookie('token')},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/user/logout", info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-            resolve(res)
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -107,17 +98,14 @@ function handleVerify() {
         headers: {'Authorization': getCookie('token')},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/user/verify", info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-            res.json().then(resBody => {
-                resolve(resBody);
-            })
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         })
-        .catch(error => {reject(error);})
     })
 }
 

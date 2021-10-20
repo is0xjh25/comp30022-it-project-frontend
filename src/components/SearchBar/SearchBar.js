@@ -2,12 +2,13 @@ import {
     TextField as SearchBar,
     InputAdornment
 } from '@mui/material';
-
 import SearchIcon from '@material-ui/icons/Search';
 
-
+import { useSnackbar } from 'notistack';
 
 export default function(props) {
+    
+    const { enqueueSnackbar } = useSnackbar();
     const {handleSearch} = props;
     const onChange = (event) => {
         handleSearch(event.target.value);

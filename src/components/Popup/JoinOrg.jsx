@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import {searchOrg, joinOrg} from '../../api/Manage';
+import { useSnackbar } from 'notistack';
 import {
 	Button,
 	TextField,
@@ -15,6 +16,7 @@ import {
 
 export default function JoinOrg(props) {
 	
+	const { enqueueSnackbar } = useSnackbar();
 	const update = props.update;
 	const [open, setOpen] = useState(false);
 	const [firstTry, setFirstTry] = useState(true);
@@ -51,22 +53,20 @@ export default function JoinOrg(props) {
   	const handleSearch = () => {
 		if (organization !== "") {
 			searchOrg(organization).then(res => {
-			if (res.ok) {
-				res.json().then(bodyRes=>{
-					setResults(bodyRes.data);
-					if (bodyRes.data.length !== 0) {
-						setAvailable(true);
-					} else {
-						setAvailable(false);
-						setFirstTry(false);
-					}
-				});
+			if (res.code===200) {
+				setResults(res.data);
+				if (res.data.length !== 0) {
+					setAvailable(true);
+				} else {
+					setAvailable(false);
+					setFirstTry(false);
+				}
             } else {
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
+                enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})	
 		} else {
-			alert("Typing box cannot be empty") 
+			enqueueSnackbar("Typing box cannot be empty",{variant: 'warning'}); 
 		}
 	}
 
@@ -88,14 +88,14 @@ export default function JoinOrg(props) {
 	// Join button
 	const handleJoin = () =>{
 		if (selected===0) {
-			alert("please select an organization!")
+			enqueueSnackbar("please select an organization!",{variant: 'warning'});
 		} else {
 			joinOrg(selected).then(res => {
-				if (res.ok) {
+				if (res.code===200) {
 					update();
-					alert("Successfully join");
+					enqueueSnackbar("Successfully join",{variant: 'success'});
 				} else {
-					res.json().then(bodyRes=>{alert(bodyRes.msg);});
+					enqueueSnackbar(res.msg,{variant: 'error'});
 				}
 			})
 			handleClickClose();
@@ -114,7 +114,7 @@ export default function JoinOrg(props) {
 
 	return (
 		<div>
-		<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+		<Button variant="contained" color="primary" onClick={handleClickOpen}>
 			Join a new organization
 		</Button>
 		<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">

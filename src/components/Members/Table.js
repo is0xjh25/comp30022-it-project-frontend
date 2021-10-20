@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-
-import Paper from '@material-ui/core/Paper';
-
 import ImageIcon from '@material-ui/icons/Image';
 import Delete from '@material-ui/icons/Delete';
 import Mail from '@material-ui/icons/MailOutline';
@@ -14,10 +11,7 @@ import AlertDialog from '../Dialog/AlertDialog';
 import SelectDialog from '../Dialog/SelectDialog';
 import {processPhoto} from '../../api/Photo';
 import {formatTime} from '../../api/Util';
-
 import { useSnackbar } from 'notistack';
-
-
 import {
     Link,
     Table,
@@ -32,7 +26,6 @@ import {
     Avatar,
     Button
 } from '@mui/material';
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -106,8 +99,6 @@ function EnhancedTableHead(props) {
   );
 }
 
-
-
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
@@ -164,7 +155,6 @@ function EnhancedTableRow(props) {
 
   }
 
-
   //================ Change permission level ==================
   const [selectOpen, setSelectOpen] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(-1);
@@ -199,9 +189,7 @@ function EnhancedTableRow(props) {
       setSelectOpen(false);
       setCurrentSelected(-1);
     } else {
-        enqueueSnackbar('Select a valid role!',{
-            variant: 'error',
-        });
+        enqueueSnackbar('Select a valid role!',{variant: 'error'});
     }
     update();
   }
@@ -211,9 +199,7 @@ function EnhancedTableRow(props) {
         if(res.code === 200) {
             update();
         }else {
-            enqueueSnackbar(res.msg,{
-                variant: 'error',
-            });
+            enqueueSnackbar(res.msg,{variant: 'error'});
         }
     });
     
@@ -224,12 +210,9 @@ function EnhancedTableRow(props) {
         if(res.code === 200) {
             update();
         }else {
-            enqueueSnackbar(res.msg,{
-                variant: 'error',
-            });
+            enqueueSnackbar(res.msg,{variant: 'error'});
         }
     });
-
   }
 
   var manage;
@@ -270,7 +253,6 @@ function EnhancedTableRow(props) {
       </div>
     )
   }
-
 
   return (
     <TableRow
@@ -318,7 +300,6 @@ function EnhancedTableRow(props) {
   )
 }
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -344,14 +325,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
 // Table to display members
 export default function EnhancedTable(props) {
-    const { enqueueSnackbar } = useSnackbar();
+    
+  const { enqueueSnackbar } = useSnackbar();
 
   //================ Data from parent ==================
   const { rows, setRows, departmentId, myPremissionLevel } = props;
-
 
   //================ Table settings ==================
   const classes = useStyles();
@@ -386,7 +366,7 @@ export default function EnhancedTable(props) {
             }else {
                 enqueueSnackbar(res.msg,{
                     variant: 'error',
-                });
+            });
         }
 
       });

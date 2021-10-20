@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { resend } from '../../api/Login';
+import { useSnackbar } from 'notistack';
 import {
 	Box,
 	Container,
@@ -41,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Resend(props) {
 
+    const { enqueueSnackbar } = useSnackbar();
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 
@@ -71,7 +73,7 @@ export default function Resend(props) {
 		}
 
 		if (alertMessage !== "") {
-			alert(alertMessage);
+			enqueueSnackbar(alertMessage,{variant: 'warning'});       
 		}
 
 		return formIsValid;
@@ -83,13 +85,14 @@ export default function Resend(props) {
 
 		if (handleValidation()) {
 			resend(email).then(res => {
-				if (res.ok) {
-					alert("Request is submitted. Please check your mailbox !");
+				if (res.code===200) {
+					enqueueSnackbar("Request is submitted. Please check your mailbox!",{variant:'info'});    
 					history.push('/Login');
 				} else {
-					res.json().then(bodyRes=>{alert(bodyRes.msg);});
+					enqueueSnackbar(res.msg,{variant:'error'});    
 					history.push('/Login');
-				}}).catch(error => {alert(error);})
+				}
+			})
 		}
 	}
 

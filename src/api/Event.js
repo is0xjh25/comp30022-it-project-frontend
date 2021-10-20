@@ -11,7 +11,7 @@ function getEventInfo(eventId) {
         headers: {'Authorization': getCookie('token'), 'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -21,7 +21,6 @@ function getEventInfo(eventId) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -34,7 +33,7 @@ function createEvent(startTime, finishTime, description) {
         body: JSON.stringify({"start_time": startTime, "finish_time": finishTime, "description": description})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -44,7 +43,6 @@ function createEvent(startTime, finishTime, description) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -57,7 +55,7 @@ function updateEvent(body) {
         body: JSON.stringify(body)
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/event", info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -67,7 +65,6 @@ function updateEvent(body) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -79,7 +76,7 @@ function deleteEvent(eventId) {
         headers: {'Authorization': getCookie('token'), 'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event?event_id=${eventId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -89,7 +86,6 @@ function deleteEvent(eventId) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -102,7 +98,7 @@ function addEventContact(eventId, contactId) {
         body: JSON.stringify({"contact_id": contactId, "event_id": eventId})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + "/event/contact", info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -112,7 +108,6 @@ function addEventContact(eventId, contactId) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -125,7 +120,7 @@ function deleteEventContact(attendId) {
         body: JSON.stringify({"attend_id": attendId})
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event/contact?attend_id=${attendId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -135,7 +130,6 @@ function deleteEventContact(attendId) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -147,7 +141,7 @@ function getMultipleEvents(startTime, finishTime) {
         headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event/between?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -157,7 +151,6 @@ function getMultipleEvents(startTime, finishTime) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 
@@ -169,7 +162,7 @@ function getMonthlyEvents(year, month, TimeZoneOffset) {
         headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event/amount?year=${year}&month=${month}&time_zone_offset=${TimeZoneOffset}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -179,7 +172,6 @@ function getMonthlyEvents(year, month, TimeZoneOffset) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 

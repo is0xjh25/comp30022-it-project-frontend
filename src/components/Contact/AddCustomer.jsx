@@ -7,6 +7,9 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import {processPhoto} from '../../api/Photo';
+import { useSnackbar } from 'notistack';
+import { formatTime, checkEmail } from '../../api/Util';
 import {
     IconButton,
 	Box,
@@ -17,15 +20,10 @@ import {
 	FormControl,
 	Select
 } from '@mui/material';
-import {processPhoto} from '../../api/Photo';
-
-import {
-	formatTime,
-	checkEmail
-} from '../../api/Util';
 
 export default function AddCustomer(props) {
 
+	const { enqueueSnackbar } = useSnackbar();
     const {departmentId, handleClose, update} = props;
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -38,7 +36,6 @@ export default function AddCustomer(props) {
 	const [description, setDescription] = useState("");
 	const [organization, setOrganization] = useState("");
 	const [customerType, setCustomerType] = useState("");
-
 	const [firstNameError, setFirstNameError] = useState("");
 	const [lastNameError, setLastNameError] = useState("");
 	const [emailError, setEmailError] = useState("");
@@ -91,7 +88,6 @@ export default function AddCustomer(props) {
 			setCustomerType(e.target.value);
 		}
     };
-
 
 	const handleOnSelect = (e,id) => {
 		console.log(e)
@@ -194,11 +190,11 @@ export default function AddCustomer(props) {
 
 		createCustomer(data, departmentId).then(res => {
 			if (res.code===200) {
-				alert("Successfully created");
+				enqueueSnackbar("Successfully created!",{variant:'success'});
                 handleClose();
                 update();
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}

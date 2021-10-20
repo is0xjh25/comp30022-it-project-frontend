@@ -4,12 +4,13 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Get all to-do list of a user
 function getAllToDo() {
+    
     const info = {
         method: 'GET',
         headers: {'Authorization': getCookie('token')},
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList?topNTodoListData=10`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -21,10 +22,11 @@ function getAllToDo() {
                     resolve(resBody)
                 });
             } else {
-                res.json().then(body => {alert(body.msg)});
+                res.json().then(resBody => {
+                    resolve(resBody)
+                });
             }
         })
-        .catch(error => {reject(error)})
     })
 
 }
@@ -37,7 +39,7 @@ function createNewToDo(data) {
         body: JSON.stringify(data)
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -49,10 +51,11 @@ function createNewToDo(data) {
                     resolve(resBody)
                 })
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -63,22 +66,16 @@ function deleteToDo(toDoListId) {
         headers: {'Authorization': getCookie('token')}
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList?todoList_id=${toDoListId}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-
-            if (res.ok) {
-                res.json().then(resBody => {
-                    resolve(resBody)
-                })
-            } else {
-                res.json().then(body => {alert(body.msg)})
-            }
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -90,19 +87,14 @@ function updateToDo(data) {
         body: JSON.stringify(data)
     }
     
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(BASE_URL + `/toDoList`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-
-            if (res.ok) {   
-                res.json().then(bodyRes=>{resolve(bodyRes);});
-            } else {
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
-            }})
-        .catch(error => {reject(error);})
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
@@ -113,7 +105,7 @@ function getMultipleTodos(startTime, finishTime) {
         headers: {'Authorization': getCookie('token'),'Origin': process.env.ORIGIN_URL},
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         fetch(`${BASE_URL}/event/statistic?start_time=${startTime}&finish_time=${finishTime}`, info)
         .then(res => {
             if(checkUnauthorized(res)) {
@@ -123,7 +115,6 @@ function getMultipleTodos(startTime, finishTime) {
                 resolve(resBody)
             })
         })
-        .catch(error => {reject(error);})
     })
 }
 

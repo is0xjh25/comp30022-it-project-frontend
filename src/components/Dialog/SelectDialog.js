@@ -1,5 +1,4 @@
 import React from 'react';
-
 // Import from MUI
 import {
     Button,
@@ -16,6 +15,7 @@ import {
 
 // A common select dialog implementation, can customize title, message, select items and so on..
 export default function DialogSelect(props) {
+    
     const {items, currentSelected ,title , label, open, handleChange, handleClose, handleConfirm} = props;
 
     return (

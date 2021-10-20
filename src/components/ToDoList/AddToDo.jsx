@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-
 // Import from MUI
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { useSnackbar } from 'notistack';
 import {
     TextField,
     Stack,
@@ -13,15 +13,15 @@ import {
     DialogActions,
     Dialog,
     DialogTitle,
-    Box
 } from '@mui/material';
 
 // Import from local
 import { createNewToDo } from '../../api/ToDoList';
 
 export default function AddToDo(props) {
+    
+    const { enqueueSnackbar } = useSnackbar();
     const { open, handleClose, update } = props;
-
     // Attributes for creating to-do
     const [time, setTime] = useState(new Date());
     const [description, setDescription] = useState("");
@@ -46,10 +46,12 @@ export default function AddToDo(props) {
         }
 
         createNewToDo(data).then(res => {
-            if (res.code === 200) {
-                alert("Create new to-do successfully");
+            if (res.code===200) {
+                enqueueSnackbar("Successfully created!",{variant:'success'});
                 update();
                 handleClose();
+            } else {
+                enqueueSnackbar(res.msg,{variant:'error'});
             }
         })
     }
