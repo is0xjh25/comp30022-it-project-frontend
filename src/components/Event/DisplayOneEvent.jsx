@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from "react";
-import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
