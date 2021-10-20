@@ -245,6 +245,19 @@ export default function ToDoList() {
         getAllToDo().then(res => {
             if (res.code === 200) {
                 const data = res.data;
+                console.log(data)
+
+                data.sort((ele1,ele2) => {
+                    if(ele1.status !== ele2.status) {
+                        if(ele1.status === 'done') {
+                            return 1;
+                        }
+                        return -1;
+                    }
+                    const date1 = new Date(ele1['date_time']);
+                    const date2 = new Date(ele2['date_time']);
+                    return date1 < date2 ? -1 : 1;
+                });
                 setRows(data);
             } else {
                 alert(res.msg)
