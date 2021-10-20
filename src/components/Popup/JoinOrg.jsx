@@ -114,7 +114,7 @@ export default function JoinOrg(props) {
 
 	return (
 		<div>
-		<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+		<Button variant="contained" color="primary" onClick={handleClickOpen}>
 			Join a new organization
 		</Button>
 		<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">

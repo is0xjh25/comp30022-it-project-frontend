@@ -377,10 +377,13 @@ export default function Organization(props) {
                             bgcolor: 'text.disabled',
                             my: '40px'
                         }} 
-                    >
-                        <CreateOrg update={update}/>
-                        <Typography sx={{ px: '20px'}} color="text.disabled.light">OR</Typography>
-                        <JoinOrg update={update}/>
+                    >   
+                        <Box sx={{display:'flex', alignItems:'center', justifyContent:'center', mx:'20px'}}>
+                            <CreateOrg update={update}/>    
+                        </Box>
+                        <Box sx={{display:'flex', alignItems:'center', justifyContent:'center', mx:'20px'}}>
+                            <JoinOrg update={update}/>  
+                        </Box>      
                     </Box>
 
                 </Box>

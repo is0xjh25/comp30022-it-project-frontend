@@ -77,7 +77,7 @@ export default function DisplayUser() {
 	//Alart Dialog Update
 	const [updateAlertOpen, setUpdateAlertOpen] = useState(false);
 	const updateAlertTitle = 'Update Confirm';
-	const updateAlertMessage = "Do you want to Update?";
+	const updateAlertMessage = "Do you want to update?";
 	const handleUpdate = function() {
 		setUpdateAlertOpen(true);
 	}

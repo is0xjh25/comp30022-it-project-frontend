@@ -59,7 +59,7 @@ export default function CreateOrg(props) {
 
 	return (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
+			<Button variant="contained" color="primary" onClick={handleClickOpen}>
 				Create a new organization
 			</Button>
 			<Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
