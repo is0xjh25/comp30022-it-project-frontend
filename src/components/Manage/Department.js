@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
 // MUI import
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import {
     Button,
     IconButton,
@@ -151,7 +152,7 @@ function MemberDepartment(props) {
                 </Button>
                 
                 <IconButton onClick={handleLeaveDep} aria-label="delete" sx={{height: 60, width: 60}} >
-                    <DeleteIcon />
+                    <DeleteOutlineOutlinedIcon />
                 </IconButton>
             </Box>
             <AlertDialog alertTitle={alertTitle}
@@ -200,7 +201,7 @@ function NotJoinedDepartment(props) {
                     my: '40px'
                 }} 
             >
-                <Button onClick={handleJoinDepartment}>
+                <Button onClick={handleJoinDepartment} fullWidth>
                     <Typography color="text.primary">{department.name}</Typography>
                 </Button>
             </Box>
