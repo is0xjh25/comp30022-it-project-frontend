@@ -251,7 +251,7 @@ export default function Department(props) {
         })
 
         getOrgDetail(orgId).then(res => {
-            if(res.code == 200) {
+            if(res.code===200) {
                 setOwned(res.data.owner === currentUser.id);
             }
         })

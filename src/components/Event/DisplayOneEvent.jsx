@@ -265,7 +265,7 @@ export default function DisplayOneEvent(props) {
 				allEmailUrl = allEmailUrl + contact.email + ',';
 			}
 		});
-		if(allEmailUrl.length != 0){
+		if(allEmailUrl.length !== 0){
 			allEmailUrl = allEmailUrl.substring(0, allEmailUrl.length - 1);
 			return (
 			<Link color="inherit" href = {`mailto:${allEmailUrl}`}>
@@ -455,7 +455,7 @@ export default function DisplayOneEvent(props) {
 					{typeof data.contact_list !== 'undefined' && data.contact_list.length > 0 ?
 						data.contact_list.map((e) => {						
 							return (
-							<Grid container item xs={12} key={e.attend_id} value={e} sx={{pt:5}} sx={{alignItems:'center', justifyContent:'center'}}>
+							<Grid container item xs={12} key={e.attend_id} value={e} sx={{alignItems:'center', justifyContent:'center'}}>
 								<Grid itme xs={1}>
 									<Avatar src={processPhoto(e.photo)} sx={{align: 'right'}}/>
 								</Grid>

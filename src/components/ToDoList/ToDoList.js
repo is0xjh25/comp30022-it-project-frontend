@@ -13,7 +13,6 @@ import {
     TableRow,
     Toolbar,
     Typography,
-    Paper,
     Checkbox,
     Chip,
     Grid,

@@ -26,9 +26,7 @@ import {
     DialogContentText,
     DialogTitle,
     Typography,
-    Grid,
-    Box
-
+    Grid
 } from '@mui/material';
 
 

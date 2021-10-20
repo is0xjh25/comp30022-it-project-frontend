@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import CustomerTable from './CustomerTable';
 import { getMyPermissionLevel } from '../../api/Manage';
-import { useSnackbar } from 'notistack';
 import { Paper, TableContainer } from '@mui/material';
 
 // This component reads organization id and department id from parameters

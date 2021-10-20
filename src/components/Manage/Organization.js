@@ -57,7 +57,7 @@ function EachOrganization(props) {
     };
 
     getIfUserHasPendingRequestBasedOnOrgId(org.id).then(res => {
-        if(res.code == 200 && res.msg === "Have pending") {
+        if(res.code===200 && res.msg==="Have pending") {
             setHasPending(true);
         }
     })

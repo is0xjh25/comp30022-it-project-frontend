@@ -4,7 +4,6 @@ import Copyright from '../../components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
 import { signIn } from '../../api/Login';
-import { setCookie } from '../../api/Util';
 import { useSnackbar } from 'notistack';
 import {
 	Box,

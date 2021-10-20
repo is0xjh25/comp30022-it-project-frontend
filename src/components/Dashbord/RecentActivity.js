@@ -8,7 +8,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getMultipleEvents } from '../../api/Event';
 import { getAllToDo } from '../../api/ToDoList';
 import {formatTime} from '../../api/Util';
-import { useSnackbar } from 'notistack';
 import {
     Paper,
     Box,
@@ -35,7 +34,6 @@ const theme = createTheme({
 
 export default function RecentActivity() {
 
-    const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const [startTime, setStartTime] = useState(new Date());
     const [eventData, setEventData] = useState([]);

@@ -277,7 +277,6 @@ function Contacts(props) {
 // A home component is rendered when path '/' is matched
 export default function Home(props) {
 
-    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(true);
     let {url} = useRouteMatch();
     const history = useHistory();
