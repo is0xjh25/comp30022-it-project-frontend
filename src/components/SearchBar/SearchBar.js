@@ -1,5 +1,5 @@
 import {
-    TextField as bar,
+    TextField,
     InputAdornment
 } from '@mui/material';
 import SearchIcon from '@material-ui/icons/Search';
@@ -12,7 +12,7 @@ export default function SearchBar(props) {
     }
 
     return (
-        <bar fullWidth 
+        <TextField fullWidth 
         placeholder="Search for a member" 
         type="search" 
         variant="outlined"
