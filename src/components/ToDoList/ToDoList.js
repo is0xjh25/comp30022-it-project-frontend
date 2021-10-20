@@ -65,7 +65,7 @@ function EnhancedToolbar(props) {
         }}
         >
             <IconButton>
-                <AddIcon variant="contained" color="primary"  onClick={() => {handleOpen()}}/>
+                <AddIcon variant="contained" color="primary" onClick={() => {handleOpen()}}/>
             </IconButton>
             <AddToDo open={createOpen} handleClose={handleClose} update={update}/>
         </Toolbar>
@@ -285,7 +285,6 @@ export default function ToDoList() {
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Grid sx={{ width: '100%', mr:"6%" }}>
             <Typography sx={classes.title} textAlign="center">ToDo List</Typography>
-                <EnhancedToolbar update={update}/>
                 <TableContainer>
                     <Table
                         aria-labelledby="tableTitle"
@@ -298,6 +297,7 @@ export default function ToDoList() {
 
                     </Table>
                 </TableContainer>
+                <EnhancedToolbar update={update}/>
             </Grid>
         </Grid>
     )

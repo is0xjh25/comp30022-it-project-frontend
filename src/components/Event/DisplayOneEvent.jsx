@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from "react";
-import DateFnsUtils from '@date-io/date-fns';
 import AlertDialog from "../Dialog/AlertDialog";
 import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "../../api/Event";
 import { toLocalTime } from "../../api/Util";
@@ -10,6 +9,9 @@ import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useSnackbar } from 'notistack';
 import {
 	Box, 
@@ -31,15 +33,6 @@ import {
 	Avatar,
 	Link
 } from '@mui/material'
-
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import Mail from '@material-ui/icons/MailOutline';
-import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
-import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
-import EditSharpIcon from '@material-ui/icons/EditSharp';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function DisplayOneEvent(props) {
 
@@ -240,7 +233,7 @@ export default function DisplayOneEvent(props) {
 								handleYearMonthChange(startTime);
 							}
 						}
-						update();
+						
 						setPageStatus("view");
 					} else {
 						enqueueSnackbar(res.msg,{variant: 'error'});
@@ -400,7 +393,7 @@ export default function DisplayOneEvent(props) {
 							value={status}
 							onChange={(event) => handleOnSelect(event,"status")}
 						>
-							<MenuItem value={"up coming"}>to do</MenuItem>
+							<MenuItem value={"upcoming"}>upcoming</MenuItem>
 							<MenuItem value={"in progress"}>in progress</MenuItem>
 							<MenuItem value={"done"}>done</MenuItem>
 						</Select>

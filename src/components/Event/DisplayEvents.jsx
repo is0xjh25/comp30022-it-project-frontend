@@ -111,7 +111,6 @@ export default function DisplayEvents() {
 
 	// Display event in one month
 	const handleYearMonthChange = (d) => {
-
 		// Extract month and year
 		let month = new Date(d).getMonth()+1;
 		let year = new Date(d).getFullYear();
@@ -222,9 +221,9 @@ export default function DisplayEvents() {
 
 	// Initial calendar
 	useEffect(() => {
-		handleYearMonthChange(new Date());
+		handleYearMonthChange(date);
 		displayDayEvent(date);
-	}, [displayEventOpen, updateCount]);
+	}, [updateCount]);
 	
 	return(
 		<Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>

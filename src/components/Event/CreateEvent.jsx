@@ -16,7 +16,7 @@ import {
 export default function CreateEvent(props) {
 	
 	const { enqueueSnackbar } = useSnackbar();
-	const { handleClose, handleYearMonthChange, yearMonth, setMonth, update } = props;
+	const { handleClose, handleYearMonthChange, yearMonth } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
 	const [description, setDescription] = useState(""); 
@@ -65,7 +65,6 @@ export default function CreateEvent(props) {
 						handleYearMonthChange(startTime);
 					}
 					handleClose();
-					update();
 				} else {
 					enqueueSnackbar(res.msg,{variant: 'error'});
 				}
