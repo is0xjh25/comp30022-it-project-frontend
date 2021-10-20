@@ -7,6 +7,7 @@ import {
 
 // MUI import
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import {
     Button,
@@ -22,13 +23,10 @@ import {
     Grid,
     Typography,
     Box,
-    Avatar,
     LinearProgress,
     Badge
     
 } from '@mui/material'
-import {styled} from '@mui/system';
-import BadgeUnstyled from '@mui/core/BadgeUnstyled';
 import {getIfUserHasPendingRequestBasedOnOrgId} from '../../api/Manage';
 
 // Local import
@@ -68,22 +66,6 @@ function EachOrganization(props) {
             <OwnedOrganization org={org} update={update} showDepartment={showDepartment} hasPending={hasPending}/>
         :
             <MemberOrganization org={org} update={update} showDepartment={showDepartment}/>
-
-                // <Box 
-                //     sx={{
-                //         display: 'flex',
-                //         justifyContent: 'center',
-                //         height: 60,
-                //         borderRadius: 2,
-                //         boxShadow: '0 5px 5px 2px rgba(105, 105, 105, .3)',
-                //         bgcolor: 'info.main',
-                //         my: '40px'
-                //     }} 
-                // >
-                //     <Button onClick={() => showDepartment(org.id)}>
-                //         <Typography color="text.primary">{org.name}</Typography>
-                //     </Button>
-                // </Box>
     )
 }
 
@@ -124,7 +106,7 @@ function MemberOrganization(props) {
                 </Button>
                 
                 <IconButton aria-label="delete" onClick={handleLeaveOrg} sx={{height: 60, width: 60}} >
-                    <DeleteIcon />
+                    <DeleteOutlineOutlinedIcon />
                 </IconButton> 
             </Box>
 

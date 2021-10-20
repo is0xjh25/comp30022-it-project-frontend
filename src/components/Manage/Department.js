@@ -199,7 +199,7 @@ function NotJoinedDepartment(props) {
                     my: '40px'
                 }} 
             >
-                <Button onClick={handleJoinDepartment}>
+                <Button onClick={handleJoinDepartment} fullWidth>
                     <Typography color="text.primary">{department.name}</Typography>
                 </Button>
             </Box>
