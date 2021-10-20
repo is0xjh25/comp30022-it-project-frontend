@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
-
-
+import { useSnackbar } from 'notistack';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Members from '../../components/Members/Members';
 import Organization from '../../components/Manage/Organization';
@@ -15,7 +14,6 @@ import DisplayEvents from '../../components/Event/DisplayEvents';
 import ToDoList from '../../components/ToDoList/ToDoList';
 import RecentContact from '../../components/Dashbord/RecentContact'
 import RecentActivity from '../../components/Dashbord/RecentActivity';
-
 import {
     Button,
     Dialog,
@@ -31,9 +29,6 @@ import {
     LinearProgress,
     Box,
 } from '@mui/material'
-
-
-
 import {
   Switch,
   Route,
@@ -103,6 +98,7 @@ function Manage(props) {
 // The component to render when Contacts is selected
 function Contacts(props) {
     let { path } = useRouteMatch();
+    const { enqueueSnackbar } = useSnackbar();
     
     const [organizations, setOrganizations] = useState([]);
     const [departments, setDepartments] = useState([]);
@@ -127,7 +123,7 @@ function Contacts(props) {
 
     const handleDialogConfirm = function() {
         if(currentOrganization < 1 || currentDepartment < 1) {
-            alert('Please select an organization and departmnet!');
+            enqueueSnackbar("Please select an organization and departmnet!",{variant: 'warning'});
         }else {
             history.push(`${path}/${currentOrganization}/${currentDepartment}`);
             setDialogOpen(false);
@@ -140,23 +136,21 @@ function Contacts(props) {
         setCurrentOrganization(orgId);
         // Fetch departments in this organization
         getDepartment(orgId).then(res => {
-            res.json().then(resBody => {
-                if(resBody.code === 200) {
-                    // TODO now can select departments
-                    const data = resBody.data.filter(dep => {
-                        return dep.status !== 'notJoin';
-                    });
-                    if(data.length === 0) {
-                        setDepartments(data);
-                        alert('There is no department you can access in this organization!');
-                    }else {
-                        setDepartments(data);
-                        setCurrentDepartment(0);
-                    }
+            if(res.code===200) {
+                // TODO now can select departments
+                const data = res.data.filter(dep => {
+                    return dep.status !== 'notJoin';
+                });
+                if(data.length === 0) {
+                    setDepartments(data);
+                    enqueueSnackbar("There is no department you can access in this organization!",{variant: 'warning'});       
                 }else {
-                    alert(resBody.msg);
+                    setDepartments(data);
+                    setCurrentDepartment(0);
                 }
-            })
+            }else {
+                enqueueSnackbar(res.msg,{variant: 'error'});       
+            }
         })
     }
 
@@ -168,18 +162,16 @@ function Contacts(props) {
     useEffect(() => {
         // Fetch organization
         getOrganization().then(res => {
-            res.json().then(resBody => {
-                if(resBody.code === 200) {
-                    const data = resBody.data;
-                    if(data.length === 0) {
-                        alert('You have not joined any organizations!\nJoin an organization first!');
-                    }else {
-                        setOrganizations(resBody.data);
-                    }
+            if(res.code === 200) {
+                const data = res.data;
+                if(data.length === 0) {
+                    enqueueSnackbar("You have not joined any organizations!\nJoin an organization first!",{variant: 'warning'});       
                 }else {
-                    alert(resBody.msg);
+                    setOrganizations(res.data);
                 }
-            })
+            }else {
+                enqueueSnackbar(res.msg,{variant: 'error'});       
+            }
         })
     }, [])
 
@@ -283,7 +275,9 @@ function Contacts(props) {
 
 
 // A home component is rendered when path '/' is matched
-function Home(props) {
+export default function Home(props) {
+
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(true);
     let {url} = useRouteMatch();
     const history = useHistory();
@@ -363,5 +357,3 @@ function Home(props) {
     </Grid>
   )
 }
-
-export default Home;

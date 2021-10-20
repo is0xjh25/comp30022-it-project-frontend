@@ -27,9 +27,8 @@ import {
     Badge
     
 } from '@mui/material'
-import {styled} from '@mui/system';
-import BadgeUnstyled from '@mui/core/BadgeUnstyled';
 import {getIfUserHasPendingRequestBasedOnOrgId} from '../../api/Manage';
+import { useSnackbar } from 'notistack';
 
 // Local import
 import {
@@ -156,6 +155,7 @@ function HasPendingNotation(props) {
 }
 
 function OwnedOrganization(props) {
+    const { enqueueSnackbar } = useSnackbar();
     const {org, update, showDepartment, hasPending} = props;
     //================ Delete Organization ==================
     // If the user owns the organization, delete button is displayed
@@ -199,8 +199,8 @@ function OwnedOrganization(props) {
                     row.name = row.first_name + ' ' + row.last_name
                 });
                 setMembers(records);
-                }else {
-                alert(res.msg);
+            }else {
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         })
     }
@@ -211,10 +211,10 @@ function OwnedOrganization(props) {
 
     const handleSubmitTransfer = () => {
         transferOwnership(org.id, selectedMember.user_id).then(res => {
-            if (res.code === 200) {
-                alert("Successfully transfered the owner!");
-                }else {
-                alert(res.msg);
+            if (res.code===200) {
+                enqueueSnackbar("Successfully transfered the owner!",{variant:'success'});
+            } else {
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         })
         update();
@@ -334,6 +334,8 @@ function OwnedOrganization(props) {
 // The organization component, it displays the user's current joined organizations,
 // and offer buttons for create/join new organizations
 export default function Organization(props) {
+    
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(true);
     const [organizations, setOrganizations] = useState([]);
     const [updateCount, setUpdateCount] = useState(0);
@@ -341,12 +343,12 @@ export default function Organization(props) {
     // Request data from backend API everytime updates
     useEffect(() => {
         getOrganization().then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    setOrganizations(body.data)
-                });
+            if (res.code===200) {
+
+                setOrganizations(res.data)
+
             } else {
-                res.json().then(body => {alert(body.msg)});
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         }).then(() => {
             setLoading(false);

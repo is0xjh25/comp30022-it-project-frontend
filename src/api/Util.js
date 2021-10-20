@@ -57,7 +57,6 @@ function getUserInfo() {
             if(checkUnauthorized(res)) {
                 return;
             }
-            console.log("here");
             res.json().then(resBody => {
                 resolve(resBody)
             })

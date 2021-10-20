@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-
+import { useSnackbar } from 'notistack';
 // Import from MUI
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -20,16 +20,14 @@ import {
     Collapse,
     IconButton,
     LinearProgress
-    
 } from '@mui/material';
-
 // Import from local
 import {
     getAllToDo,
     updateToDo,
     deleteToDo
 } from '../../api/ToDoList';
-import { formatTime, toLocalTime } from '../../api/Util';
+import { formatTime } from '../../api/Util';
 import AddToDo from './AddToDo';
 import UpdateToDo from './UpdateToDo';
 
@@ -77,8 +75,8 @@ function EnhancedToolbar(props) {
 // Implement a new table row
 function EnhancedTableRow(props) {
     const { row, update } = props;
-    const [expand, setExpand] = useState(false);
-
+    const [expand, setExpand] = useState(false); 
+    const { enqueueSnackbar } = useSnackbar();
     // For displaying to-do
     const getRowLabel = (status) => {
         if (status === "to do") {
@@ -96,7 +94,7 @@ function EnhancedTableRow(props) {
     // For deleting to-do
     const handleDelete = (id) => {
         deleteToDo(id).then(() => {
-            alert("To-do event deleted");
+            enqueueSnackbar("To-do event deleted!",{variant: 'success'});
             update();
         })
     }
@@ -128,7 +126,10 @@ function EnhancedTableRow(props) {
 
         updateToDo(data).then(res => {
             if (res.code === 200) {
+                enqueueSnackbar("Successfully updated!",{variant:'success'});
                 update();
+            } else {
+                enqueueSnackbar(res.msg,{variant:'error'});
             }
         })
     };
@@ -233,21 +234,23 @@ function EnhancedTableRow(props) {
 }
 
 export default function ToDoList() {
+
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(true);
     const [updateCount, setUpdateCount] = useState(0);
     const [rows, setRows] = useState([]);
-
+    
     const update = () => {
         setTimeout(() => {setUpdateCount(updateCount + 1)}, 1000);
     }
 
     useEffect(() => {
         getAllToDo().then(res => {
-            if (res.code === 200) {
+            if (res.code===200) {
                 const data = res.data;
                 setRows(data);
             } else {
-                alert(res.msg)
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         })
     }, [updateCount])

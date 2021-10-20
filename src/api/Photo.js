@@ -32,7 +32,9 @@ function uploadUserPhoto(photo){
                 })
                 window.location.reload();
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
         })
         .catch(error => {reject(error)})
@@ -66,7 +68,9 @@ function uploadContactPhoto(contactId, photo){
                 })
                 window.location.reload();
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
             
         })

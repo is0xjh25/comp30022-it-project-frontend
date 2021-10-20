@@ -1,9 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { useHistory } from 'react-router';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getMultipleEvents } from '../../api/Event';
+import { getAllToDo } from '../../api/ToDoList';
+import {formatTime} from '../../api/Util';
+import { useSnackbar } from 'notistack';
 import {
     Paper,
-    Grid,
     Box,
     Typography,
     LinearProgress,
@@ -11,23 +18,8 @@ import {
     CardActionArea,
     CardContent,
     Divider,
-    Avatar,
     Chip,
-    TextField
-
-
 } from '@mui/material';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { useHistory } from 'react-router';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import { processPhoto } from '../../api/Photo';
-import { getMultipleEvents } from '../../api/Event';
-import { getMultipleTodos, getAllToDo } from '../../api/ToDoList';
-
-import {formatTime} from '../../api/Util';
 
 const theme = createTheme({
     palette: {
@@ -43,6 +35,7 @@ const theme = createTheme({
 
 export default function RecentActivity() {
 
+    const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const [startTime, setStartTime] = useState(new Date());
     const [eventData, setEventData] = useState([]);
@@ -66,18 +59,15 @@ export default function RecentActivity() {
         const finishTime = new Date(startTime);
         finishTime.setHours(24);
         getMultipleEvents(startTime.toISOString(), finishTime.toISOString()).then(res => {
-            console.log(res);
             setEventData(res.data);
         })
 
         getAllToDo().then(res => {
-            console.log(res);
             const filtered = res.data.filter(record => {
                 const date = new Date(record['date_time']);
                 return startTime < date && finishTime > date;
             })
             setTodoData(filtered);
-            console.log(filtered);
         })
 
     }, [startTime])

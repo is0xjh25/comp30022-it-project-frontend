@@ -5,10 +5,7 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Verify from './Login/Verify';
 
-import RecentContact from '../components/Dashbord/RecentContact';
-import RecentActivity from '../components/Dashbord/RecentActivity';
-
-function PageNavigator() {
+export default function PageNavigator() {
     return (
         <Switch>
             <Route path='/swagger'>
@@ -23,9 +20,6 @@ function PageNavigator() {
             <Route path='/'>
                 <Home/>
             </Route>
-            
         </Switch>
     );
 }
-
-export default PageNavigator;

@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
 import { signIn } from '../../api/Login';
 import { setCookie } from '../../api/Util';
+import { useSnackbar } from 'notistack';
 import {
 	Box,
 	Container,
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn(props) {
 
+    const { enqueueSnackbar } = useSnackbar();
 	const classes = useStyles();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -99,7 +101,7 @@ export default function SignIn(props) {
 		}
 
 		if (alertMessage !== "") {
-			alert(alertMessage);
+			enqueueSnackbar(alertMessage,{variant: 'warning'});    
 		}
 
 		return formIsValid;
@@ -111,11 +113,10 @@ export default function SignIn(props) {
 
 		if (handleValidation()) {
 			signIn(email, password).then(res => {
-			if (res.ok) {
-				setCookie('token', res.headers.get("Authorization"), 1)
+			if (res.code===200) {
                 history.push('/');
             } else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant:'error'}); 
                 history.push('/Login');
 			}
 			})

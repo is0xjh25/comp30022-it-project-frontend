@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory,  useRouteMatch, useParams } from 'react-router-dom';
-
 // MUI import
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
@@ -13,7 +12,6 @@ import {
     Badge
     
 } from '@mui/material'
-
 // Local import
 import {
     getDepartment, 
@@ -26,6 +24,7 @@ import {
 import { getUserInfo } from '../../api/Util';
 import AlertDialog from '../Dialog/AlertDialog';
 import CreateDep from '../../components/Popup/CreateDep';
+import { useSnackbar } from 'notistack';
 
 function HasPendingNotation(props) {
     const {hasPending} = props;
@@ -63,7 +62,7 @@ function OwnedDepartment(props) {
     }
 
     getIfUserHasPendingRequestBasedOnDepartmentId(department.organization_id, department.id).then(res => {
-        if(res.code == 200 && res.msg === "Have pending") {
+        if(res.code === 200 && res.msg === "Have pending") {
             setHasPending(true);
         }
     })
@@ -168,6 +167,8 @@ function MemberDepartment(props) {
 
 // Display all not joined department in the organization, and click to send a join request
 function NotJoinedDepartment(props) {
+    
+    const { enqueueSnackbar } = useSnackbar();
     const {department, update} = props;
 
     //================ Delete Department ==================
@@ -181,7 +182,7 @@ function NotJoinedDepartment(props) {
     const handleAlertConfirm = function() {
         joinDep(department.id);
         setAlertOpen(false);
-        alert('Your request has been sent');
+        enqueueSnackbar('Your request has been sent!',{variant: 'info'});
         update();
     }
 
@@ -217,8 +218,9 @@ function NotJoinedDepartment(props) {
 // Loop through all department in this organization, and display them according to 
 // the user's authority level
 export default function Department(props) {
+    
+    const { enqueueSnackbar } = useSnackbar();
     const {currentUser} = props;
-
     const [loading, setLoading] = useState(true);
     const [departments, setDepartments] = useState([]);
     const history = useHistory();
@@ -236,11 +238,10 @@ export default function Department(props) {
     useEffect(() => {
         const id = orgId;
         getDepartment(id).then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    setDepartments(body.data)});
+            if (res.code===200) {
+                setDepartments(res.data);
             } else {
-                res.json().then(body => {alert(body.msg)});
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         }).then(() => {
             setLoading(false);

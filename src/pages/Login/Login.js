@@ -4,7 +4,6 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Resend from './Resend';
 import {
-	Box,
 	Grid,
     CardMedia
 } from '@mui/material';

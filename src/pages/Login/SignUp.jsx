@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory , NavLink } from 'react-router-dom';
 import { signUp } from '../../api/Login';
 import { setCookie } from '../../api/Util';
+import { useSnackbar } from 'notistack';
 import {
 	Box,
 	Container,
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp(props) {
 
+    const { enqueueSnackbar } = useSnackbar();
 	const classes = useStyles();	
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -132,7 +134,7 @@ export default function SignUp(props) {
 		}
 
 		if (alertMessage !== "") {
-			alert(alertMessage);
+			enqueueSnackbar(alertMessage ,{variant:'warning'}); 
 		}
 
 		return formIsValid;
@@ -144,15 +146,11 @@ export default function SignUp(props) {
 
 		if (handleValidation()) {
 			signUp (email, password, firstName, lastName, phone).then(res => {
-			if (res.ok) {
-				setCookie('token', res.headers.get("Authorization"), 1)
-                res.json().then(resBody => {
-                    console.log(resBody);
-                })
-				alert("Please go to your email and activiate your account");
+			if (res.code===200) {
+				enqueueSnackbar("Please go to your email and activiate your account!",{variant:'info'}); 
 				history.push('/login');
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant:'error'}); 
 				history.push('/login');
 			}
 			})

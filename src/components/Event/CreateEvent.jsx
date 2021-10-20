@@ -5,6 +5,7 @@ import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import { useSnackbar } from 'notistack';
 import {
 	Grid,
 	TextField,
@@ -13,6 +14,8 @@ import {
 } from '@mui/material'
 
 export default function CreateEvent(props) {
+	
+	const { enqueueSnackbar } = useSnackbar();
 	const { handleClose, handleYearMonthChange, yearMonth, setMonth, update } = props;
 	const [startTime, setStartTime] = useState(new Date());
 	const [finishTime, setFinishTime] = useState(new Date());
@@ -53,18 +56,18 @@ export default function CreateEvent(props) {
 		const eventFinish = new Date(finishTime);
 		
 		if (eventFinish.getTime() < eventStart.getTime()) {
-			alert("Finish time cannot be earlier than start time.")
+			enqueueSnackbar("Finish time cannot be earlier than start time!",{variant:'success'});
 		} else {
 			createEvent(startTime.toISOString(), finishTime.toISOString(), description).then(res => {
 				if (res.code===200) {
-					alert("Create event successfully");
+					enqueueSnackbar("Create event successfully!",{variant:'success'});
 					if ((year+month) === yearMonth) {
 						handleYearMonthChange(startTime);
 					}
 					handleClose();
 					update();
 				} else {
-					alert(res.msg);
+					enqueueSnackbar(res.msg,{variant: 'error'});
 				}
 			});
 		}

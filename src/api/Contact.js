@@ -21,10 +21,11 @@ function getAllCustomer (orgId, departId, pageSize, currentPage) {
                     resolve(resBody)
                 });
             } else {
-                // res.json().then(body=>{alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody);
+                })
             }
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -63,11 +64,8 @@ function createCustomer(data, departmentId) {
         if(checkUnauthorized(res)) {
             return;
         }
-        if (res.ok) {   
-            res.json().then(bodyRes=>{resolve(bodyRes);});
-        } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
-    }})
+        res.json().then(bodyRes=>{resolve(bodyRes);});
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -86,11 +84,8 @@ function displayCustomer(customerId) {
         if(checkUnauthorized(res)) {
             return;
         }
-        if (res.ok) {   
-            res.json().then(bodyRes=>{resolve(bodyRes)});
-        } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        res.json().then(bodyRes=>{resolve(bodyRes);});
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -109,15 +104,9 @@ function deleteCustomer(customerId) {
         if(checkUnauthorized(res)) {
             return;
         }
-        if (res.ok) {
-            res.json().then(resBody => {
-                resolve(resBody)
-            })
-        } else {
-            res.json().then(body => {alert(body.msg)})
-        }
+        res.json().then(bodyRes=>{resolve(bodyRes);});
     })
-    .catch(error => {reject(error)})
+    .catch(error => {reject(error);})
     })
 }
 
@@ -138,11 +127,8 @@ function updateCustomer(data, customerId) {
         if(checkUnauthorized(res)) {
             return;
         }
-        if (res.ok) {   
-            res.json().then(bodyRes=>{resolve(bodyRes);});
-        } else {
-            res.json().then(bodyRes=>{alert(bodyRes.msg);});
-        }})
+        res.json().then(bodyRes=>{resolve(bodyRes);});
+    })
     .catch(error => {reject(error);})
     })
 }
@@ -155,12 +141,13 @@ function searchAllCustomers(searchkey) {
         headers: {'Authorization': getCookie('token')},
     };
     
-    return new Promise((resovle) => {
-        fetch(BASE_URL + `/contact/searchAll?search_key=${searchkey}`, info).then(res => {
+    return new Promise(resolve => {
+        fetch(BASE_URL + `/contact/searchAll?search_key=${searchkey}`, info)
+        .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-            res.json().then(value => resovle(value));    
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         })
     })
 }
@@ -173,12 +160,13 @@ function getRecentCustomer(limit) {
         headers: {'Authorization': getCookie('token')},
     };
     
-    return new Promise((resovle) => {
-        fetch(BASE_URL + `/recentContact?limit=${limit}`, info).then(res => {
+    return new Promise((resolve) => {
+        fetch(BASE_URL + `/recentContact?limit=${limit}`, info)
+        .then(res => {
             if(checkUnauthorized(res)) {
                 return;
             }
-            res.json().then(value => resovle(value));    
+            res.json().then(bodyRes=>{resolve(bodyRes);});
         })
     })
 }

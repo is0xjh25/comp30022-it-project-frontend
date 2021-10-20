@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useSnackbar } from 'notistack';
 import {
     Dashboard,
     Person as Contact,
@@ -38,7 +38,9 @@ import {processPhoto} from '../../api/Photo';
 import {getIfUserHasPendingRequest} from '../../api/Manage';
 
 
-function Sidebar(props) {
+export default function Sidebar(props) {
+
+    const { enqueueSnackbar } = useSnackbar();
     const {changePage, selectedPage, currentUser} = props;
     const [hasPending, setHasPending] = useState(false);
     const [updateCount, setUpdateCount] = useState(0);
@@ -46,9 +48,6 @@ function Sidebar(props) {
     const refreshPage = () => {
         setUpdateCount(updateCount + 1);
     }
-
-
-    // setInterval(() => {setUpdateCount(updateCount+1);}, 20000);
 
     const navItems = [
         {
@@ -75,13 +74,12 @@ function Sidebar(props) {
         </Grid>
     )
 
-
     useEffect(() => {
         getIfUserHasPendingRequest().then(res => {
-            if(res.code == 200) {
-                if(res.msg === "Have pending") {
+            if(res.code===200) {
+                if(res.msg==="Have pending") {
                     setHasPending(true);
-                }else if(res.msg === "No pending") {
+                }else if(res.msg==="No pending") {
                     setHasPending(false);
                 }
                 
@@ -95,7 +93,6 @@ function Sidebar(props) {
 
     }, [updateCount])
     
-
     const user = (
         <Grid container sx={{my: '10px'}}>
             <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center'}}>
@@ -192,13 +189,12 @@ function Sidebar(props) {
 	// Logout
   	const handleConfirm = () => {
 		logout().then(res => {
-			if (res.ok) {
-				alert("Successfully logout");
+			if (res.code===200) {
+				enqueueSnackbar("Logout successfully",{variant:'success'});
 				document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 				history.push("/Login");
 			} else {
-				console.log("Log out");
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant:"error"});
 			}
 		})	
 	}
@@ -215,11 +211,8 @@ function Sidebar(props) {
                 <Grid item xs={9} sx={{display: 'flex', justifyContent: 'center'}}>
                     <ListItemText primary="Log out"></ListItemText>
                 </Grid>
-            </Grid>
-            
+            </Grid>  
         </ListItem>
-
-        
     )
 
     return(
@@ -262,5 +255,3 @@ function Sidebar(props) {
         </Drawer>
     )
 }
-
-export default Sidebar

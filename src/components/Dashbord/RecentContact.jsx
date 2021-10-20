@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getRecentCustomer } from '../../api/Contact';
 import { toLocalTime } from '../../api/Util';
 import { useHistory } from 'react-router';
+import { useSnackbar } from 'notistack';
 import {
 	Paper,
     Box,
@@ -15,7 +16,6 @@ import {
 	Grid,
 	Avatar,
 } from '@mui/material';
-
 const theme = createTheme({
     palette: {
         RecentActivity: {
@@ -29,6 +29,7 @@ const theme = createTheme({
 
 export default function RecentContact() {
 	
+	const { enqueueSnackbar } = useSnackbar();
 	const history = useHistory();
 	const [recentContact, setRecentContact] = useState([]);
 	const classes = {
@@ -46,7 +47,7 @@ export default function RecentContact() {
 			if (res.code===200) {
 				setRecentContact(res.data);
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	};

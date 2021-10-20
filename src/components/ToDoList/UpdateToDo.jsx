@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-
+import { useSnackbar } from 'notistack';
 // Import from MUI
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
@@ -19,8 +19,9 @@ import {
 import { updateToDo } from '../../api/ToDoList';
 
 export default function UpdateToDo(props) {
-    const { original, open, handleClose, update } = props;
 
+    const { enqueueSnackbar } = useSnackbar();
+    const { original, open, handleClose, update } = props;
     // Attributes for updating to-do
     const [time, setTime] = useState(new Date(original.date_time));
     const [description, setDescription] = useState(original.description);
@@ -56,9 +57,11 @@ export default function UpdateToDo(props) {
 
         updateToDo(data).then(res => {
             if (res.code === 200) {
-                alert("To-do updated successfully");
+                enqueueSnackbar("To-do updated!",{variant: 'success'});
                 update();
                 handleClose();
+            } else {
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         })
     }

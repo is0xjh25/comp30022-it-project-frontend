@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
-
 // Import from mui
 import Mail from '@material-ui/icons/MailOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import ImageIcon from '@material-ui/icons/Image';
-import { height } from '@mui/system';
+import { useSnackbar } from 'notistack';
 import { 
     Link,
     Paper,
@@ -57,39 +55,35 @@ const columns = [
 // Current organization and department, filter button, and create new contact button(if apply)
 const EnhancedTableToolbar = (props) => {
     const { organizationId, departmentId, handleDialogOpen, update, permissionLevel} = props;
+	const { enqueueSnackbar } = useSnackbar();
     const [orgName, setOrgName] = useState();
     const [depName, setDepName] = useState();
 
     // Request data from backend API, record the name of current organization and department
     useEffect(() => {
         getOrganization().then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    const data = body.data;
-                    data.forEach(organization => {
-                        if (organization.id.toString() === organizationId) {
-                            setOrgName(organization.name);
-
-                        }
-                    });
-                })
+            if (res.code === 200) {
+                const data = res.data;
+                data.forEach(organization => {
+                    if (organization.id.toString() === organizationId) {
+                        setOrgName(organization.name);
+                    }
+                });
             } else {
-                res.json().then(body => {alert(body.msg)});
+				enqueueSnackbar(res.msg,{variant: 'error'});
             }
         });
         
         getDepartment(organizationId).then(res => {
-            if (res.ok) {
-                res.json().then(body => {
-                    const data = body.data;
-                    data.forEach(department => {
-                        if (department.id.toString() === departmentId) {
-                            setDepName(department.name);
-                        } 
-                    });
-                })
+            if (res.code === 200) {
+                const data = res.data;
+                data.forEach(department => {
+                    if (department.id.toString() === departmentId) {
+                        setDepName(department.name);
+                    } 
+                });
             } else {
-                res.json().then(body => {alert(body.msg)});
+                enqueueSnackbar(res.msg,{variant: 'error'});
             }
         });
     }, [departmentId])
@@ -161,6 +155,7 @@ const EnhancedTableToolbar = (props) => {
 // Create a new table row component, including link to contact detail and delete contact
 function EnhancedTableRow(props) {
     const {row, permissionLevel, update} = props;
+	const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const {url} = useRouteMatch();
     const onRowClick = () => {
@@ -177,11 +172,11 @@ function EnhancedTableRow(props) {
     const handleAlertConfirm = function() {
         deleteCustomerBackend(row.id).then(res => {
 			if (res.code === 200) {
-                alert(`${row.name} is deleted!`);
+                enqueueSnackbar(`${row.name} is deleted!`,{variant:'success'});
                 setAlertOpen(false);
                 update();
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 
 		});
@@ -253,6 +248,8 @@ function EnhancedTableRow(props) {
 
 // The final table for contact
 export default function CustomerTable(props) {
+
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(true);
 
     //=============== Data from Parent ==================
@@ -283,7 +280,7 @@ export default function CustomerTable(props) {
                 setRows(records);
                 setLoading(false);
             } else {
-                alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
             }
 
         })
@@ -308,7 +305,7 @@ export default function CustomerTable(props) {
                 });
                 setRows(records);
             } else {
-                alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
             }
         })
     }

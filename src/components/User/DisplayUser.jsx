@@ -8,6 +8,8 @@ import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
 import ChangeCircleRoundedIcon from '@material-ui/icons/ChangeCircleRounded';
+import { useSnackbar } from 'notistack';
+import {processPhoto} from '../../api/Photo';
 import {
 	Avatar,
 	Box,
@@ -17,11 +19,10 @@ import {
 	Badge,
     LinearProgress
 } from '@mui/material';
-import {processPhoto} from '../../api/Photo';
-
 
 export default function DisplayUser() {
     
+	const { enqueueSnackbar } = useSnackbar();
 	const history = useHistory();
 	const [status, setPageStatus] = useState("view");
 	const [loading, setLoading] = useState(true);
@@ -164,18 +165,18 @@ export default function DisplayUser() {
 		if (Object.keys(body).length !== 0) { 
 			updateUserInfo(body).then(res => {
 				if (res.code===200) {
-					alert("Successfully updated");
+					enqueueSnackbar("Successfully updated!",{variant:'success'});
 					if (body["first_name"] !== undefined || body["last_name"] !== undefined) {
 						window.location.reload();
 					} else {
 						setPageStatus('view');
 					}
 				} else {
-					alert(res.msg);
+					enqueueSnackbar(res.msg,{variant:'error'});
 				}
 			})
 		} else {
-			alert("Nothing has been changed");
+			enqueueSnackbar("Nothing has been changed!",{variant: 'warning'});
 		}
 	}
 
@@ -193,7 +194,7 @@ export default function DisplayUser() {
 				setDescription(res.data.description);  
 				setLoading(false);
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 		

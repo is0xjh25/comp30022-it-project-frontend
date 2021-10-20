@@ -6,6 +6,12 @@ import { getEventInfo, updateEvent, deleteEventContact, addEventContact } from "
 import { toLocalTime } from "../../api/Util";
 import { searchAllCustomers } from "../../api/Contact";
 import { processPhoto } from '../../api/Photo';
+import Mail from '@material-ui/icons/MailOutline';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
+import EditSharpIcon from '@material-ui/icons/EditSharp';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { useSnackbar } from 'notistack';
 import {
 	Box, 
     Button,
@@ -26,14 +32,10 @@ import {
 	Avatar,
 	Link
 } from '@mui/material'
-import Mail from '@material-ui/icons/MailOutline';
-import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
-import UpdateSharpIcon from '@material-ui/icons/UpdateSharp';
-import EditSharpIcon from '@material-ui/icons/EditSharp';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function DisplayOneEvent(props) {
 
+	const { enqueueSnackbar } = useSnackbar();
 	const { eventId, handleClose, handleYearMonthChange, yearMonth } = props;
 	const [pageStatus, setPageStatus] = useState("view");	
 	const [status, setStatus] = useState("");
@@ -122,11 +124,11 @@ export default function DisplayOneEvent(props) {
 	const confirmAddContact = () => {
 		addEventContact(eventId, selectedContact).then(res => {
 			if (res.code===200) {
-				alert("Successfully added");
+				enqueueSnackbar("Successfully added!",{variant:'success'});
 				setAddContactOpen(false);
 				update();
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}
@@ -168,8 +170,8 @@ export default function DisplayOneEvent(props) {
 						row.name = row.first_name + ' ' + row.last_name
 					});
 					setContacts(data);
-					} else {
-					alert(res.msg);
+				} else {
+					enqueueSnackbar(res.msg,{variant: 'error'});
 				}
 			})
 		}
@@ -207,7 +209,7 @@ export default function DisplayOneEvent(props) {
 		}
 		
 		if (eventFinish.getTime() < eventStart.getTime()) {
-			alert("Finish time cannot be earlier than start time.")
+			enqueueSnackbar("Finish time cannot be earlier than start time.",{variant: 'warning'});
 			return false;
 		}
 		return true;
@@ -222,7 +224,7 @@ export default function DisplayOneEvent(props) {
 				body["id"] = eventId;
 				updateEvent(body).then(res => {
 					if (res.code===200) {
-						alert("Successfully updated");
+						enqueueSnackbar("Successfully updated!",{variant:'success'});
 						if (body["start_time"] !== undefined) {
 							let month = new Date(startTime).getMonth()+1;
 							let year = new Date(startTime).getFullYear();
@@ -233,11 +235,11 @@ export default function DisplayOneEvent(props) {
 						update();
 						setPageStatus("view");
 					} else {
-						alert(res.msg);
+						enqueueSnackbar(res.msg,{variant: 'error'});
 					}
 				})
 			} else {
-				alert("Nothing has been changed");
+				enqueueSnackbar("Nothing has beem changed!",{variant:'warning'});
 			}
 		}
 	}
@@ -246,10 +248,10 @@ export default function DisplayOneEvent(props) {
 	const confirmDelete = () => {
 		deleteEventContact(selectedAttend).then(res => {
 			if (res.code===200) {
-				alert("Successfully Deleted");
+				enqueueSnackbar("Successfully deleted!",{variant:'success'});
 				update();
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}
@@ -287,7 +289,7 @@ export default function DisplayOneEvent(props) {
 				setDescription(res.data.description);
 				setStatus(res.data.status);
 			} else {
-				alert(res.msg);
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}, [eventId, pageStatus, updateCount])

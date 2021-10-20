@@ -16,9 +16,11 @@ import {
     LinearProgress
 } from '@mui/material';
 import {processPhoto} from '../../api/Photo';
+import { useSnackbar } from 'notistack';
 
 export default function DisplayCustomer(props) {
 	
+	const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const {depId, customerId} = useParams();
     const [authority, setAuthority] = useState(1);
@@ -79,14 +81,16 @@ export default function DisplayCustomer(props) {
 				setData(res.data);
                 setLoading(false);
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 
         getMyPermissionLevel(depId).then(res => {
-            if(res.code === 200) {
+            if (res.code === 200) {
                 setAuthority(res.data.authority_level);
-            }
+            } else {
+				enqueueSnackbar(res.msg,{variant: 'error'});
+			}
         });
         
     }, [pageStatus, customerId, depId])
@@ -108,10 +112,10 @@ export default function DisplayCustomer(props) {
 	const confirmDelete = () => {
 		deleteCustomer(customerId).then(res => {
 			if (res.code === 200) {
-				alert("Successfully deleted");
+				enqueueSnackbar("Successfully deleted!",{variant:'success'});
 				handleBack();
 			} else {
-				res.json().then(bodyRes=>{alert(bodyRes.msg);});
+				enqueueSnackbar(res.msg,{variant: 'error'});
 			}
 		})
 	}

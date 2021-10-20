@@ -4,6 +4,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Get all to-do list of a user
 function getAllToDo() {
+    
     const info = {
         method: 'GET',
         headers: {'Authorization': getCookie('token')},
@@ -21,7 +22,9 @@ function getAllToDo() {
                     resolve(resBody)
                 });
             } else {
-                res.json().then(body => {alert(body.msg)});
+                res.json().then(resBody => {
+                    resolve(resBody)
+                });
             }
         })
         .catch(error => {reject(error)})
@@ -49,7 +52,9 @@ function createNewToDo(data) {
                     resolve(resBody)
                 })
             } else {
-                res.json().then(body => {alert(body.msg)})
+                res.json().then(resBody => {
+                    resolve(resBody)
+                })
             }
         })
         .catch(error => {reject(error)})
@@ -69,16 +74,10 @@ function deleteToDo(toDoListId) {
             if(checkUnauthorized(res)) {
                 return;
             }
-
-            if (res.ok) {
-                res.json().then(resBody => {
-                    resolve(resBody)
-                })
-            } else {
-                res.json().then(body => {alert(body.msg)})
-            }
+            res.json().then(resBody => {
+                resolve(resBody)
+            })
         })
-        .catch(error => {reject(error)})
     })
 }
 
@@ -96,13 +95,8 @@ function updateToDo(data) {
             if(checkUnauthorized(res)) {
                 return;
             }
-
-            if (res.ok) {   
-                res.json().then(bodyRes=>{resolve(bodyRes);});
-            } else {
-                res.json().then(bodyRes=>{alert(bodyRes.msg);});
-            }})
-        .catch(error => {reject(error);})
+            res.json().then(bodyRes=>{resolve(bodyRes);});
+        })
     })
 }
 
