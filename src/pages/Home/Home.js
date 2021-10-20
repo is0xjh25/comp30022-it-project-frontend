@@ -173,7 +173,7 @@ function Contacts(props) {
                 enqueueSnackbar(res.msg,{variant: 'error'});       
             }
         })
-    }, [])
+    })
 
     return(
         <div>
@@ -302,7 +302,7 @@ export default function Home(props) {
             history.push('/Login');
         }
     })
-  }, [])
+  })
 
     // Display loading page if the request is not finished
     if (loading) {

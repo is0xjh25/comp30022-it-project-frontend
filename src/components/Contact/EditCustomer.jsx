@@ -42,7 +42,7 @@ export default function EditCustomer(props) {
 	const [description, setDescription] = useState(props.data.description);
 	const [organization, setOrganization] = useState(props.data.organization);
 	const [customerType, setCustomerType] = useState(props.data.customer_type);
-	const [photo, setPhoto] = useState(props.data.photo);
+	const photo = props.data.photo;
 
 	const [firstNameError, setFirstNameError] = useState("");
 	const [lastNameError, setLastNameError] = useState("");

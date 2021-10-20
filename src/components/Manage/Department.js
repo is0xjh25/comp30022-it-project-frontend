@@ -277,7 +277,7 @@ export default function Department(props) {
     const own = [];
     const member = [];
     const other = [];
-    departments.map((department) => {
+    departments.forEach((department) => {
         if (department.status==="owner") {
             own.push(
                 <OwnedDepartment department={department} update={update} showMembers={showMembers}/>
