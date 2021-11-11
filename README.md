@@ -16,6 +16,20 @@ This is the frontend for team yyds of comp30022 It Project, a personal CRM websi
 * Create a new customer and store it in a department
 * Update a customer in a department
 * Delete a customer in a department
+* Update User details
+* Verify user after register
+* Transfer organization ownership
+* Search customers in a department
+* Display a few most recent contacts on sidebar, can navigate to contact
+* Create an event
+* Add contact to an event
+* Delete contact from an event
+* Create, modify, delele a todo
+* Display Events
+* Sidebar re-implement to look better
+* Improved overall CSS
+* Restrict user input by providing a select component when edit contact
+* Using a new notification component which do not need user response (notification at bottom right)
 
 
 ## Available Scripts
